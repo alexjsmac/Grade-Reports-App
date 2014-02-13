@@ -1,6 +1,7 @@
 # Compiled source #
 ###################
 *.class
+target/
 
 # OS generated files #
 ######################
