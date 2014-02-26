@@ -12,7 +12,7 @@ public class Course {
     private String title;
 
     /* Constructor */
-    public void Course(String title, String code, String term){
+    public Course(String title, String code, String term){
         this.title = title;
         this.code = code;
         this.term = term;
