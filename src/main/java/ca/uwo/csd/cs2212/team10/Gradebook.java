@@ -9,12 +9,12 @@ import java.util.ArrayList;
 public class Gradebook {
 
     /* Attributes */
-    Course activeCourse;
-    ArrayList<Course> courses; //The courses in the Gradebook
+    private Course activeCourse;
+    private ArrayList<Course> courses; //The courses in the Gradebook
 
     /* Constructor */
-    public void Gradebook(){
-        courses = new ArrayList();
+    public Gradebook(){
+        courses = new ArrayList<Course>();
     }
 
     /* Public Methods */
@@ -26,8 +26,19 @@ public class Gradebook {
     public void removeCourse(Course course){
         courses.remove(course);
     }
+    
+    public ArrayList<Course> getCourseList(){
+        return courses;
+    }
+    
+    public Course getActiveCourse(){
+        return activeCourse;
+    }
 
     public void setActiveCourse(Course course){
-        activeCourse = course;
+		if (courses.contains(course))
+			activeCourse = course;
+		else
+			throw new IllegalArgumentException("Course not in gradebook");
     }
 }
