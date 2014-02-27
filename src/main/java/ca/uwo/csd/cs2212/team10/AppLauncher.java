@@ -5,7 +5,7 @@ package ca.uwo.csd.cs2212.team10;
  * @author Team 10
  */
 public class AppLauncher{
-	public static void main(String[] args){
-		new MainWindow(); //delegate to the constructor of MainWindow
-	}
+    public static void main(String[] args){
+        new MainWindow(); //delegate to the constructor of MainWindow
+    }
 }
