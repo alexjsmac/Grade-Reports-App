@@ -22,7 +22,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ca.uwo.csd.cs2212.team10.MainGUI</mainClass>
+							<mainClass>ca.uwo.csd.cs2212.team10.AppLauncher</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
