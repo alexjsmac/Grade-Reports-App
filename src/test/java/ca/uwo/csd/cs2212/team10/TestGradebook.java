@@ -16,14 +16,14 @@ public class TestGradebook{
     
     @Test
     public void testCourseListInitiallyEmpty(){
-		Gradebook tempGradebook = new Gradebook();
-		Assert.assertTrue(tempGradebook.getCourseList().isEmpty());
+		gradebook = new Gradebook();
+		Assert.assertTrue(gradebook.getCourseList().isEmpty());
     }
     
     @Test
     public void testActiveCourseInitiallyNull(){
-		Gradebook tempGradebook = new Gradebook();
-		Assert.assertNull(tempGradebook.getActiveCourse());
+		gradebook = new Gradebook();
+		Assert.assertNull(gradebook.getActiveCourse());
     }
     
     @Test
@@ -40,13 +40,13 @@ public class TestGradebook{
 		gradebook.addCourse(course);
 		gradebook.setActiveCourse(course);
 		
-		Assert.assertSame(gradebook.getActiveCourse(), course);
+		Assert.assertSame(course, gradebook.getActiveCourse());
 		
 		gradebook.removeCourse(course);
     }
     
     @Test(expected=IllegalArgumentException.class)
-    public void testSetActiveNonexistentCourse(){
+    public void testSetActiveNonExistentCourse(){
 		gradebook.setActiveCourse(course);
     }
 }

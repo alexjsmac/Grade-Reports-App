@@ -1,10 +1,14 @@
 package ca.uwo.csd.cs2212.team10;
 
+import java.io.Serializable;
+
 /**
  * Represents a course in the Gradebook
  * @author Team 10
  */
-public class Course {
+public class Course implements Serializable{
+    /* Constants */
+    private static final long serialVersionUID = 1L; //for serializing
 
     /* Attributes */
     private String code;
@@ -30,5 +34,17 @@ public class Course {
 
     public void setTerm(String newTerm){
         term = newTerm;
+    }
+
+    public String getTitle(){
+        return title;
+    }
+
+    public String getCode(){
+        return code;
+    }
+
+    public String getTerm(){
+        return term;
     }
 }
