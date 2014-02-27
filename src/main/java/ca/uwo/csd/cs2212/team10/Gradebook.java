@@ -39,9 +39,9 @@ public class Gradebook implements Serializable{
     }
 
     public void setActiveCourse(Course course){
-		if (courses.contains(course))
-			activeCourse = course;
-		else
-			throw new IllegalArgumentException("Course not in gradebook");
+        if (courses.contains(course))
+            activeCourse = course;
+        else
+            throw new IllegalArgumentException("Course not in gradebook");
     }
 }
