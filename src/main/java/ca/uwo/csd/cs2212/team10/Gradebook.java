@@ -24,10 +24,14 @@ public class Gradebook implements Serializable{
 
     public void addCourse(Course course){
         courses.add(course);
+	if (courses.size() == 1)
+	    activeCourse = course;
     }
 
     public void removeCourse(Course course){
-        courses.remove(course);
+        if (activeCourse == course)
+	    activeCourse = null;
+	courses.remove(course);
     }
     
     public ArrayList<Course> getCourseList(){
