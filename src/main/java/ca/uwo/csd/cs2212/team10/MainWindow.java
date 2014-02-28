@@ -446,7 +446,6 @@ public class MainWindow extends JFrame {
         addDialog.setVisible(true);
     }                                            
 
-    //TODO Change DropDown list based on new list of Courses
     private void addOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String title = null;
         String code = null;
@@ -469,8 +468,8 @@ public class MainWindow extends JFrame {
         Course course = new Course(title, code, term);
         gradebook.addCourse(course);
         
-        //TODO Change DropDown list based on new list of Courses
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "New Item" }));
+        // Change DropDown list based on new list of Courses
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
         
         //Close Dialog
         addDialog.setVisible(false);
@@ -480,7 +479,6 @@ public class MainWindow extends JFrame {
         addDialog.setVisible(false);
     }                                            
 
-    //TODO Change DropDown list based on new list of Courses
     private void editOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                          
         String title = null;
         String code = null;
@@ -505,8 +503,8 @@ public class MainWindow extends JFrame {
         editCourse.setCode(code);
         editCourse.setTerm(term);
                 
-        //TODO Change DropDown list based on new list of Courses
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "New Item" }));
+        // Change DropDown list based on new list of Courses
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
         
         //Close Dialog
         editDialog.setVisible(false);
@@ -530,14 +528,13 @@ public class MainWindow extends JFrame {
         editDialog.setVisible(true);
     }                                             
 
-    //TODO Change DropDown list based on new list of Courses
     private void delOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
         //Only opens the Dialog if there is an active Course, so there's no need to check it again
         Course delCourse = gradebook.getActiveCourse();
         gradebook.removeCourse(delCourse);
         
-        //TODO Change DropDown list based on new list of Courses
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "New Item" }));
+        // Change DropDown list based on new list of Courses
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
         
         delDialog.setVisible(false);
     }                                        
