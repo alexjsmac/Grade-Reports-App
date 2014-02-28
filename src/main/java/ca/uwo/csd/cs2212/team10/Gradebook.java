@@ -48,4 +48,14 @@ public class Gradebook implements Serializable{
         else
             throw new IllegalArgumentException("Course not in gradebook");
     }
+    
+    public String[] courseNames(ArrayList<Course> courseList){
+    	String[] courseNamesList = new String[courseList.size()];
+    	for (i=0;i< courseList.size();i++){
+    		courseNamesList[i] = courseList.get(i).getTitle();
+    	}
+    	return courseNamesList;
+    }
 }
+    	
+    		
