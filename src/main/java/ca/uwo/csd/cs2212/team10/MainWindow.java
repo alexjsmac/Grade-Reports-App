@@ -306,7 +306,7 @@ public class MainWindow extends JFrame {
         });
         jScrollPane1.setViewportView(coursesTbl);
 
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
         dropDownCourses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dropDownCoursesActionPerformed(evt);
