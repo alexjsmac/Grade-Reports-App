@@ -24,6 +24,7 @@ public class MainWindow extends JFrame {
     
     /* Private methods */
     
+    //TODO Make DropDown list based on list of Courses
         @SuppressWarnings("unchecked")                     
     private void initComponents() {
         
@@ -67,6 +68,8 @@ public class MainWindow extends JFrame {
         addMenuItem = new javax.swing.JMenuItem();
         editMenuItem = new javax.swing.JMenuItem();
         delMenuItem = new javax.swing.JMenuItem();
+        
+        activeCourseLabel.setText("Active Course:");
 
         addDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addDialog.setTitle("Add Course");
@@ -403,19 +406,27 @@ public class MainWindow extends JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(delCourseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                        .addComponent(dropDownCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dropDownCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(activeCourseLabel)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dropDownCourses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addCourseBtn)
-                    .addComponent(editCourseBtn)
-                    .addComponent(delCourseBtn))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addCourseBtn)
+                            .addComponent(editCourseBtn)
+                            .addComponent(delCourseBtn))
+                        .addGap(24, 24, 24))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(activeCourseLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dropDownCourses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -435,35 +446,31 @@ public class MainWindow extends JFrame {
         addDialog.setVisible(true);
     }                                            
 
-    // TODO Not Catching Exception
+    //TODO Change DropDown list based on new list of Courses
     private void addOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String title = null;
         String code = null;
         String term = null;
         
-        //TODO Not catching exception
-        try {
-            title = addTitleTxtField.getText();
-        } 
-        catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Bad Title");
+        if ((title = addTitleTxtField.getText()).length() == 0){
+            JOptionPane.showMessageDialog(addDialog, "Bad Title", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        try {
-            code = addCodeTxtField.getText();
-        } 
-        catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Bad code");
+        if ((code = addCodeTxtField.getText()).length() == 0){
+            JOptionPane.showMessageDialog(addDialog, "Bad Code", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        try {
-            term = addTermTxtField.getText();
-        } 
-        catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Bad Term");
+        if ((term = addTermTxtField.getText()).length() == 0){
+            JOptionPane.showMessageDialog(addDialog, "Bad Term", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        
+              
         //Create a new Course and adds it to the gradebook
         Course course = new Course(title, code, term);
         gradebook.addCourse(course);
+        
+        //TODO Change DropDown list based on new list of Courses
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "New Item" }));
         
         //Close Dialog
         addDialog.setVisible(false);
@@ -473,30 +480,23 @@ public class MainWindow extends JFrame {
         addDialog.setVisible(false);
     }                                            
 
-    //TODO not Catching Exception
+    //TODO Change DropDown list based on new list of Courses
     private void editOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                          
         String title = null;
         String code = null;
         String term = null;
         
-        //TODO Not catching exception
-        try {
-            title = editTitleTxtField.getText();
-        } 
-        catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Bad Title");
+        if ((title = editTitleTxtField.getText()).length() == 0){
+            JOptionPane.showMessageDialog(addDialog, "Bad Title", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        try {
-            code = editCodeTxtField.getText();
-        } 
-        catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Bad code");
+        if ((code = editCodeTxtField.getText()).length() == 0){
+            JOptionPane.showMessageDialog(addDialog, "Bad Code", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        try {
-            term = editTermTxtField.getText();
-        } 
-        catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Bad Term");
+        if ((term = editTermTxtField.getText()).length() == 0){
+            JOptionPane.showMessageDialog(addDialog, "Bad Term", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
         //Set attributes
@@ -505,6 +505,9 @@ public class MainWindow extends JFrame {
         editCourse.setCode(code);
         editCourse.setTerm(term);
                 
+        //TODO Change DropDown list based on new list of Courses
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "New Item" }));
+        
         //Close Dialog
         editDialog.setVisible(false);
     }                                         
@@ -527,10 +530,14 @@ public class MainWindow extends JFrame {
         editDialog.setVisible(true);
     }                                             
 
+    //TODO Change DropDown list based on new list of Courses
     private void delOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
         //Only opens the Dialog if there is an active Course, so there's no need to check it again
         Course delCourse = gradebook.getActiveCourse();
         gradebook.removeCourse(delCourse);
+        
+        //TODO Change DropDown list based on new list of Courses
+        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "New Item" }));
         
         delDialog.setVisible(false);
     }                                        
