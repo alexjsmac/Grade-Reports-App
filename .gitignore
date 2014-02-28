@@ -12,3 +12,5 @@ target/
 .Trashes
 ehthumbs.db
 Thumbs.db
+.html
+.css
