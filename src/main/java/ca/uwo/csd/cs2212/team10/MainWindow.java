@@ -29,6 +29,7 @@ public class MainWindow extends JFrame {
         
         gradebook = new Gradebook();
 
+        activeCourseLabel = new javax.swing.JLabel();
         addDialog = new javax.swing.JDialog();
         addTitleLabel = new javax.swing.JLabel();
         addOkBtn = new javax.swing.JButton();
@@ -72,7 +73,7 @@ public class MainWindow extends JFrame {
         addDialog.setAlwaysOnTop(true);
         addDialog.setBounds(new java.awt.Rectangle(0, 0, 350, 250));
 
-        addTitleLabel.setText("Name:");
+        addTitleLabel.setText("Title:");
 
         addOkBtn.setText("OK");
         addOkBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -472,12 +473,39 @@ public class MainWindow extends JFrame {
         addDialog.setVisible(false);
     }                                            
 
-    //TODO
+    //TODO not Catching Exception
     private void editOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        //TODO Get the Code, Term and Title that changed
+        String title = null;
+        String code = null;
+        String term = null;
         
-        //TODO Change attributes of the active course
+        //TODO Not catching exception
+        try {
+            title = editTitleTxtField.getText();
+        } 
+        catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "Bad Title");
+        }
+        try {
+            code = editCodeTxtField.getText();
+        } 
+        catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "Bad code");
+        }
+        try {
+            term = editTermTxtField.getText();
+        } 
+        catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "Bad Term");
+        }
+        
+        //Set attributes
+        Course editCourse = gradebook.getActiveCourse();
+        editCourse.setTitle(title);
+        editCourse.setCode(code);
+        editCourse.setTerm(term);
                 
+        //Close Dialog
         editDialog.setVisible(false);
     }                                         
 
@@ -485,22 +513,24 @@ public class MainWindow extends JFrame {
         editDialog.setVisible(false);
     }                                             
 
-    //TODO
     private void editCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        Course editCourse;
         
-        // TODO What if there's no active course?
-        //Course editCourse = gradebook.getActiveCourse();
-        Course editCourse = new Course("Title", "Code", "Term");  
-        
+        if ((editCourse = gradebook.getActiveCourse()) == null) {
+            JOptionPane.showMessageDialog(this, "No active Course");
+            return;
+        }
+                
         editCodeTxtField.setText(editCourse.getCode());
         editTitleTxtField.setText(editCourse.getTitle());
         editTermTxtField.setText(editCourse.getTerm());
         editDialog.setVisible(true);
     }                                             
 
-    //TODO
     private void delOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        //TODO remove active Course and changes active course to ?
+        //Only opens the Dialog if there is an active Course, so there's no need to check it again
+        Course delCourse = gradebook.getActiveCourse();
+        gradebook.removeCourse(delCourse);
         
         delDialog.setVisible(false);
     }                                        
@@ -510,6 +540,14 @@ public class MainWindow extends JFrame {
     }                                            
 
     private void delCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        Course delCourse;
+        
+        //Checks for an actice Course
+        if ((delCourse = gradebook.getActiveCourse()) == null) {
+            JOptionPane.showMessageDialog(this, "No active Course");
+            return;
+        }
+        
         delDialog.setVisible(true);
     }                                            
 
@@ -524,12 +562,14 @@ public class MainWindow extends JFrame {
         addDialog.setVisible(true);
     }                                           
 
-    //TODO
     private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO What if there's no active course?
-        //Course editCourse = gradebook.getActiveCourse();
-        Course editCourse = new Course("Title", "Code", "Term");  
+         Course editCourse;
         
+        if ((editCourse = gradebook.getActiveCourse()) == null) {
+            JOptionPane.showMessageDialog(this, "No active Course");
+            return;
+        }
+                
         editCodeTxtField.setText(editCourse.getCode());
         editTitleTxtField.setText(editCourse.getTitle());
         editTermTxtField.setText(editCourse.getTerm());
@@ -537,6 +577,14 @@ public class MainWindow extends JFrame {
     }                                            
 
     private void delMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        Course delCourse;
+        
+        //Checks for an actice Course
+        if ((delCourse = gradebook.getActiveCourse()) == null) {
+            JOptionPane.showMessageDialog(this, "No active Course");
+            return;
+        }
+        
         delDialog.setVisible(true);
     }                                           
         
@@ -632,5 +680,6 @@ public class MainWindow extends JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel activeCourseLabel;
     // End of variables declaration     
 }
