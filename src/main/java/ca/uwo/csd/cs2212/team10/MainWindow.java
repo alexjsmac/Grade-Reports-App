@@ -2,6 +2,8 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.io.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*; 
 
 /**
@@ -27,7 +29,7 @@ public class MainWindow extends JFrame {
         @SuppressWarnings("unchecked")                     
     private void initComponents() {
         
-        gradebook = new Gradebook();
+        gradebook = loadGradebook();
 
         activeCourseLabel = new javax.swing.JLabel();
         addDialog = new javax.swing.JDialog();
@@ -281,7 +283,12 @@ public class MainWindow extends JFrame {
                 .addContainerGap(121, Short.MAX_VALUE))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                onExit();
+            }
+        });
         setTitle("Gradebook");
 
         coursesTbl.setModel(new javax.swing.table.DefaultTableModel(
@@ -553,7 +560,7 @@ public class MainWindow extends JFrame {
     }                                            
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        System.exit(0);
+        onExit();
     }                                            
 
     private void addMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -589,19 +596,20 @@ public class MainWindow extends JFrame {
         delDialog.setVisible(true);
     }                                           
         
-    private void loadGradebook(){
+    private Gradebook loadGradebook(){
         ObjectInputStream in = null;
+        Gradebook gradebook = null;
         
         try{ 
             //attempt reading from data file
             in = new ObjectInputStream(new FileInputStream(DATA_FILENAME));
-            Gradebook gradebook = (Gradebook)in.readObject();
+            gradebook = (Gradebook)in.readObject();
         } catch (Exception e1){
             //if that didn't work...
             try{ 
                 //attempt reading from backup data file
                 in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME));
-                Gradebook gradebook = (Gradebook)in.readObject();
+                gradebook = (Gradebook)in.readObject();
                 
                 //TODO: display message saying data was read from backup?
             } catch (Exception e2){
@@ -613,6 +621,7 @@ public class MainWindow extends JFrame {
                 in.close(); //clean up
             } catch (Exception e){ }
         }
+        return gradebook;
     }
     
     private void storeGradebook(){
@@ -643,6 +652,12 @@ public class MainWindow extends JFrame {
         }
     }
 
+    private int onExit() {
+        storeGradebook();
+        System.exit(0);
+        return 0;        
+    }
+    
     // Variables declaration - do not modify                     
     private javax.swing.JButton addCancelBtn;
     private javax.swing.JLabel addCodeLabel;
