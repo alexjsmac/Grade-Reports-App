@@ -286,10 +286,10 @@ public class MainWindow extends JFrame {
 
         coursesTbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"exampl",  new Integer(12),  new Float(0.3),  new Float(0.9)},
-                {"exampl",  new Integer(13),  new Float(1.2),  new Float(0.4)},
-                {"another",  new Integer(44),  new Float(2.3),  new Float(6.0)},
-                {"exam",  new Integer(5),  new Float(4.5),  new Float(0.7)}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
                 "Name", "Number", "Average", "Deliverable"
