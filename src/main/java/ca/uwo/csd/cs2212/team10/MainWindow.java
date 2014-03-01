@@ -18,8 +18,16 @@ public class MainWindow extends JFrame {
     
     /* Attributes */
     private Gradebook gradebook;
+	
+    private JScrollPane jScrollPane1;
+    private JTable coursesTbl;
+    private JComboBox dropDownCourses;
+    private JButton addCourseBtn, editCourseBtn, delCourseBtn;
+    private JMenuBar jMenuBar;
+    private JMenu fileMenu, coursesMenu;
+    private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem;
     
-    /* Main method */
+    /* Constructor */
     public MainWindow(){
 		gradebook = loadGradebook();
         initComponents();
@@ -27,7 +35,6 @@ public class MainWindow extends JFrame {
     
     /* Private methods */             
     private void initComponents() {
-        activeCourseLabel = new JLabel();
         jScrollPane1 = new JScrollPane();
         coursesTbl = new JTable();
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
@@ -173,8 +180,7 @@ public class MainWindow extends JFrame {
                         .addComponent(delCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(activeCourseLabel)))
+                            .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -189,7 +195,6 @@ public class MainWindow extends JFrame {
                             .addComponent(delCourseBtn))
                         .addGap(24, 24, 24))
                     .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(activeCourseLabel)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
@@ -356,22 +361,5 @@ public class MainWindow extends JFrame {
                 out.close(); //clean up
             } catch (Exception e){ }
         }
-    }
-    
-    // Variables declaration - do not modify                     
-    private JLabel activeCourseLabel;
-    private JScrollPane jScrollPane1;
-    private JTable coursesTbl;
-    private JComboBox dropDownCourses;
-    private JButton addCourseBtn;
-    private JButton editCourseBtn;
-    private JButton delCourseBtn;
-    private JMenuBar jMenuBar;
-    private JMenu fileMenu;
-    private JMenuItem exitMenuItem;
-    private JMenu coursesMenu;
-    private JMenuItem addMenuItem;
-    private JMenuItem editMenuItem;
-    private JMenuItem delMenuItem;
-    // End of variables declaration     
+    } 
 }
