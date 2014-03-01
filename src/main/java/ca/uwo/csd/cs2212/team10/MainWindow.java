@@ -23,8 +23,7 @@ public class MainWindow extends JFrame {
     }
     
     /* Private methods */
-    
-    //TODO Make DropDown list based on list of Courses
+   
         @SuppressWarnings("unchecked")                     
     private void initComponents() {
         
@@ -57,7 +56,7 @@ public class MainWindow extends JFrame {
         delCancelBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         coursesTbl = new javax.swing.JTable();
-        dropDownCourses = new javax.swing.JComboBox();
+        dropDownCourses = new javax.swing.JComboBox(gradebook.getCourseList().toArray());
         addCourseBtn = new javax.swing.JButton();
         editCourseBtn = new javax.swing.JButton();
         delCourseBtn = new javax.swing.JButton();
@@ -306,7 +305,7 @@ public class MainWindow extends JFrame {
         });
         jScrollPane1.setViewportView(coursesTbl);
 
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
+        //dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
         dropDownCourses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dropDownCoursesActionPerformed(evt);
@@ -434,9 +433,12 @@ public class MainWindow extends JFrame {
         pack();
     }                     
 
-    // TODO
     private void dropDownCoursesActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO Change active course based on wich course is selected on the DropDown list
+        Course course;
+        course = (Course) dropDownCourses.getSelectedItem();
+        
+        gradebook.setActiveCourse(course);
+
     }                                               
 
     private void addCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -469,7 +471,7 @@ public class MainWindow extends JFrame {
         gradebook.addCourse(course);
         
         // Change DropDown list based on new list of Courses
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
+        dropDownCourses.addItem(course);
         
         //Close Dialog
         addDialog.setVisible(false);
@@ -503,9 +505,6 @@ public class MainWindow extends JFrame {
         editCourse.setCode(code);
         editCourse.setTerm(term);
                 
-        // Change DropDown list based on new list of Courses
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
-        
         //Close Dialog
         editDialog.setVisible(false);
     }                                         
@@ -532,9 +531,7 @@ public class MainWindow extends JFrame {
         //Only opens the Dialog if there is an active Course, so there's no need to check it again
         Course delCourse = gradebook.getActiveCourse();
         gradebook.removeCourse(delCourse);
-        
-        // Change DropDown list based on new list of Courses
-        dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
+        dropDownCourses.removeItem(delCourse);
         
         delDialog.setVisible(false);
     }                                        
