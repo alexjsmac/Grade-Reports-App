@@ -2,16 +2,16 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.io.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import javax.swing.*; 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * The main window of the gradebook program
  * @author Team 10
  */
 public class MainWindow extends JFrame {
-    
     /* Constants */
     private final String DATA_FILENAME = "gradebook.dat";
     private final String BACKUP_FILENAME = "gradebook.dat.bak";
@@ -21,277 +21,37 @@ public class MainWindow extends JFrame {
     
     /* Main method */
     public MainWindow(){
+		gradebook = loadGradebook();
         initComponents();
     }
     
-    /* Private methods */
-   
-        @SuppressWarnings("unchecked")                     
+    /* Private methods */             
     private void initComponents() {
-        
-        gradebook = loadGradebook();
+        activeCourseLabel = new JLabel();
+        jScrollPane1 = new JScrollPane();
+        coursesTbl = new JTable();
+        dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
+        addCourseBtn = new JButton();
+        editCourseBtn = new JButton();
+        delCourseBtn = new JButton();
+        jMenuBar = new JMenuBar();
+        fileMenu = new JMenu();
+        exitMenuItem = new JMenuItem();
+        coursesMenu = new JMenu();
+        addMenuItem = new JMenuItem();
+        editMenuItem = new JMenuItem();
+        delMenuItem = new JMenuItem();
 
-        activeCourseLabel = new javax.swing.JLabel();
-        addDialog = new javax.swing.JDialog();
-        addTitleLabel = new javax.swing.JLabel();
-        addOkBtn = new javax.swing.JButton();
-        addCancelBtn = new javax.swing.JButton();
-        addCodeLabel = new javax.swing.JLabel();
-        addTermLabel = new javax.swing.JLabel();
-        addTitleTxtField = new javax.swing.JTextField();
-        addWindowLabel = new javax.swing.JLabel();
-        addCodeTxtField = new javax.swing.JTextField();
-        addTermTxtField = new javax.swing.JTextField();
-        editDialog = new javax.swing.JDialog();
-        editTitleLabel = new javax.swing.JLabel();
-        editOkBtn = new javax.swing.JButton();
-        editCancelBtn = new javax.swing.JButton();
-        editCodeLabel = new javax.swing.JLabel();
-        editTermLabel = new javax.swing.JLabel();
-        editTitleTxtField = new javax.swing.JTextField();
-        editLabel = new javax.swing.JLabel();
-        editCodeTxtField = new javax.swing.JTextField();
-        editTermTxtField = new javax.swing.JTextField();
-        delDialog = new javax.swing.JDialog();
-        delLabel = new javax.swing.JLabel();
-        delOkBtn = new javax.swing.JButton();
-        delCancelBtn = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        coursesTbl = new javax.swing.JTable();
-        dropDownCourses = new javax.swing.JComboBox(gradebook.getCourseList().toArray());
-        addCourseBtn = new javax.swing.JButton();
-        editCourseBtn = new javax.swing.JButton();
-        delCourseBtn = new javax.swing.JButton();
-        jMenuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        exitMenuItem = new javax.swing.JMenuItem();
-        coursesMenu = new javax.swing.JMenu();
-        addMenuItem = new javax.swing.JMenuItem();
-        editMenuItem = new javax.swing.JMenuItem();
-        delMenuItem = new javax.swing.JMenuItem();
-        
-        activeCourseLabel.setText("Active Course:");
-
-        addDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addDialog.setTitle("Add Course");
-        addDialog.setAlwaysOnTop(true);
-        addDialog.setBounds(new java.awt.Rectangle(0, 0, 350, 250));
-
-        addTitleLabel.setText("Title:");
-
-        addOkBtn.setText("OK");
-        addOkBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addOkBtnActionPerformed(evt);
-            }
-        });
-
-        addCancelBtn.setText("Cancel");
-        addCancelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCancelBtnActionPerformed(evt);
-            }
-        });
-
-        addCodeLabel.setText("Code:");
-
-        addTermLabel.setText("Term:");
-
-        addWindowLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        addWindowLabel.setText("Add a Course");
-
-        javax.swing.GroupLayout addDialogLayout = new javax.swing.GroupLayout(addDialog.getContentPane());
-        addDialog.getContentPane().setLayout(addDialogLayout);
-        addDialogLayout.setHorizontalGroup(
-            addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(addDialogLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(addDialogLayout.createSequentialGroup()
-                        .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(addTitleLabel)
-                            .addComponent(addCodeLabel)
-                            .addComponent(addTermLabel))
-                        .addGap(49, 49, 49)
-                        .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addTitleTxtField)
-                            .addComponent(addCodeTxtField)
-                            .addComponent(addTermTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(addDialogLayout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(addOkBtn)
-                        .addGap(54, 54, 54)
-                        .addComponent(addCancelBtn))
-                    .addGroup(addDialogLayout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(addWindowLabel)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        addDialogLayout.setVerticalGroup(
-            addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(addWindowLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addGap(11, 11, 11)
-                .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addTitleTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addTitleLabel))
-                .addGap(18, 18, 18)
-                .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addCodeLabel))
-                .addGap(18, 18, 18)
-                .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addTermTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addTermLabel))
-                .addGap(18, 18, 18)
-                .addGroup(addDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addOkBtn)
-                    .addComponent(addCancelBtn))
-                .addContainerGap())
-        );
-
-        editDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        editDialog.setTitle("Edit Course");
-        editDialog.setAlwaysOnTop(true);
-        editDialog.setBounds(new java.awt.Rectangle(0, 0, 350, 250));
-
-        editTitleLabel.setText("Name:");
-
-        editOkBtn.setText("OK");
-        editOkBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editOkBtnActionPerformed(evt);
-            }
-        });
-
-        editCancelBtn.setText("Cancel");
-        editCancelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editCancelBtnActionPerformed(evt);
-            }
-        });
-
-        editCodeLabel.setText("Code:");
-
-        editTermLabel.setText("Term:");
-
-        editLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        editLabel.setText("Edit Course");
-
-        javax.swing.GroupLayout editDialogLayout = new javax.swing.GroupLayout(editDialog.getContentPane());
-        editDialog.getContentPane().setLayout(editDialogLayout);
-        editDialogLayout.setHorizontalGroup(
-            editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editDialogLayout.createSequentialGroup()
-                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editDialogLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(editDialogLayout.createSequentialGroup()
-                                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(editTitleLabel)
-                                    .addComponent(editCodeLabel)
-                                    .addComponent(editTermLabel))
-                                .addGap(49, 49, 49)
-                                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(editTitleTxtField)
-                                    .addComponent(editCodeTxtField)
-                                    .addComponent(editTermTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(editDialogLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(editOkBtn)
-                                .addGap(54, 54, 54)
-                                .addComponent(editCancelBtn))))
-                    .addGroup(editDialogLayout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(editLabel)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        editDialogLayout.setVerticalGroup(
-            editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(editLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addGap(11, 11, 11)
-                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editTitleTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editTitleLabel))
-                .addGap(18, 18, 18)
-                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editCodeLabel))
-                .addGap(18, 18, 18)
-                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editTermTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editTermLabel))
-                .addGap(18, 18, 18)
-                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editOkBtn)
-                    .addComponent(editCancelBtn))
-                .addContainerGap())
-        );
-
-        delDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        delDialog.setTitle("Delete Course");
-        delDialog.setAlwaysOnTop(true);
-        delDialog.setBounds(new java.awt.Rectangle(0, 0, 250, 150));
-
-        delLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        delLabel.setText("Are you sure?");
-
-        delOkBtn.setText("Yes");
-        delOkBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delOkBtnActionPerformed(evt);
-            }
-        });
-
-        delCancelBtn.setText("Cancel");
-        delCancelBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delCancelBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout delDialogLayout = new javax.swing.GroupLayout(delDialog.getContentPane());
-        delDialog.getContentPane().setLayout(delDialogLayout);
-        delDialogLayout.setHorizontalGroup(
-            delDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(delDialogLayout.createSequentialGroup()
-                .addGroup(delDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(delDialogLayout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(delLabel)
-                        .addGap(0, 54, Short.MAX_VALUE))
-                    .addGroup(delDialogLayout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(delOkBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(delCancelBtn)))
-                .addContainerGap())
-        );
-        delDialogLayout.setVerticalGroup(
-            delDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(delDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(delLabel)
-                .addGap(18, 18, 18)
-                .addGroup(delDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(delOkBtn)
-                    .addComponent(delCancelBtn))
-                .addContainerGap(121, Short.MAX_VALUE))
-        );
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 onExit();
             }
         });
+		
         setTitle("Gradebook");
 
-        coursesTbl.setModel(new javax.swing.table.DefaultTableModel(
+        coursesTbl.setModel(new DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -312,84 +72,84 @@ public class MainWindow extends JFrame {
         });
         jScrollPane1.setViewportView(coursesTbl);
 
-        //dropDownCourses.setModel(new javax.swing.DefaultComboBoxModel(gradebook.courseNames(gradebook.getCourseList())));
-        dropDownCourses.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dropDownCoursesActionPerformed(evt);
+        dropDownCourses.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent evt) {
+                dropDownItemChanged(evt);
             }
         });
+		dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
 
-        addCourseBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/new.png"))); // NOI18N
-        addCourseBtn.setMnemonic(java.awt.event.KeyEvent.VK_N);
+        addCourseBtn.setIcon(new ImageIcon(getClass().getResource("/new.png"))); // NOI18N
+        addCourseBtn.setMnemonic(KeyEvent.VK_N);
         addCourseBtn.setToolTipText("Add a new Course (Alt+N)");
-        addCourseBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCourseBtnActionPerformed(evt);
+        addCourseBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                addCourseAction(evt);
             }
         });
 
-        editCourseBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
-        editCourseBtn.setMnemonic(java.awt.event.KeyEvent.VK_E);
+        editCourseBtn.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
+        editCourseBtn.setMnemonic(KeyEvent.VK_E);
         editCourseBtn.setToolTipText("Edit Selected Course (Alt+E)");
-        editCourseBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editCourseBtnActionPerformed(evt);
+        editCourseBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editCourseAction(evt);
             }
         });
 
-        delCourseBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/del.png"))); // NOI18N
-        delCourseBtn.setMnemonic(java.awt.event.KeyEvent.VK_D);
+        delCourseBtn.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
+        delCourseBtn.setMnemonic(KeyEvent.VK_D);
         delCourseBtn.setToolTipText("Delete Selected Course (Alt+D)");
-        delCourseBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delCourseBtnActionPerformed(evt);
+        delCourseBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                delCourseAction(evt);
             }
         });
 
-        fileMenu.setMnemonic(java.awt.event.KeyEvent.VK_F);
+        fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
 
-        exitMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/exit.png"))); // NOI18N
-        exitMenuItem.setMnemonic(java.awt.event.KeyEvent.VK_E);
+        exitMenuItem.setIcon(new ImageIcon(getClass().getResource("/exit.png"))); // NOI18N
+        exitMenuItem.setMnemonic(KeyEvent.VK_E);
         exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
+        exitMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                onExit();
             }
         });
         fileMenu.add(exitMenuItem);
 
         jMenuBar.add(fileMenu);
 
-        coursesMenu.setMnemonic(java.awt.event.KeyEvent.VK_C);
+        coursesMenu.setMnemonic(KeyEvent.VK_C);
         coursesMenu.setText("Courses");
 
-        addMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/new.png"))); // NOI18N
-        addMenuItem.setMnemonic(java.awt.event.KeyEvent.VK_A);
+        addMenuItem.setIcon(new ImageIcon(getClass().getResource("/new.png"))); // NOI18N
+        addMenuItem.setMnemonic(KeyEvent.VK_A);
         addMenuItem.setText("Add Course");
-        addMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addMenuItemActionPerformed(evt);
+        addMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                addCourseAction(evt);
             }
         });
         coursesMenu.add(addMenuItem);
 
-        editMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
-        editMenuItem.setMnemonic(java.awt.event.KeyEvent.VK_E);
+        editMenuItem.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
+        editMenuItem.setMnemonic(KeyEvent.VK_E);
         editMenuItem.setText("Edit Course");
-        editMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editMenuItemActionPerformed(evt);
+        editMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editCourseAction(evt);
             }
         });
         coursesMenu.add(editMenuItem);
 
-        delMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/del.png"))); // NOI18N
-        delMenuItem.setMnemonic(java.awt.event.KeyEvent.VK_D);
+        delMenuItem.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
+        delMenuItem.setMnemonic(KeyEvent.VK_D);
         delMenuItem.setText("Delete Course");
-        delMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delMenuItemActionPerformed(evt);
+        delMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                delCourseAction(evt);
             }
         });
         coursesMenu.add(delMenuItem);
@@ -398,204 +158,146 @@ public class MainWindow extends JFrame {
 
         setJMenuBar(jMenuBar);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(addCourseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editCourseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delCourseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dropDownCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)
                             .addComponent(activeCourseLabel)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(addCourseBtn)
                             .addComponent(editCourseBtn)
                             .addComponent(delCourseBtn))
                         .addGap(24, 24, 24))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(activeCourseLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dropDownCourses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }                     
 
-    private void dropDownCoursesActionPerformed(java.awt.event.ActionEvent evt) {
-        Course course;
-        course = (Course) dropDownCourses.getSelectedItem();
-        
-        gradebook.setActiveCourse(course);
-
+    private void dropDownItemChanged(ItemEvent evt) {
+        gradebook.setActiveCourse((Course)dropDownCourses.getSelectedItem());
     }                                               
 
-    private void addCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        addCodeTxtField.setText(null);
-        addTitleTxtField.setText(null);
-        addTermTxtField.setText(null);
-        addDialog.setVisible(true);
-    }                                            
+    private void addCourseAction(ActionEvent evt){                                             
+		JTextField title = new JTextField();
+		JTextField code = new JTextField();
+		JTextField term = new JTextField();
+		
+		Object[] message = {
+			"Course title:", title,
+			"Course code:", code,
+			"Term:", term
+		};
 
-    private void addOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        String title = null;
-        String code = null;
-        String term = null;
+		int option = JOptionPane.showConfirmDialog(this, message, "Add Course", JOptionPane.OK_CANCEL_OPTION);
+		
+		if (option == JOptionPane.OK_OPTION) {
+			if (title.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (code.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (term.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else{
+			    //Create a new Course and add it to the gradebook
+				Course course = new Course(title.getText(), code.getText(), term.getText());
+				gradebook.addCourse(course);
         
-        if ((title = addTitleTxtField.getText()).length() == 0){
-            JOptionPane.showMessageDialog(addDialog, "Bad Title", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if ((code = addCodeTxtField.getText()).length() == 0){
-            JOptionPane.showMessageDialog(addDialog, "Bad Code", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if ((term = addTermTxtField.getText()).length() == 0){
-            JOptionPane.showMessageDialog(addDialog, "Bad Term", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-              
-        //Create a new Course and adds it to the gradebook
-        Course course = new Course(title, code, term);
-        gradebook.addCourse(course);
-        
-        // Change DropDown list based on new list of Courses
-        dropDownCourses.addItem(course);
-        
-        //Close Dialog
-        addDialog.setVisible(false);
-    }                                        
-
-    private void addCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        addDialog.setVisible(false);
-    }                                            
-
-    private void editOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        String title = null;
-        String code = null;
-        String term = null;
-        
-        if ((title = editTitleTxtField.getText()).length() == 0){
-            JOptionPane.showMessageDialog(addDialog, "Bad Title", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if ((code = editCodeTxtField.getText()).length() == 0){
-            JOptionPane.showMessageDialog(addDialog, "Bad Code", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if ((term = editTermTxtField.getText()).length() == 0){
-            JOptionPane.showMessageDialog(addDialog, "Bad Term", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        //Set attributes
-        Course editCourse = gradebook.getActiveCourse();
-        editCourse.setTitle(title);
-        editCourse.setCode(code);
-        editCourse.setTerm(term);
-                
-        //Close Dialog
-        editDialog.setVisible(false);
+				//Add the entry to the dropdown list
+				dropDownCourses.addItem(course);
+				dropDownCourses.setSelectedItem(course);
+			}
+		}
     }                                         
 
-    private void editCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        editDialog.setVisible(false);
-    }                                             
+    private void editCourseAction(ActionEvent evt) {   
+		if (gradebook.getActiveCourse() == null){
+			JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+	
+        JTextField title = new JTextField(gradebook.getActiveCourse().getTitle());
+		JTextField code = new JTextField(gradebook.getActiveCourse().getCode());
+		JTextField term = new JTextField(gradebook.getActiveCourse().getTerm());
+		
+		Object[] message = {
+			"Course title:", title,
+			"Course code:", code,
+			"Term:", term
+		};
 
-    private void editCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        Course editCourse;
-        
-        if ((editCourse = gradebook.getActiveCourse()) == null) {
-            JOptionPane.showMessageDialog(this, "No active Course");
-            return;
-        }
-                
-        editCodeTxtField.setText(editCourse.getCode());
-        editTitleTxtField.setText(editCourse.getTitle());
-        editTermTxtField.setText(editCourse.getTerm());
-        editDialog.setVisible(true);
-    }                                             
+		int option = JOptionPane.showConfirmDialog(this, message, "Edit Course", JOptionPane.OK_CANCEL_OPTION);
+		
+		if (option == JOptionPane.OK_OPTION) {
+			if (title.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (code.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (term.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else{
+				Course activeCourse = gradebook.getActiveCourse();
+			
+			    //Set the attributes
+				activeCourse.setTitle(title.getText());
+				activeCourse.setCode(code.getText());
+				activeCourse.setTerm(term.getText());
+				
+				//Refresh the dropdown list entry
+				dropDownCourses.removeItem(activeCourse);
+				dropDownCourses.addItem(activeCourse);
+				dropDownCourses.setSelectedItem(activeCourse);
+			}
+		}
+    }                                       
 
-    private void delOkBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        //Only opens the Dialog if there is an active Course, so there's no need to check it again
-        Course delCourse = gradebook.getActiveCourse();
-        gradebook.removeCourse(delCourse);
-        dropDownCourses.removeItem(delCourse);
-        
-        delDialog.setVisible(false);
-    }                                        
-
-    private void delCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        delDialog.setVisible(false);
-    }                                            
-
-    private void delCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        Course delCourse;
-        
-        //Checks for an actice Course
-        if ((delCourse = gradebook.getActiveCourse()) == null) {
-            JOptionPane.showMessageDialog(this, "No active Course");
-            return;
-        }
-        
-        delDialog.setVisible(true);
-    }                                            
-
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        onExit();
-    }                                            
-
-    private void addMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        addCodeTxtField.setText(null);
-        addTitleTxtField.setText(null);
-        addTermTxtField.setText(null);
-        addDialog.setVisible(true);
-    }                                           
-
-    private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                             
-         Course editCourse;
-        
-        if ((editCourse = gradebook.getActiveCourse()) == null) {
-            JOptionPane.showMessageDialog(this, "No active Course");
-            return;
-        }
-                
-        editCodeTxtField.setText(editCourse.getCode());
-        editTitleTxtField.setText(editCourse.getTitle());
-        editTermTxtField.setText(editCourse.getTerm());
-        editDialog.setVisible(true);
-    }                                            
-
-    private void delMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        Course delCourse;
-        
-        //Checks for an actice Course
-        if ((delCourse = gradebook.getActiveCourse()) == null) {
-            JOptionPane.showMessageDialog(this, "No active Course");
-            return;
-        }
-        
-        delDialog.setVisible(true);
-    }                                           
-        
+    private void delCourseAction(ActionEvent evt) {                                             
+        if (gradebook.getActiveCourse() == null){
+			JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Course", JOptionPane.OK_CANCEL_OPTION);
+		
+		if (option == JOptionPane.OK_OPTION) {
+			//remove the course
+			gradebook.removeCourse(gradebook.getActiveCourse());
+			dropDownCourses.removeItem(gradebook.getActiveCourse());
+		}
+    }                                                                                                                                                                         
+    
+	private int onExit() {
+        storeGradebook();
+        System.exit(0);
+        return 0;
+    }
+	
     private Gradebook loadGradebook(){
         ObjectInputStream in = null;
         Gradebook gradebook = null;
@@ -611,10 +313,10 @@ public class MainWindow extends JFrame {
                 in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME));
                 gradebook = (Gradebook)in.readObject();
                 
-                //TODO: display message saying data was read from backup?
+				//show a warning message
+                JOptionPane.showMessageDialog(this, "The data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
             } catch (Exception e2){
-                //TODO: display message saying data couldn't be read? What about first start?
-                gradebook = new Gradebook();
+                gradebook = new Gradebook(); //return an empty gradebook
             }
         } 
         finally{
@@ -622,6 +324,7 @@ public class MainWindow extends JFrame {
                 in.close(); //clean up
             } catch (Exception e){ }
         }
+		
         return gradebook;
     }
     
@@ -642,9 +345,11 @@ public class MainWindow extends JFrame {
             out = new ObjectOutputStream(new FileOutputStream(DATA_FILENAME));
             out.writeObject(gradebook);
         } catch (FileNotFoundException e){
-            //TODO: message: data file could not be created
+            //show a message: data file could not be created
+			JOptionPane.showMessageDialog(this, "The data file could not be created. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e){
-            //TODO: message: error writing data file
+            //show a message: error writing data file
+			JOptionPane.showMessageDialog(this, "The data file could not be written. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e){ }
         finally{
             try{
@@ -652,51 +357,21 @@ public class MainWindow extends JFrame {
             } catch (Exception e){ }
         }
     }
-
-    private int onExit() {
-        storeGradebook();
-        System.exit(0);
-        return 0;        
-    }
     
     // Variables declaration - do not modify                     
-    private javax.swing.JButton addCancelBtn;
-    private javax.swing.JLabel addCodeLabel;
-    private javax.swing.JTextField addCodeTxtField;
-    private javax.swing.JButton addCourseBtn;
-    private javax.swing.JDialog addDialog;
-    private javax.swing.JMenuItem addMenuItem;
-    private javax.swing.JLabel addTitleLabel;
-    private javax.swing.JTextField addTitleTxtField;
-    private javax.swing.JButton addOkBtn;
-    private javax.swing.JLabel addTermLabel;
-    private javax.swing.JTextField addTermTxtField;
-    private javax.swing.JLabel addWindowLabel;
-    private javax.swing.JMenu coursesMenu;
-    private javax.swing.JTable coursesTbl;
-    private javax.swing.JButton delCancelBtn;
-    private javax.swing.JButton delCourseBtn;
-    private javax.swing.JDialog delDialog;
-    private javax.swing.JLabel delLabel;
-    private javax.swing.JMenuItem delMenuItem;
-    private javax.swing.JButton delOkBtn;
-    private javax.swing.JComboBox dropDownCourses;
-    private javax.swing.JButton editCancelBtn;
-    private javax.swing.JLabel editCodeLabel;
-    private javax.swing.JTextField editCodeTxtField;
-    private javax.swing.JButton editCourseBtn;
-    private javax.swing.JDialog editDialog;
-    private javax.swing.JMenuItem editMenuItem;
-    private javax.swing.JLabel editTitleLabel;
-    private javax.swing.JTextField editTitleTxtField;
-    private javax.swing.JButton editOkBtn;
-    private javax.swing.JLabel editTermLabel;
-    private javax.swing.JTextField editTermTxtField;
-    private javax.swing.JLabel editLabel;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel activeCourseLabel;
+    private JLabel activeCourseLabel;
+    private JScrollPane jScrollPane1;
+    private JTable coursesTbl;
+    private JComboBox dropDownCourses;
+    private JButton addCourseBtn;
+    private JButton editCourseBtn;
+    private JButton delCourseBtn;
+    private JMenuBar jMenuBar;
+    private JMenu fileMenu;
+    private JMenuItem exitMenuItem;
+    private JMenu coursesMenu;
+    private JMenuItem addMenuItem;
+    private JMenuItem editMenuItem;
+    private JMenuItem delMenuItem;
     // End of variables declaration     
 }

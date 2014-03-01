@@ -6,7 +6,7 @@ package ca.uwo.csd.cs2212.team10;
  */
 public class AppLauncher{
     public static void main(String[] args){
-        MainWindow window = new MainWindow(); //delegate to the constructor of MainWindow
+        MainWindow window = new MainWindow(); //spawn the main window
         window.setVisible(true);
     }
 }
