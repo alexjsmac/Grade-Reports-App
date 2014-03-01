@@ -44,9 +44,11 @@ public class TestGradebook{
 		
 		gradebook.removeCourse(course);
     }
-    
-    @Test(expected=IllegalArgumentException.class)
-    public void testSetActiveNonExistentCourse(){
-		gradebook.setActiveCourse(course);
+	
+	@Test
+    public void testSetActiveCourseToNull(){
+		gradebook.setActiveCourse(null);
+		
+		Assert.assertNull(gradebook.getActiveCourse());
     }
 }
