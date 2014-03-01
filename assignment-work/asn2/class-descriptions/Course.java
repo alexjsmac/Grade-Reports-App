@@ -90,6 +90,22 @@ public class Course {
 	public String getTitle()
 	{
 	}
+	
+	/**
+	 * Gets the list of students in the course
+	 * @return List of students in the course
+	 */
+	public ArrayList<Student> getStudentList()
+	{
+	}
+
+	/**
+	 * Gets the list of deliverables in the course
+	 * @return List of deliverables in the course
+	 */
+	public ArrayList<Deliverable> getDeliverableList()
+	{
+	}
 
 	/**
 	 * Adds a student to the course
