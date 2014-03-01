@@ -614,6 +614,7 @@ public class MainWindow extends JFrame {
                 //TODO: display message saying data was read from backup?
             } catch (Exception e2){
                 //TODO: display message saying data couldn't be read? What about first start?
+                gradebook = new Gradebook();
             }
         } 
         finally{
