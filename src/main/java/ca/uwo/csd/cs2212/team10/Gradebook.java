@@ -57,5 +57,3 @@ public class Gradebook implements Serializable{
     	return courseNamesList;
     }
 }
-    	
-    		
