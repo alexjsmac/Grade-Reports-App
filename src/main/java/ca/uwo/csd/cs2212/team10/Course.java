@@ -47,4 +47,9 @@ public class Course implements Serializable{
     public String getTerm(){
         return term;
     }
+    
+    @Override
+    public String toString() {
+        return code + " - " + title;
+    }
 }
