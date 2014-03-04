@@ -27,20 +27,20 @@ public class Student implements Serializable {
 	
 	/* Public Methods */
 	
-	public void setFirstName(String firstName){
-		this.firstName = firstName;
+	public void setFirstName(String newFirstName){
+		firstName = newFirstName;
 	}
 	
-	public void setLastName(String lastName){
-		this.lastName = lastName;
+	public void setLastName(String newLastName){
+		lastName = newLastName;
 	}
 	
-	public void setEmail(String email){
-		this.email = email;
+	public void setEmail(String newEmail){
+		email = newEmail;
 	}
 	
-	public void setStudentNumber(int studentNumber){
-		this.studentNumber = studentNumber;
+	public void setStudentNumber(int newStudentNumber){
+		studentNumber = newStudentNumber;
 	}
 	
 	public String getFirstName(){
