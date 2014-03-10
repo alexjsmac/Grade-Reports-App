@@ -14,12 +14,14 @@ public class Course implements Serializable{
     private String code;
     private String term;
     private String title;
+    private ArrayList<Student> studentList;
 
     /* Constructor */
     public Course(String title, String code, String term){
         this.title = title;
         this.code = code;
         this.term = term;
+        studentList = new ArrayList<Student>();
     }
 
     /* Public Methods */
@@ -46,6 +48,14 @@ public class Course implements Serializable{
 
     public String getTerm(){
         return term;
+    }
+    
+    public ArrayList<Student> getStudentList(){
+    	return studentList;
+    }
+    
+    public void addStudent(Student toAdd){
+    	studentList.add(toAdd);
     }
     
     @Override
