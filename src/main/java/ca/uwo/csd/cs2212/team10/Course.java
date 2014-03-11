@@ -2,6 +2,7 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.io.Serializable;
 import java.util.*;
+import java.io.*;
 
 /**
  * Represents a course in the Gradebook
@@ -57,6 +58,15 @@ public class Course implements Serializable{
     
     public void addStudent(Student toAdd){
     	studentList.add(toAdd);
+    }
+    
+    public void removeStudent(Student toRemove) throws ObjectNotFoundException{
+    	if(studentList.contains(toRemove){
+    		studentList.remove(toRemove)
+    	}
+    	else{
+    		throw new ObjectNotFoundException("Student not found");
+    	}
     }
     
     @Override
