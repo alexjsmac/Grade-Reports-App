@@ -60,13 +60,8 @@ public class Course implements Serializable{
     	studentList.add(toAdd);
     }
     
-    public void removeStudent(Student toRemove) throws ObjectNotFoundException{
-    	if(studentList.contains(toRemove)){
-    		studentList.remove(toRemove);
-    	}
-    	else{
-    		throw new ObjectNotFoundException("Student not found");
-    	}
+    public void removeStudent(Student toRemove){
+    	studentList.remove(toRemove);
     }
     
     @Override
