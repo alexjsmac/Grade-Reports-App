@@ -1,6 +1,7 @@
 package ca.uwo.csd.cs2212.team10;
 
 import java.io.Serializable;
+import java.util.*;
 
 /**
  * Represents a course in the Gradebook
