@@ -16,6 +16,7 @@ public class Student implements Serializable {
 	private String lastName;
 	private String email;
 	private int studentNumber;
+	private ArrayList<Grade> studentGrades;
 	
 	/* Constructor */
 	public Student(String firstName, String lastName, String email, int studentNumber){
@@ -23,6 +24,7 @@ public class Student implements Serializable {
 		this.lastName = lastName;
 		this.email = email;
 		this.studentNumber = studentNumber;
+		studentGrades = new ArrayList<Grade>();
 	}
 	
 	/* Public Methods */
