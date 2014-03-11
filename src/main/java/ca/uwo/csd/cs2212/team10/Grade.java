@@ -34,5 +34,4 @@ public class Grade implements Serializable{
     public void setGrade(float grade){
     	this.grade = grade;
 	}
-
 }
