@@ -1,7 +1,6 @@
 package ca.uwo.csd.cs2212.team10;
 
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * Represents a student's grade for a particular deliverable
@@ -34,4 +33,9 @@ public class Grade implements Serializable{
     public void setGrade(float grade){
     	this.grade = grade;
 	}
+	
+	@Override
+    public String toString() {
+        return Float.toString(grade);
+    }
 }
