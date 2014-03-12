@@ -19,7 +19,7 @@ public class TestStudent{
 		Assert.assertEquals("John", student.getFirstName());
 		Assert.assertEquals("Doe", student.getLastName());
 		Assert.assertEquals("jdoe@example.com", student.getEmail());
-		Assert.assertEquals("123456789", student.getStudentNumber());
+		Assert.assertEquals("123456789", student.getNum());
 	}
 	
 	@Test
@@ -42,7 +42,7 @@ public class TestStudent{
 	
 	@Test
 	public void testSetStudentNumber(){
-		student.setStudentNumber("987654321");
-		Assert.assertEquals("987654321", student.getStudentNumber());
+		student.setNum("987654321");
+		Assert.assertEquals("987654321", student.getNum());
 	}
 }
