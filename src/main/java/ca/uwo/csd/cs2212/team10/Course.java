@@ -81,7 +81,12 @@ public class Course implements Serializable {
     }
 
     public void removeDeliverable(Deliverable deliverable) {
+        //Removes the Grade object linked to the Deliverable in every student of the Course
+        for (Student student : students) {
+            student.removeGrade(deliverable);
+        }
         deliverables.remove(deliverable);
+
     }
 
     @Override
