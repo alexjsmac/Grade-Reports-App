@@ -12,7 +12,7 @@ public class TestGrade{
 	@Before
 	public void setup(){
 		deliverable = new deliverable("Assignment 1", "Assignment", 25);
-		grade = new float(86.7f);
+		grade = 86.7f;
 	}
 	
 	@Test
