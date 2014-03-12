@@ -12,20 +12,22 @@ public class TestGrade{
 	@Before
 	public void setup(){
 		deliverable = new deliverable("Assignment 1", "Assignment", 25);
-		grade = 86.7f;
+		grade = new float("86.7");
 	}
 	
 	@Test
 	public void testConstructorSetsAttriutes(){
 		grade = new Grade(deliverable,grade);
+		float confirm = 86.7;
 		
 		Assert.assertEquals(deliverable,grade.getDeliverable());
-		Assert.assertEquals(86.7f, grade.getGrade());
+		Assert.assertEquals(confirm, grade.getGrade());
 	}
 	
 	@Test
 	public void testSetGrade(){
-		grade.setGrade(75.5f);
-		Assert.assertEquals(75.5f, grade.getGrade());
+		float set = 75.5;
+		grade.setGrade(set);
+		Assert.assertEquals(set, grade.getGrade());
 	}
 }
