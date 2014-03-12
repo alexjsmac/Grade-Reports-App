@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*; 
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import java.lang.*;
 
 /**
  * The main window of the gradebook program
@@ -20,23 +21,65 @@ public class MainWindow extends JFrame {
     private Gradebook gradebook;
 	
     private JScrollPane jScrollPane1;
-    private JTable coursesTbl;
+    private JTable studentsTbl;
     private JComboBox dropDownCourses;
     private JButton addCourseBtn, editCourseBtn, delCourseBtn;
     private JMenuBar jMenuBar;
-    private JMenu fileMenu, coursesMenu;
-    private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem;
+    private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu;
+    private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem, 
+                addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
+                addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem;
     
     /* Constructor */
-    public MainWindow(){
-		gradebook = loadGradebook();
+    public MainWindow(){		
+        gradebook = loadGradebook();
         initComponents();
+        initTable();
     }
     
-    /* Private methods */             
+    /* Private methods */     
+    private void initTable() {
+        initModel();
+
+        //TODO Implement custom CellRenderer
+        //studentsTbl.setDefaultRenderer(Double.class, new CellRenderer());
+        
+        studentsTbl.setAutoCreateRowSorter(true);
+        studentsTbl.setCellSelectionEnabled(true);
+        studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
+
+        studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
+        studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                delStudentAction();
+            }} );
+    }          
+
+    private void initModel() {     
+        ArrayList<Student> studentsList;
+        ArrayList<Deliverable> deliverablesList;
+
+        //Get Students and Deliverables list. Creates empty lists if they don't exist
+        if (gradebook.getActiveCourse() != null) {
+            if ((studentsList = gradebook.getActiveCourse().getStudentList()) == null) {
+                studentsList = new ArrayList<Student>();
+            }
+            if ((deliverablesList = gradebook.getActiveCourse().getDeliverableList()) == null) {
+                deliverablesList = new ArrayList<Deliverable>();
+            }
+        } else {
+            deliverablesList = new ArrayList<Deliverable>();
+            studentsList = new ArrayList<Student>();
+        }
+
+        TableModel tblModel = new TableModel(studentsList, deliverablesList);
+        studentsTbl.setModel(tblModel);
+    }
+        
     private void initComponents() {
+        
         jScrollPane1 = new JScrollPane();
-        coursesTbl = new JTable();
+        studentsTbl = new JTable();
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
         addCourseBtn = new JButton();
         editCourseBtn = new JButton();
@@ -48,6 +91,14 @@ public class MainWindow extends JFrame {
         addMenuItem = new JMenuItem();
         editMenuItem = new JMenuItem();
         delMenuItem = new JMenuItem();
+        studentsMenu = new JMenu();
+        addStudentMenuItem = new JMenuItem();
+        editStudentMenuItem = new JMenuItem();
+        delStudentMenuItem = new JMenuItem();
+        deliverablesMenu = new JMenu();
+        addDeliverableMenuItem = new JMenuItem();
+        editDeliverableMenuItem = new JMenuItem();
+        delDeliverableMenuItem = new JMenuItem();        
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -58,26 +109,7 @@ public class MainWindow extends JFrame {
 		
         setTitle("Gradebook");
 
-        coursesTbl.setModel(new DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-                "Name", "Number", "Average", "Deliverable"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(coursesTbl);
+        jScrollPane1.setViewportView(studentsTbl);
 
         dropDownCourses.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent evt) {
@@ -162,6 +194,82 @@ public class MainWindow extends JFrame {
         coursesMenu.add(delMenuItem);
 
         jMenuBar.add(coursesMenu);
+        
+        studentsMenu.setMnemonic(KeyEvent.VK_S);
+        studentsMenu.setText("Students");
+
+        //TODO Get icon?
+        //addStudentMenuItem.setIcon(new ImageIcon(getClass().getResource("/newStudent.png"))); // NOI18N
+        addStudentMenuItem.setMnemonic(KeyEvent.VK_A);
+        addStudentMenuItem.setText("Add Student");
+        addStudentMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                addStudentAction();
+            }
+        });
+        studentsMenu.add(addStudentMenuItem);
+
+        //TODO Get Icon
+        //editStudentMenuItem.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
+        editStudentMenuItem.setMnemonic(KeyEvent.VK_E);
+        editStudentMenuItem.setText("Edit Student");
+        editStudentMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editStudentAction();
+            }
+        });
+        studentsMenu.add(editStudentMenuItem);
+
+        //TODO get icon
+        //delStudentMenuItem.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
+        delStudentMenuItem.setMnemonic(KeyEvent.VK_D);
+        delStudentMenuItem.setText("Delete Student");
+        delStudentMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                delStudentAction();
+            }
+        });
+        studentsMenu.add(delStudentMenuItem);
+
+        jMenuBar.add(studentsMenu);
+        
+        deliverablesMenu.setMnemonic(KeyEvent.VK_D);
+        deliverablesMenu.setText("Deliverables");
+
+        //TODO Get icon?
+        //addDeliverableMenuItem.setIcon(new ImageIcon(getClass().getResource("/newStudent.png"))); // NOI18N
+        addDeliverableMenuItem.setMnemonic(KeyEvent.VK_A);
+        addDeliverableMenuItem.setText("Add Deliverable");
+        addDeliverableMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                addDeliverableAction();
+            }
+        });
+        deliverablesMenu.add(addDeliverableMenuItem);
+
+        //TODO Get Icon
+        //editDeliverableMenuItem.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
+        editDeliverableMenuItem.setMnemonic(KeyEvent.VK_E);
+        editDeliverableMenuItem.setText("Edit Deliverable");
+        editDeliverableMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editDeliverableAction();
+            }
+        });
+        deliverablesMenu.add(editDeliverableMenuItem);
+
+        //TODO get icon
+        //delDeliverableMenuItem.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
+        delDeliverableMenuItem.setMnemonic(KeyEvent.VK_D);
+        delDeliverableMenuItem.setText("Delete Deliverable");
+        delDeliverableMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                delDeliverableAction();
+            }
+        });
+        deliverablesMenu.add(delDeliverableMenuItem);
+
+        jMenuBar.add(deliverablesMenu);        
 
         setJMenuBar(jMenuBar);
 
@@ -198,15 +306,30 @@ public class MainWindow extends JFrame {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, Short.MAX_VALUE)
+                .addContainerGap(0, Short.MAX_VALUE))
         );
 
         pack();
     }                     
 
+    private void updateTbl () {
+        ArrayList<Student> studentsList;
+        ArrayList<Deliverable> deliverablesList;
+        if (gradebook.getActiveCourse() == null) {
+            studentsList = new ArrayList<Student>();
+            deliverablesList = new ArrayList<Deliverable>();
+        } else {
+            studentsList = gradebook.getActiveCourse().getStudentList();
+            deliverablesList = gradebook.getActiveCourse().getDeliverableList();
+        }
+        TableModel tblModel = new TableModel(studentsList, deliverablesList);
+        studentsTbl.setModel(tblModel);
+    }
+    
     private void dropDownItemChanged(ItemEvent evt) {
         gradebook.setActiveCourse((Course)dropDownCourses.getSelectedItem());
+        updateTbl();
     }                                               
 
     private void addCourseAction(ActionEvent evt){                                             
@@ -297,7 +420,263 @@ public class MainWindow extends JFrame {
 		}
     }                                                                                                                                                                         
     
-	private int onExit() {
+    private void addStudentAction() {
+        if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JTextField firstName = new JTextField();
+        JTextField lastName = new JTextField();
+        JTextField number = new JTextField();
+        JTextField email = new JTextField();
+        int num;
+
+        Object[] message = {
+            "Student First Name:", firstName,
+            "Student Last Name:", lastName,
+            "Student Number:", number,
+            "Student Email:", email
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Student", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            if (firstName.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No First Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (lastName.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Last Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (number.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Student number entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (email.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    num = Integer.parseInt(number.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Not a valid Student number.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                //Create a new Student and add it to the gradebook
+                Student student = new Student(firstName.getText(), lastName.getText(), email.getText(), number.getText());
+                gradebook.getActiveCourse().addStudent(student);
+                
+                //Add grades in the new Student for each deliverable of the course
+                ArrayList<Deliverable> deliverables = gradebook.getActiveCourse().getDeliverableList();
+                if (deliverables != null) {
+                    for (Deliverable deliv : deliverables)
+                        student.addGrade(new Grade(deliv, 0));
+                }
+                
+                //Update JTable
+                updateTbl();
+            }
+        }
+    }
+
+    private void editStudentAction() {
+        if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (studentsTbl.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "No student selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+            
+        //Get current selected Student
+        int row = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
+        Student student = gradebook.getActiveCourse().getStudentList().get(row);
+
+        
+        JTextField firstName = new JTextField(student.getFirstName());
+        JTextField lastName = new JTextField(student.getLastName());
+        JTextField number = new JTextField(String.valueOf(student.getNum()));
+        JTextField email = new JTextField(student.getEmail());
+        int num;
+
+        Object[] message = {
+            "Student First Name:", firstName,
+            "Student Last Name:", lastName,
+            "Student Number:", number,
+            "Student Email:", email
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit Student", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            if (firstName.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No First Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (lastName.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Last Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (number.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Student number entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (email.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    num = Integer.parseInt(number.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Not a valid Student number.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                //Edit current selected Student
+                student.setFirstName(firstName.getText());
+                student.setLastName(lastName.getText());
+                student.setEmail(email.getText());
+                student.setNum(number.getText());                
+                
+                //Update JTable
+                updateTbl();
+            }
+        }
+    }
+
+    private void delStudentAction () {
+        if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (studentsTbl.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "No student selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //Get current selected Student
+        int row = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
+        Student student = gradebook.getActiveCourse().getStudentList().get(row);
+        
+        int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Student", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (option == JOptionPane.OK_OPTION) {
+            gradebook.getActiveCourse().removeStudent(student);
+            updateTbl();
+        }
+        
+    }
+    
+    private void addDeliverableAction() {
+        if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JTextField name = new JTextField();
+        JTextField type = new JTextField();
+        JTextField weight = new JTextField();        
+        int num;
+
+        Object[] message = {
+            "Deliverable Name:", name,
+            "Deliverable Type:", type,
+            "Deliverable Weight:", weight
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Deliverable", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            if (name.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Deliverable Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (type.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Deliverable Type entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (weight.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Deliverable Weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    num = Integer.parseInt(weight.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Not a valid Deliverable Weight.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                //Create a new Deliverable and add it to the Course
+                Deliverable deliverable = new Deliverable(name.getText(), type.getText(), num);
+                gradebook.getActiveCourse().addDeliverable(deliverable);
+
+                //Update JTable
+                updateTbl();
+            }
+        }
+    }
+
+    private void editDeliverableAction() {
+        if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (studentsTbl.getSelectedColumn() < 4) {
+            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+            
+        //Get current selected Deliverable
+        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+        //To get the right Deliverable from the list we use column - 7 because the Deliverables start on the 7th Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 7);
+        
+        JTextField name = new JTextField(deliverable.getName());
+        JTextField type = new JTextField(deliverable.getType());
+        JTextField weight = new JTextField(String.valueOf(deliverable.getWeight()));
+        int num;
+
+        Object[] message = {
+            "Deliverable Name:", name,
+            "Deliverable Type:", type,
+            "Deliverable Weight:", weight
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit Deliverable", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            if (name.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Deliverable Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (type.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Deliverable Type entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (weight.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No Deliverable Weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    num = Integer.parseInt(weight.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Not a valid Deliverable Weight.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                //Updates Deliverable
+                deliverable.setName(name.getText());
+                deliverable.setType(type.getText());
+                deliverable.setWeight(num);
+
+                //Update JTable
+                updateTbl();
+            }
+        }
+    }
+
+    private void delDeliverableAction () {
+        if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (studentsTbl.getSelectedColumn() < 4) {
+            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //Get current selected Deliverable
+        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+        //To get the right Deliverable from the list we use (column - 7) because the Deliverables start on the 7th Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 7);
+        
+        int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (option == JOptionPane.OK_OPTION) {
+            gradebook.getActiveCourse().removeDeliverable(deliverable);
+            
+            updateTbl();
+        }
+        
+    }    
+    
+    private int onExit() {
         storeGradebook();
         System.exit(0);
         return 0;
