@@ -316,13 +316,20 @@ public class MainWindow extends JFrame {
     private void updateTbl () {
         ArrayList<Student> studentsList;
         ArrayList<Deliverable> deliverablesList;
-        if (gradebook.getActiveCourse() == null) {
-            studentsList = new ArrayList<Student>();
-            deliverablesList = new ArrayList<Deliverable>();
+       
+        //Get Students and Deliverables list. Creates empty lists if they don't exist
+        if (gradebook.getActiveCourse() != null) {
+            if ((studentsList = gradebook.getActiveCourse().getStudentList()) == null) {
+                studentsList = new ArrayList<Student>();
+            }
+            if ((deliverablesList = gradebook.getActiveCourse().getDeliverableList()) == null) {
+                deliverablesList = new ArrayList<Deliverable>();
+            }
         } else {
-            studentsList = gradebook.getActiveCourse().getStudentList();
-            deliverablesList = gradebook.getActiveCourse().getDeliverableList();
+            deliverablesList = new ArrayList<Deliverable>();
+            studentsList = new ArrayList<Student>();
         }
+        
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
     }

@@ -68,9 +68,9 @@ public class Student implements Serializable {
 	}
 	
 	public void removeGrade(Deliverable deliverable){
-		for (Grade grade : grades){
-			if (grade.getDeliverable() == deliverable)
-				grades.remove(grade);
+		for (int i = 0; i < grades.size(); i++){
+			if (grades.get(i).getDeliverable() == deliverable)
+				grades.remove(i);
 		}
 	}
 	
