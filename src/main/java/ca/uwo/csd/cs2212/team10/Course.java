@@ -16,28 +16,31 @@ public class Course implements Serializable{
     private String code;
     private String term;
     private String title;
-    private ArrayList<Student> studentList;
+    private ArrayList<Student> students;
+	private ArrayList<Deliverable> deliverables;
 
     /* Constructor */
     public Course(String title, String code, String term){
         this.title = title;
         this.code = code;
         this.term = term;
-        studentList = new ArrayList<Student>();
+		
+        students = new ArrayList<Student>();
+		deliverables = new ArrayList<Deliverable>();
     }
 
     /* Public Methods */
 
-    public void setTitle(String newTitle){
-        title = newTitle;
+    public void setTitle(String title){
+        this.title = title;
     }
 
-    public void setCode(String newCode){
-        code = newCode;
+    public void setCode(String code){
+        this.code = code;
     }
 
-    public void setTerm(String newTerm){
-        term = newTerm;
+    public void setTerm(String term){
+        this.term = term;
     }
 
     public String getTitle(){
@@ -53,15 +56,27 @@ public class Course implements Serializable{
     }
     
     public ArrayList<Student> getStudentList(){
-    	return studentList;
+    	return students;
+    }
+	
+	public ArrayList<Deliverable> getDeliverableList(){
+    	return deliverables;
     }
     
-    public void addStudent(Student toAdd){
-    	studentList.add(toAdd);
+    public void addStudent(Student student){
+    	students.add(student);
     }
     
-    public void removeStudent(Student toRemove){
-    	studentList.remove(toRemove);
+    public void removeStudent(Student student){
+    	students.remove(student);
+    }
+	
+	public void addDeliverable(Deliverable deliverable){
+    	deliverables.add(deliverable);
+    }
+    
+	public void removeDeliverable(Deliverable deliverable){
+    	deliverables.remove(deliverable);
     }
     
     @Override
