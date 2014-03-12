@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.Before;
 
 public class TestStudent{
-	private Student student
+	private Student student;
 	
 	@Before
 	public void setup(){
