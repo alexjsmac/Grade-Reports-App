@@ -1,11 +1,10 @@
 package ca.uwo.csd.cs2212.team10;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.Before;
+import static junit.framework.Assert.*;
 
 public class TestDeliverable{
-	
 	private Deliverable deliverable;
 	
 	@Before
@@ -14,29 +13,29 @@ public class TestDeliverable{
 	}
 	
 	@Test
-	public void testConstructorSetAttributes(){
+	public void testConstructorSetsAttributes(){
 		deliverable = new Deliverable("Assignment 1", Deliverable.ASSIGNMENT_TYPE, 25);
 		
-		Assert.assertEquals("Assignment 1", deliverable.getName());
-		Assert.assertEquals(Deliverable.ASSIGNMENT_TYPE, deliverable.getType());
-		Assert.assertEquals(25, deliverable.getWeight());
+		assertEquals("Assignment 1", deliverable.getName());
+		assertEquals(Deliverable.ASSIGNMENT_TYPE, deliverable.getType());
+		assertEquals(25, deliverable.getWeight());
 	}
 	
 	@Test
 	public void testSetName(){
 		deliverable.setName("Exam 1");
-		Assert.assertEquals("Exam 1", deliverable.getName());
+		assertEquals("Exam 1", deliverable.getName());
 	}
 	
 	@Test
 	public void testSetType(){
 		deliverable.setType(Deliverable.EXAM_TYPE);
-		Assert.assertEquals(Deliverable.EXAM_TYPE, deliverable.getType());
+		assertEquals(Deliverable.EXAM_TYPE, deliverable.getType());
 	}
 	
 	@Test
 	public void testSetWeight(){
 		deliverable.setWeight(50);
-		Assert.assertEquals(50, deliverable.getWeight());
+		assertEquals(50, deliverable.getWeight());
 	}
 }
