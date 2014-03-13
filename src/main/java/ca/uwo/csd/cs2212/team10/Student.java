@@ -9,7 +9,7 @@ import java.util.Map.Entry;
  * @author Team10
  */
 
-public class Student implements Serializable 
+public class Student implements Serializable {
 	/* Constants */
 	private static final long serialVersionUID = 1L; //for serializing
 	
