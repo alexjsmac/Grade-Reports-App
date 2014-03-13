@@ -1,8 +1,8 @@
 package ca.uwo.csd.cs2212.team10;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.Before;
+import static junit.framework.Assert.*;
 
 public class TestGradebook{
     private Gradebook gradebook;
@@ -17,22 +17,22 @@ public class TestGradebook{
     @Test
     public void testCourseListInitiallyEmpty(){
 		gradebook = new Gradebook();
-		Assert.assertTrue(gradebook.getCourseList().isEmpty());
+		assertTrue(gradebook.getCourseList().isEmpty());
     }
     
     @Test
     public void testActiveCourseInitiallyNull(){
 		gradebook = new Gradebook();
-		Assert.assertNull(gradebook.getActiveCourse());
+		assertNull(gradebook.getActiveCourse());
     }
     
     @Test
     public void testAddAndRemoveCourse(){
 		gradebook.addCourse(course);
-		Assert.assertTrue(gradebook.getCourseList().contains(course));
+		assertTrue(gradebook.getCourseList().contains(course));
 		
 		gradebook.removeCourse(course);
-		Assert.assertFalse(gradebook.getCourseList().contains(course));
+		assertFalse(gradebook.getCourseList().contains(course));
     }
     
     @Test
@@ -40,7 +40,7 @@ public class TestGradebook{
 		gradebook.addCourse(course);
 		gradebook.setActiveCourse(course);
 		
-		Assert.assertSame(course, gradebook.getActiveCourse());
+		assertSame(course, gradebook.getActiveCourse());
 		
 		gradebook.removeCourse(course);
     }
@@ -49,6 +49,6 @@ public class TestGradebook{
     public void testSetActiveCourseToNull(){
 		gradebook.setActiveCourse(null);
 		
-		Assert.assertNull(gradebook.getActiveCourse());
+		assertNull(gradebook.getActiveCourse());
     }
 }

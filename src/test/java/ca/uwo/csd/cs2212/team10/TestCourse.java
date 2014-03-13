@@ -13,16 +13,19 @@ public class TestCourse{
     public void setup(){
         course = new Course("foo", "bar", "daz");
 		student = new Student("foo", "bar", "daz", "1");
-		deliverable = new Deliverable("Foo1", Deliverable.ASSIGNMENT_TYPE, 0);
+		deliverable = new Deliverable("Foo", Deliverable.ASSIGNMENT_TYPE, 0);
     }
     
     @Test
-    public void testConstructorSetsAttributes(){
+    public void testConstructorSetsAttributesAndCreatesEmptyLists(){
         course = new Course("foo", "bar", "daz");
         
         assertEquals("foo", course.getTitle());
         assertEquals("bar", course.getCode());
         assertEquals("daz", course.getTerm());
+		
+		assertTrue(course.getStudentList().isEmpty());
+		assertTrue(course.getDeliverableList().isEmpty());
     }
     
     @Test
@@ -80,7 +83,7 @@ public class TestCourse{
         course.addDeliverable(deliverable);
 		course.addStudent(student);
 		
-		assertEquals(student.getGrade(deliverable), 0.0);
+		assertEquals(0.0, student.getGrade(deliverable));
 		
 		course.removeStudent(student);
 		course.removeDeliverable(deliverable);
@@ -91,7 +94,7 @@ public class TestCourse{
 		course.addStudent(student);
 		course.addDeliverable(deliverable);
 		
-		assertEquals(student.getGrade(deliverable), 0.0);
+		assertEquals(0.0, student.getGrade(deliverable));
 		
 		course.removeDeliverable(deliverable);
 		course.removeStudent(student);
@@ -105,5 +108,10 @@ public class TestCourse{
 		course.removeDeliverable(deliverable);
 		
 		assertNull(student.getGrade(deliverable));
+    }
+	
+	@Test
+    public void testToStringReturnsAString(){
+		assertNotNull(course.toString());
     }
 }

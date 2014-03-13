@@ -1,7 +1,7 @@
 package ca.uwo.csd.cs2212.team10;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Represents a course in the Gradebook
@@ -68,7 +68,7 @@ public class Course implements Serializable {
 		
 		//Add each deliverable to the grade list
         for (Deliverable deliverable : deliverables)
-            student.addGrade(deliverable, 0.0);
+            student.setGrade(deliverable, 0.0);
     }
 
     public void removeStudent(Student student) {
@@ -80,7 +80,7 @@ public class Course implements Serializable {
 		
         //Add the deliverable to the grade list of each student
         for (Student student : students)
-            student.addGrade(deliverable, 0.0);
+            student.setGrade(deliverable, 0.0);
     }
 
     public void removeDeliverable(Deliverable deliverable) {

@@ -64,10 +64,6 @@ public class Student implements Serializable {
 		return num;
 	}
 	
-	public void addGrade(Deliverable deliverable, Double grade){
-		grades.put(deliverable, grade);
-	}
-	
 	public void removeGrade(Deliverable deliverable){
 		grades.remove(deliverable);
 	}
