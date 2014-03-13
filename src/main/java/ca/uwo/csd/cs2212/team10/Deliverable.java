@@ -1,7 +1,6 @@
 package ca.uwo.csd.cs2212.team10;
 
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * Represents a gradeable item to be completed by a student in a course
@@ -10,15 +9,19 @@ import java.util.*;
 public class Deliverable implements Serializable{
 	/* Constants */
     private static final long serialVersionUID = 1L; //for serializing
+	
+	public static final String[] TYPES = {"Assignment", "Exam"};
+	public static final int ASSIGNMENT_TYPE = 0;
+	public static final int EXAM_TYPE = 1;
 
     /* Attributes */
     private String name;
-    private String type;
+    private int type;
     private int weight;
     
 
     /* Constructor */
-    public Deliverable(String name, String type, int weight){
+    public Deliverable(String name, int type, int weight){
         this.name = name;
         this.type = type;
         this.weight = weight;
@@ -30,7 +33,7 @@ public class Deliverable implements Serializable{
     	return name;
     }
     
-    public String getType(){
+    public int getType(){
     	return type;
     }
     
@@ -42,7 +45,7 @@ public class Deliverable implements Serializable{
     	this.name = name;
     }
     
-    public void setType(String type){
+    public void setType(int type){
     	this.type = type;
     }
     

@@ -45,10 +45,8 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == IDX_STUDENT_NUMBER)
-            return Integer.class;
-        else if (columnIndex > 3)
-            return Float.class;
+        if (columnIndex > 3)
+            return Double.class;
         else 
             return String.class;
     }
@@ -92,12 +90,12 @@ public class TableModel extends AbstractTableModel {
         else if (columnIndex == IDX_AVG)
             return selectedStudent.calcAverage();
         else if (columnIndex == IDX_ASSIG_AVG)
-            return selectedStudent.calcAssignmentAverage();
+            return selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE);
         else if (columnIndex == IDX_EXAM_AVG)
-            return selectedStudent.calcExamAverage();
+            return selectedStudent.calcAverage(Deliverable.EXAM_TYPE);
         else if ((columnIndex >= 5) && columnIndex < COLUMN_COUNT) {
             Deliverable deliverable = deliverables.get((columnIndex - 7));
-            return selectedStudent.getGrade(deliverable).getGrade();
+            return selectedStudent.getGrade(deliverable);
         }
         else 
             return null;
@@ -110,7 +108,7 @@ public class TableModel extends AbstractTableModel {
             
         Student selectedStudent = students.get(rowIndex);
         Deliverable deliverable = deliverables.get((columnIndex - 7));
-        selectedStudent.getGrade(deliverable).setGrade((Float)aValue);
+        selectedStudent.setGrade(deliverable, (Double)aValue);
 
         fireTableCellUpdated(rowIndex, columnIndex);
         fireTableDataChanged();

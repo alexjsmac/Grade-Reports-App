@@ -458,23 +458,9 @@ public class MainWindow extends JFrame {
             } else if (email.getText().length() == 0) {
                 JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                try {
-                    num = Integer.parseInt(number.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Not a valid Student number.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
                 //Create a new Student and add it to the gradebook
                 Student student = new Student(firstName.getText(), lastName.getText(), email.getText(), number.getText());
                 gradebook.getActiveCourse().addStudent(student);
-                
-                //Add grades in the new Student for each deliverable of the course
-                ArrayList<Deliverable> deliverables = gradebook.getActiveCourse().getDeliverableList();
-                if (deliverables != null) {
-                    for (Deliverable deliv : deliverables)
-                        student.addGrade(new Grade(deliv, 0));
-                }
                 
                 //Update JTable
                 updateTbl();
@@ -569,9 +555,9 @@ public class MainWindow extends JFrame {
         }
 
         JTextField name = new JTextField();
-        JTextField type = new JTextField();
-        JTextField weight = new JTextField();        
-        int num;
+        JComboBox type = new JComboBox(Deliverable.TYPES);
+        JTextField weight = new JTextField();
+		int weightInt;
 
         Object[] message = {
             "Deliverable Name:", name,
@@ -583,21 +569,19 @@ public class MainWindow extends JFrame {
 
         if (option == JOptionPane.OK_OPTION) {
             if (name.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Deliverable Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (type.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Deliverable Type entered.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No name entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (weight.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Deliverable Weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
-                    num = Integer.parseInt(weight.getText());
+                    weightInt = Integer.parseInt(weight.getText());
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Not a valid Deliverable Weight.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "The weight must be an integer.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 //Create a new Deliverable and add it to the Course
-                Deliverable deliverable = new Deliverable(name.getText(), type.getText(), num);
+                Deliverable deliverable = new Deliverable(name.getText(), type.getSelectedIndex(), weightInt);
                 gradebook.getActiveCourse().addDeliverable(deliverable);
 
                 //Update JTable
@@ -621,9 +605,10 @@ public class MainWindow extends JFrame {
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 7);
         
         JTextField name = new JTextField(deliverable.getName());
-        JTextField type = new JTextField(deliverable.getType());
+        JComboBox type = new JComboBox(Deliverable.TYPES);
+		type.setSelectedIndex(deliverable.getType());
         JTextField weight = new JTextField(String.valueOf(deliverable.getWeight()));
-        int num;
+        int weightInt;
 
         Object[] message = {
             "Deliverable Name:", name,
@@ -635,23 +620,21 @@ public class MainWindow extends JFrame {
 
         if (option == JOptionPane.OK_OPTION) {
             if (name.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Deliverable Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (type.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Deliverable Type entered.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No name entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (weight.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Deliverable Weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
-                    num = Integer.parseInt(weight.getText());
+                    weightInt = Integer.parseInt(weight.getText());
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Not a valid Deliverable Weight.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "The weight must be an integer.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 //Updates Deliverable
                 deliverable.setName(name.getText());
-                deliverable.setType(type.getText());
-                deliverable.setWeight(num);
+                deliverable.setType(type.getSelectedIndex());
+                deliverable.setWeight(weightInt);
 
                 //Update JTable
                 updateTbl();

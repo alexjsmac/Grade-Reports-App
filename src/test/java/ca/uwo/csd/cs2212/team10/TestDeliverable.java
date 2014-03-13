@@ -10,13 +10,15 @@ public class TestDeliverable{
 	
 	@Before
 	public void setup(){
-		deliverable = new Deliverable("Assignment 1", "Assignment", 25);
+		deliverable = new Deliverable("Foo", Deliverable.ASSIGNMENT_TYPE, 0);
 	}
 	
 	@Test
 	public void testConstructorSetAttributes(){
+		deliverable = new Deliverable("Assignment 1", Deliverable.ASSIGNMENT_TYPE, 25);
+		
 		Assert.assertEquals("Assignment 1", deliverable.getName());
-		Assert.assertEquals("Assignment", deliverable.getType());
+		Assert.assertEquals(Deliverable.ASSIGNMENT_TYPE, deliverable.getType());
 		Assert.assertEquals(25, deliverable.getWeight());
 	}
 	
@@ -28,8 +30,8 @@ public class TestDeliverable{
 	
 	@Test
 	public void testSetType(){
-		deliverable.setType("Exam");
-		Assert.assertEquals("Exam", deliverable.getType());
+		deliverable.setType(Deliverable.EXAM_TYPE);
+		Assert.assertEquals(Deliverable.EXAM_TYPE, deliverable.getType());
 	}
 	
 	@Test
