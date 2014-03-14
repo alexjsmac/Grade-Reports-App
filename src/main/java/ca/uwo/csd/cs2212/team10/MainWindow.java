@@ -25,42 +25,86 @@ public class MainWindow extends JFrame {
     private JTable studentsTbl;
     private JComboBox dropDownCourses;
     private JButton addCourseBtn, editCourseBtn, delCourseBtn;
+    private JPopupMenu studentTblPopup, deliverableTblPopup;
+    private JMenuItem addStudentPopupMenu, editStudentPopupMenu, delStudentPopupMenu, 
+            addDeliverablePopupMenu, editDeliverablePopupMenu, delDeliverablePopupMenu;
     private JMenuBar jMenuBar;
     private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu;
-    private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem, 
-                addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
-                addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem;
-    
+    private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
+            addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
+            addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem;
+
     /* Constructor */
-    public MainWindow(){        
+    public MainWindow() {
         gradebook = loadGradebook();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
         setVisible(true);
     }
-    
-    /* Private methods */     
+
+    /* Private methods */
     private void initTable() {
         refreshTableModel();
-       
+
         //Set custom Cell Editor for Columns with type Double (Correspond to the cells with the grades)
         studentsTbl.setDefaultEditor(Double.class, new DoubleCellEditor());
 
         studentsTbl.setAutoCreateRowSorter(true);
         studentsTbl.setCellSelectionEnabled(true);
+        studentsTbl.setGridColor(Color.gray);
+        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
+        //Set MinWidth for the first Column
+        studentsTbl.getColumnModel().getColumn(0).setMinWidth(200);
+        //Set width for the rest of the columns
+        for (int i = 1; i < studentsTbl.getModel().getColumnCount(); i++)
+            studentsTbl.getColumnModel().getColumn(i).setMinWidth(120);
         
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 4)
+                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 4) {
                     delDeliverableAction();
-                else
+                } else {
                     delStudentAction();
-            }} );
-        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    }          
+                }
+            }
+        });
+
+        studentsTbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                studentsTbl.clearSelection();
+                int row = studentsTbl.rowAtPoint(e.getPoint());
+                int column = studentsTbl.columnAtPoint(e.getPoint());
+                if (row >= 0 && row < studentsTbl.getRowCount()) {
+                    studentsTbl.changeSelection(row, column, false, false);
+                } else {
+                    studentsTbl.clearSelection();
+                }
+
+                int rowindex = studentsTbl.getSelectedRow();
+                if (rowindex < 0) {
+                    return;
+                }
+
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) {
+                        studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
+                    } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 0)
+                            && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) <= (studentsTbl.getModel().getColumnCount() - 3))) {
+
+                        deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
+                    } else {
+                        return;
+                    }
+
+                }
+            }
+        });
+    }
 
     private void refreshTableModel() {
         List<Student> studentsList;
@@ -78,15 +122,23 @@ public class MainWindow extends JFrame {
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
     }
-        
+
     private void initComponents() {
-        
+
         jScrollPane1 = new JScrollPane();
         studentsTbl = new JTable();
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
         addCourseBtn = new JButton();
         editCourseBtn = new JButton();
         delCourseBtn = new JButton();
+        studentTblPopup = new JPopupMenu ("Students Menu");
+        addStudentPopupMenu = new JMenuItem();
+        editStudentPopupMenu = new JMenuItem();
+        delStudentPopupMenu = new JMenuItem();
+        deliverableTblPopup = new JPopupMenu ("Deliverables Menu");
+        addDeliverablePopupMenu = new JMenuItem();
+        editDeliverablePopupMenu = new JMenuItem();
+        delDeliverablePopupMenu = new JMenuItem();
         jMenuBar = new JMenuBar();
         fileMenu = new JMenu();
         exitMenuItem = new JMenuItem();
@@ -197,7 +249,7 @@ public class MainWindow extends JFrame {
         coursesMenu.add(delMenuItem);
 
         jMenuBar.add(coursesMenu);
-        
+
         studentsMenu.setMnemonic(KeyEvent.VK_S);
         studentsMenu.setText("Students");
 
@@ -235,7 +287,7 @@ public class MainWindow extends JFrame {
         studentsMenu.add(delStudentMenuItem);
 
         jMenuBar.add(studentsMenu);
-        
+
         deliverablesMenu.setMnemonic(KeyEvent.VK_D);
         deliverablesMenu.setText("Deliverables");
 
@@ -272,16 +324,68 @@ public class MainWindow extends JFrame {
         });
         deliverablesMenu.add(delDeliverableMenuItem);
 
-        jMenuBar.add(deliverablesMenu);        
+        jMenuBar.add(deliverablesMenu);
 
         setJMenuBar(jMenuBar);
 
+        addStudentPopupMenu.setText("Add Student");
+        addStudentPopupMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                addStudentAction();
+            }
+        });
+        studentTblPopup.add(addStudentPopupMenu);
+
+        editStudentPopupMenu.setText("Edit Student");
+        editStudentPopupMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editStudentAction();
+            }
+        });
+        studentTblPopup.add(editStudentPopupMenu);
+
+        delStudentPopupMenu.setText("Delete Student");
+        delStudentPopupMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                delStudentAction();
+            }
+        });
+        
+        studentTblPopup.add(delStudentPopupMenu);
+
+        addDeliverablePopupMenu.setText("Add Deliverable");
+        addDeliverablePopupMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                addDeliverableAction();
+            }
+        });
+        deliverableTblPopup.add(addDeliverablePopupMenu);
+
+        editDeliverablePopupMenu.setText("Edit Deliverable");
+        editDeliverablePopupMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                editDeliverableAction();
+            }
+        });
+        deliverableTblPopup.add(editDeliverablePopupMenu);
+
+        delDeliverablePopupMenu.setText("Delete Deliverable");
+        delDeliverablePopupMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                delDeliverableAction();
+            }
+        });
+        
+        deliverableTblPopup.add(delDeliverablePopupMenu);
+
+        
+        
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
@@ -576,7 +680,8 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) < 4) {
+        } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) &&
+                (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) >= (studentsTbl.getModel().getColumnCount() - 3))) {
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -628,11 +733,12 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) < 4) {
+        } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0)
+                && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) >= (studentsTbl.getModel().getColumnCount() - 3))) {
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         //Get current selected Deliverable
         int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
         //To get the right Deliverable from the list we use (column - 1) because the Deliverables start on the 2nd Column
