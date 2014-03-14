@@ -19,7 +19,7 @@ public class MainWindow extends JFrame {
     
     /* Attributes */
     private Gradebook gradebook;
-	
+    
     private JScrollPane jScrollPane1;
     private JTable studentsTbl;
     private JComboBox dropDownCourses;
@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
                 addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem;
     
     /* Constructor */
-    public MainWindow(){		
+    public MainWindow(){        
         gradebook = loadGradebook();
         initComponents();
         initTable();
@@ -106,7 +106,7 @@ public class MainWindow extends JFrame {
                 onExit();
             }
         });
-		
+        
         setTitle("Gradebook");
 
         jScrollPane1.setViewportView(studentsTbl);
@@ -116,7 +116,7 @@ public class MainWindow extends JFrame {
                 dropDownItemChanged(evt);
             }
         });
-		dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
+        dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
 
         addCourseBtn.setIcon(new ImageIcon(getClass().getResource("/new.png"))); // NOI18N
         addCourseBtn.setMnemonic(KeyEvent.VK_N);
@@ -340,91 +340,91 @@ public class MainWindow extends JFrame {
     }                                               
 
     private void addCourseAction(ActionEvent evt){                                             
-		JTextField title = new JTextField();
-		JTextField code = new JTextField();
-		JTextField term = new JTextField();
-		
-		Object[] message = {
-			"Course title:", title,
-			"Course code:", code,
-			"Term:", term
-		};
-
-		int option = JOptionPane.showConfirmDialog(this, message, "Add Course", JOptionPane.OK_CANCEL_OPTION);
-		
-		if (option == JOptionPane.OK_OPTION) {
-			if (title.getText().length() == 0) {
-				JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
-			} else if (code.getText().length() == 0) {
-				JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
-			} else if (term.getText().length() == 0) {
-				JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
-			} else{
-			    //Create a new Course and add it to the gradebook
-				Course course = new Course(title.getText(), code.getText(), term.getText());
-				gradebook.addCourse(course);
+        JTextField title = new JTextField();
+        JTextField code = new JTextField();
+        JTextField term = new JTextField();
         
-				//Add the entry to the dropdown list
-				dropDownCourses.addItem(course);
-				dropDownCourses.setSelectedItem(course);
-			}
-		}
+        Object[] message = {
+            "Course title:", title,
+            "Course code:", code,
+            "Term:", term
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Course", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (option == JOptionPane.OK_OPTION) {
+            if (title.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (code.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (term.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else{
+                //Create a new Course and add it to the gradebook
+                Course course = new Course(title.getText(), code.getText(), term.getText());
+                gradebook.addCourse(course);
+        
+                //Add the entry to the dropdown list
+                dropDownCourses.addItem(course);
+                dropDownCourses.setSelectedItem(course);
+            }
+        }
     }                                         
 
     private void editCourseAction(ActionEvent evt) {   
-		if (gradebook.getActiveCourse() == null){
-			JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-	
+        if (gradebook.getActiveCourse() == null){
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
         JTextField title = new JTextField(gradebook.getActiveCourse().getTitle());
-		JTextField code = new JTextField(gradebook.getActiveCourse().getCode());
-		JTextField term = new JTextField(gradebook.getActiveCourse().getTerm());
-		
-		Object[] message = {
-			"Course title:", title,
-			"Course code:", code,
-			"Term:", term
-		};
+        JTextField code = new JTextField(gradebook.getActiveCourse().getCode());
+        JTextField term = new JTextField(gradebook.getActiveCourse().getTerm());
+        
+        Object[] message = {
+            "Course title:", title,
+            "Course code:", code,
+            "Term:", term
+        };
 
-		int option = JOptionPane.showConfirmDialog(this, message, "Edit Course", JOptionPane.OK_CANCEL_OPTION);
-		
-		if (option == JOptionPane.OK_OPTION) {
-			if (title.getText().length() == 0) {
-				JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
-			} else if (code.getText().length() == 0) {
-				JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
-			} else if (term.getText().length() == 0) {
-				JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
-			} else{
-				Course activeCourse = gradebook.getActiveCourse();
-			
-			    //Set the attributes
-				activeCourse.setTitle(title.getText());
-				activeCourse.setCode(code.getText());
-				activeCourse.setTerm(term.getText());
-				
-				//Refresh the dropdown list entry
-				dropDownCourses.removeItem(activeCourse);
-				dropDownCourses.addItem(activeCourse);
-				dropDownCourses.setSelectedItem(activeCourse);
-			}
-		}
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit Course", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (option == JOptionPane.OK_OPTION) {
+            if (title.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (code.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (term.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else{
+                Course activeCourse = gradebook.getActiveCourse();
+            
+                //Set the attributes
+                activeCourse.setTitle(title.getText());
+                activeCourse.setCode(code.getText());
+                activeCourse.setTerm(term.getText());
+                
+                //Refresh the dropdown list entry
+                dropDownCourses.removeItem(activeCourse);
+                dropDownCourses.addItem(activeCourse);
+                dropDownCourses.setSelectedItem(activeCourse);
+            }
+        }
     }                                       
 
     private void delCourseAction(ActionEvent evt) {                                             
         if (gradebook.getActiveCourse() == null){
-			JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Course", JOptionPane.OK_CANCEL_OPTION);
-		
-		if (option == JOptionPane.OK_OPTION) {
-			//remove the course
-			gradebook.removeCourse(gradebook.getActiveCourse());
-			dropDownCourses.removeItem(gradebook.getActiveCourse());
-		}
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Course", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (option == JOptionPane.OK_OPTION) {
+            //remove the course
+            gradebook.removeCourse(gradebook.getActiveCourse());
+            dropDownCourses.removeItem(gradebook.getActiveCourse());
+        }
     }                                                                                                                                                                         
     
     private void addStudentAction() {
@@ -557,7 +557,7 @@ public class MainWindow extends JFrame {
         JTextField name = new JTextField();
         JComboBox type = new JComboBox(Deliverable.TYPES);
         JTextField weight = new JTextField();
-		int weightInt;
+        int weightInt;
 
         Object[] message = {
             "Deliverable Name:", name,
@@ -606,7 +606,7 @@ public class MainWindow extends JFrame {
         
         JTextField name = new JTextField(deliverable.getName());
         JComboBox type = new JComboBox(Deliverable.TYPES);
-		type.setSelectedIndex(deliverable.getType());
+        type.setSelectedIndex(deliverable.getType());
         JTextField weight = new JTextField(String.valueOf(deliverable.getWeight()));
         int weightInt;
 
@@ -671,7 +671,7 @@ public class MainWindow extends JFrame {
         System.exit(0);
         return 0;
     }
-	
+    
     private Gradebook loadGradebook(){
         ObjectInputStream in = null;
         Gradebook gradebook = null;
@@ -687,7 +687,7 @@ public class MainWindow extends JFrame {
                 in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME));
                 gradebook = (Gradebook)in.readObject();
                 
-				//show a warning message
+                //show a warning message
                 JOptionPane.showMessageDialog(this, "The data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
             } catch (Exception e2){
                 gradebook = new Gradebook(); //return an empty gradebook
@@ -698,7 +698,7 @@ public class MainWindow extends JFrame {
                 in.close(); //clean up
             } catch (Exception e){ }
         }
-		
+        
         return gradebook;
     }
     
@@ -720,10 +720,10 @@ public class MainWindow extends JFrame {
             out.writeObject(gradebook);
         } catch (FileNotFoundException e){
             //show a message: data file could not be created
-			JOptionPane.showMessageDialog(this, "The data file could not be created. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "The data file could not be created. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e){
             //show a message: error writing data file
-			JOptionPane.showMessageDialog(this, "The data file could not be written. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "The data file could not be written. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e){ }
         finally{
             try{

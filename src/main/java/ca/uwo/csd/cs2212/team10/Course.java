@@ -65,8 +65,8 @@ public class Course implements Serializable {
 
     public void addStudent(Student student) {
         students.add(student);
-		
-		//Add each deliverable to the grade list
+        
+        //Add each deliverable to the grade list
         for (Deliverable deliverable : deliverables)
             student.setGrade(deliverable, 0.0);
     }
@@ -77,15 +77,15 @@ public class Course implements Serializable {
 
     public void addDeliverable(Deliverable deliverable) {
         deliverables.add(deliverable);
-		
+        
         //Add the deliverable to the grade list of each student
         for (Student student : students)
             student.setGrade(deliverable, 0.0);
     }
 
     public void removeDeliverable(Deliverable deliverable) {
-		deliverables.remove(deliverable);
-		
+        deliverables.remove(deliverable);
+        
         //Remove the deliverable from the grade list of each student
         for (Student student : students)
             student.removeGrade(deliverable);

@@ -7,12 +7,12 @@ import java.io.Serializable;
  * @author Team 10
  */
 public class Deliverable implements Serializable{
-	/* Constants */
+    /* Constants */
     private static final long serialVersionUID = 1L; //for serializing
-	
-	public static final String[] TYPES = {"Assignment", "Exam"};
-	public static final int ASSIGNMENT_TYPE = 0;
-	public static final int EXAM_TYPE = 1;
+    
+    public static final String[] TYPES = {"Assignment", "Exam"};
+    public static final int ASSIGNMENT_TYPE = 0;
+    public static final int EXAM_TYPE = 1;
 
     /* Attributes */
     private String name;
@@ -30,26 +30,26 @@ public class Deliverable implements Serializable{
     /* Public Methods */
     
     public String getName(){
-    	return name;
+        return name;
     }
     
     public int getType(){
-    	return type;
+        return type;
     }
     
     public int getWeight(){
-    	return weight;
+        return weight;
     }
     
     public void setName(String name){
-    	this.name = name;
+        this.name = name;
     }
     
     public void setType(int type){
-    	this.type = type;
+        this.type = type;
     }
     
     public void setWeight(int weight){
-    	this.weight = weight;
+        this.weight = weight;
     }
 }
