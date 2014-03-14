@@ -60,7 +60,7 @@ public class TableModel extends AbstractTableModel {
         else if (columnIndex == IDX_EXAM_AVG)
             return "Exams Average";
         else if ((columnIndex > IDX_NUMBER) && columnIndex < IDX_AVG)
-            return (deliverables.get((columnIndex - 2)).getName() + " (" + String.valueOf(deliverables.get(columnIndex - 2).getWeight()) + ")");
+            return (deliverables.get((columnIndex - 2)).getName() + " (" + String.valueOf(deliverables.get(columnIndex - 2).getWeight()) + "%)");
         else 
             return null;      
     }
