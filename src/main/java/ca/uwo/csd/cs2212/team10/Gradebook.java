@@ -1,6 +1,7 @@
 package ca.uwo.csd.cs2212.team10;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.io.Serializable;
 
 /**
@@ -13,7 +14,7 @@ public class Gradebook implements Serializable{
 
     /* Attributes */
     private Course activeCourse;
-    private ArrayList<Course> courses; //the courses in the Gradebook
+    private List<Course> courses; //the courses in the Gradebook
 
     /* Constructor */
     public Gradebook(){
@@ -30,7 +31,7 @@ public class Gradebook implements Serializable{
         courses.remove(course);
     }
     
-    public ArrayList<Course> getCourseList(){
+    public List<Course> getCourseList(){
         return courses;
     }
     

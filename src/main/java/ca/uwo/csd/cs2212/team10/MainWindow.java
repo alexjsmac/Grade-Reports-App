@@ -4,9 +4,9 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*; 
+import java.util.List;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-import java.lang.*;
 
 /**
  * The main window of the gradebook program
@@ -39,7 +39,7 @@ public class MainWindow extends JFrame {
     
     /* Private methods */     
     private void initTable() {
-        initModel();
+        refreshTableModel();
 
         //TODO Implement custom CellRenderer
         //studentsTbl.setDefaultRenderer(Double.class, new CellRenderer());
@@ -55,18 +55,14 @@ public class MainWindow extends JFrame {
             }} );
     }          
 
-    private void initModel() {     
-        ArrayList<Student> studentsList;
-        ArrayList<Deliverable> deliverablesList;
+    private void refreshTableModel() {
+        List<Student> studentsList;
+        List<Deliverable> deliverablesList;
 
         //Get Students and Deliverables list. Creates empty lists if they don't exist
         if (gradebook.getActiveCourse() != null) {
-            if ((studentsList = gradebook.getActiveCourse().getStudentList()) == null) {
-                studentsList = new ArrayList<Student>();
-            }
-            if ((deliverablesList = gradebook.getActiveCourse().getDeliverableList()) == null) {
-                deliverablesList = new ArrayList<Deliverable>();
-            }
+            studentsList = gradebook.getActiveCourse().getStudentList();
+            deliverablesList = gradebook.getActiveCourse().getDeliverableList();
         } else {
             deliverablesList = new ArrayList<Deliverable>();
             studentsList = new ArrayList<Student>();
@@ -311,33 +307,12 @@ public class MainWindow extends JFrame {
         );
 
         pack();
-    }                     
-
-    private void updateTbl () {
-        ArrayList<Student> studentsList;
-        ArrayList<Deliverable> deliverablesList;
-       
-        //Get Students and Deliverables list. Creates empty lists if they don't exist
-        if (gradebook.getActiveCourse() != null) {
-            if ((studentsList = gradebook.getActiveCourse().getStudentList()) == null) {
-                studentsList = new ArrayList<Student>();
-            }
-            if ((deliverablesList = gradebook.getActiveCourse().getDeliverableList()) == null) {
-                deliverablesList = new ArrayList<Deliverable>();
-            }
-        } else {
-            deliverablesList = new ArrayList<Deliverable>();
-            studentsList = new ArrayList<Student>();
-        }
-        
-        TableModel tblModel = new TableModel(studentsList, deliverablesList);
-        studentsTbl.setModel(tblModel);
     }
     
     private void dropDownItemChanged(ItemEvent evt) {
         gradebook.setActiveCourse((Course)dropDownCourses.getSelectedItem());
-        updateTbl();
-    }                                               
+        refreshTableModel();
+    }
 
     private void addCourseAction(ActionEvent evt){                                             
         JTextField title = new JTextField();
@@ -369,7 +344,7 @@ public class MainWindow extends JFrame {
                 dropDownCourses.setSelectedItem(course);
             }
         }
-    }                                         
+    }
 
     private void editCourseAction(ActionEvent evt) {   
         if (gradebook.getActiveCourse() == null){
@@ -410,7 +385,7 @@ public class MainWindow extends JFrame {
                 dropDownCourses.setSelectedItem(activeCourse);
             }
         }
-    }                                       
+    }
 
     private void delCourseAction(ActionEvent evt) {                                             
         if (gradebook.getActiveCourse() == null){
@@ -425,7 +400,7 @@ public class MainWindow extends JFrame {
             gradebook.removeCourse(gradebook.getActiveCourse());
             dropDownCourses.removeItem(gradebook.getActiveCourse());
         }
-    }                                                                                                                                                                         
+    }
     
     private void addStudentAction() {
         if (gradebook.getActiveCourse() == null) {
@@ -463,7 +438,7 @@ public class MainWindow extends JFrame {
                 gradebook.getActiveCourse().addStudent(student);
                 
                 //Update JTable
-                updateTbl();
+                refreshTableModel();
             }
         }
     }
@@ -521,7 +496,7 @@ public class MainWindow extends JFrame {
                 student.setNum(number.getText());                
                 
                 //Update JTable
-                updateTbl();
+                refreshTableModel();
             }
         }
     }
@@ -543,7 +518,7 @@ public class MainWindow extends JFrame {
         
         if (option == JOptionPane.OK_OPTION) {
             gradebook.getActiveCourse().removeStudent(student);
-            updateTbl();
+            refreshTableModel();
         }
         
     }
@@ -585,7 +560,7 @@ public class MainWindow extends JFrame {
                 gradebook.getActiveCourse().addDeliverable(deliverable);
 
                 //Update JTable
-                updateTbl();
+                refreshTableModel();
             }
         }
     }
@@ -637,7 +612,7 @@ public class MainWindow extends JFrame {
                 deliverable.setWeight(weightInt);
 
                 //Update JTable
-                updateTbl();
+                refreshTableModel();
             }
         }
     }
@@ -661,7 +636,7 @@ public class MainWindow extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             gradebook.getActiveCourse().removeDeliverable(deliverable);
             
-            updateTbl();
+            refreshTableModel();
         }
         
     }    
