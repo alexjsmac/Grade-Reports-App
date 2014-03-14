@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*; 
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -40,18 +41,21 @@ public class MainWindow extends JFrame {
     /* Private methods */     
     private void initTable() {
         refreshTableModel();
+       
+        //Set custom Cell Editor for Columns with type Double (Correspond to the cells with the grades)
+        studentsTbl.setDefaultEditor(Double.class, new DoubleCellEditor());
 
-        //TODO Implement custom CellRenderer
-        //studentsTbl.setDefaultRenderer(Double.class, new CellRenderer());
-        
         studentsTbl.setAutoCreateRowSorter(true);
         studentsTbl.setCellSelectionEnabled(true);
+        
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
-
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                delStudentAction();
+                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 4)
+                    delDeliverableAction();
+                else
+                    delStudentAction();
             }} );
     }          
 
@@ -569,7 +573,7 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (studentsTbl.getSelectedColumn() < 4) {
+        } else if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) < 4) {
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -621,7 +625,7 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (studentsTbl.getSelectedColumn() < 4) {
+        } else if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) < 4) {
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }

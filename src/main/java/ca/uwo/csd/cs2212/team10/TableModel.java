@@ -39,7 +39,7 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex > 3)
+        if (columnIndex > IDX_EMAIL)
             return Double.class;
         else 
             return String.class;
