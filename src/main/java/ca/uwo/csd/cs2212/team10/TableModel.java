@@ -10,7 +10,6 @@ import javax.swing.table.AbstractTableModel;
  */
 
 public class TableModel extends AbstractTableModel {
-       
     private final static int IDX_FIRST_NAME = 0;
     private final static int IDX_LAST_NAME = 1;
     private final static int IDX_STUDENT_NUMBER = 2;
@@ -116,10 +115,10 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-      if (columnIndex > IDX_EXAM_AVG && columnIndex < COLUMN_COUNT)
-          return true;
-      else
-          return false;
+        if (columnIndex > IDX_EXAM_AVG && columnIndex < COLUMN_COUNT)
+            return true;
+        else
+            return false;
     }
  
 }

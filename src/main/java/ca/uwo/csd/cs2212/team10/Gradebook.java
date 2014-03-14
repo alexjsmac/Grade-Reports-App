@@ -27,7 +27,7 @@ public class Gradebook implements Serializable{
     }
 
     public void removeCourse(Course course){
-		courses.remove(course);
+        courses.remove(course);
     }
     
     public ArrayList<Course> getCourseList(){
@@ -35,7 +35,7 @@ public class Gradebook implements Serializable{
     }
     
     public Course getActiveCourse(){
-		return activeCourse;
+        return activeCourse;
     }
 
     public void setActiveCourse(Course course){
