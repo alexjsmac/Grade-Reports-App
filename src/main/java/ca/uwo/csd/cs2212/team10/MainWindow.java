@@ -59,6 +59,7 @@ public class MainWindow extends JFrame {
                 else
                     delStudentAction();
             }} );
+        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }          
 
     private void refreshTableModel() {
