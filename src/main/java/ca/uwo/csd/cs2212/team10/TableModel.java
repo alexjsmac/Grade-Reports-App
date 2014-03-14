@@ -69,7 +69,7 @@ public class TableModel extends AbstractTableModel {
         
         Student selectedStudent = students.get(rowIndex);
         if (columnIndex == IDX_STUDENT)
-            return (selectedStudent.getLastName() + "," + selectedStudent.getFirstName() + "-" + selectedStudent.getNum());
+            return (selectedStudent.getLastName() + ", " + selectedStudent.getFirstName() + " - " + selectedStudent.getNum());
         else if (columnIndex == IDX_AVG)
             return selectedStudent.calcAverage();
         else if (columnIndex == IDX_ASSIG_AVG)
