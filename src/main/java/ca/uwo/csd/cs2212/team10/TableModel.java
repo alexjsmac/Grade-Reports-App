@@ -9,14 +9,12 @@ import javax.swing.table.AbstractTableModel;
  */
 
 public class TableModel extends AbstractTableModel {
-    private final static int IDX_FIRST_NAME = 0;
-    private final static int IDX_LAST_NAME = 1;
-    private final static int IDX_STUDENT_NUMBER = 2;
-    private final static int IDX_EMAIL = 3;
-    private final static int IDX_AVG = 4;
-    private final static int IDX_ASSIG_AVG = 5;
-    private final static int IDX_EXAM_AVG = 6;
+    private final static int IDX_STUDENT = 0;
     
+    
+    private int IDX_AVG;
+    private int IDX_ASSIG_AVG;
+    private int IDX_EXAM_AVG;
     private int COLUMN_COUNT;
     private final List<Student> students;
     private final List<Deliverable> deliverables;
@@ -24,7 +22,10 @@ public class TableModel extends AbstractTableModel {
     public TableModel(List<Student> studentsList, List<Deliverable> deliverablesList) {
         students = studentsList;
         deliverables = deliverablesList;
-        COLUMN_COUNT = 7 + (deliverables.size());
+        COLUMN_COUNT = 4 + (deliverables.size());
+        IDX_AVG = COLUMN_COUNT - 1;
+        IDX_ASSIG_AVG = IDX_AVG - 1;
+        IDX_EXAM_AVG = IDX_ASSIG_AVG - 1;
     }
     
     @Override
@@ -39,7 +40,7 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex > IDX_EMAIL)
+        if (columnIndex != IDX_STUDENT)
             return Double.class;
         else 
             return String.class;
@@ -47,22 +48,16 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public String getColumnName(int columnIndex) {
-        if (columnIndex == IDX_FIRST_NAME)
-            return "First Name";
-        else if (columnIndex == IDX_LAST_NAME)
-            return "Last Name";
-        else if (columnIndex == IDX_STUDENT_NUMBER)
-            return "Student Number";
-        else if (columnIndex == IDX_EMAIL)
-            return "Email";
+        if (columnIndex == IDX_STUDENT)
+            return "Student";
         else if (columnIndex == IDX_AVG)
             return "Total Average";
         else if (columnIndex == IDX_ASSIG_AVG)
             return "Assignments Average";
         else if (columnIndex == IDX_EXAM_AVG)
             return "Exams Average";
-        else if ((columnIndex >= 7) && columnIndex < COLUMN_COUNT)
-            return deliverables.get((columnIndex - 7)).getName();
+        else if ((columnIndex > IDX_STUDENT) && columnIndex < IDX_AVG)
+            return (deliverables.get((columnIndex - 1)).getName() + " (" + String.valueOf(deliverables.get(columnIndex - 1).getWeight()) + ")");
         else 
             return null;      
     }
@@ -73,22 +68,16 @@ public class TableModel extends AbstractTableModel {
             return null;
         
         Student selectedStudent = students.get(rowIndex);
-        if (columnIndex == IDX_FIRST_NAME)
-            return selectedStudent.getFirstName();
-        else if (columnIndex == IDX_LAST_NAME)
-            return selectedStudent.getLastName();
-        else if (columnIndex == IDX_STUDENT_NUMBER)
-            return selectedStudent.getNum();
-        else if (columnIndex == IDX_EMAIL)
-            return selectedStudent.getEmail();
+        if (columnIndex == IDX_STUDENT)
+            return (selectedStudent.getLastName() + "," + selectedStudent.getFirstName() + "-" + selectedStudent.getNum());
         else if (columnIndex == IDX_AVG)
             return selectedStudent.calcAverage();
         else if (columnIndex == IDX_ASSIG_AVG)
             return selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE);
         else if (columnIndex == IDX_EXAM_AVG)
             return selectedStudent.calcAverage(Deliverable.EXAM_TYPE);
-        else if ((columnIndex >= 5) && columnIndex < COLUMN_COUNT) {
-            Deliverable deliverable = deliverables.get((columnIndex - 7));
+        else if ((columnIndex >= IDX_STUDENT) && columnIndex < IDX_AVG) {
+            Deliverable deliverable = deliverables.get((columnIndex - 1));
             return selectedStudent.getGrade(deliverable);
         }
         else 
@@ -97,11 +86,11 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if ((rowIndex < 0) || (rowIndex >= students.size()) || columnIndex <= IDX_EXAM_AVG || columnIndex >= COLUMN_COUNT)
+        if ((rowIndex < 0) || (rowIndex >= students.size()) || columnIndex >= IDX_STUDENT || columnIndex <= IDX_EXAM_AVG)
             return;
             
         Student selectedStudent = students.get(rowIndex);
-        Deliverable deliverable = deliverables.get((columnIndex - 7));
+        Deliverable deliverable = deliverables.get((columnIndex - 1));
         selectedStudent.setGrade(deliverable, (Double)aValue);
 
         fireTableCellUpdated(rowIndex, columnIndex);
@@ -110,7 +99,7 @@ public class TableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex > IDX_EXAM_AVG && columnIndex < COLUMN_COUNT)
+        if (columnIndex > IDX_STUDENT && columnIndex < IDX_EXAM_AVG)
             return true;
         else
             return false;

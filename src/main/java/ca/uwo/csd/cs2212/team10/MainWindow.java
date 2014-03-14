@@ -35,8 +35,8 @@ public class MainWindow extends JFrame {
     public MainWindow(){        
         gradebook = loadGradebook();
         initComponents();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
         setVisible(true);
     }
     
@@ -309,7 +309,7 @@ public class MainWindow extends JFrame {
                         .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, Short.MAX_VALUE)
-                .addContainerGap(0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -582,8 +582,8 @@ public class MainWindow extends JFrame {
             
         //Get current selected Deliverable
         int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        //To get the right Deliverable from the list we use column - 7 because the Deliverables start on the 7th Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 7);
+        //To get the right Deliverable from the list we use column - 1 because the Deliverables start on the 2nd Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 1);
         
         JTextField name = new JTextField(deliverable.getName());
         JComboBox type = new JComboBox(Deliverable.TYPES);
@@ -634,8 +634,8 @@ public class MainWindow extends JFrame {
         
         //Get current selected Deliverable
         int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        //To get the right Deliverable from the list we use (column - 7) because the Deliverables start on the 7th Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 7);
+        //To get the right Deliverable from the list we use (column - 1) because the Deliverables start on the 2nd Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 1);
         
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
         
