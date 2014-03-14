@@ -36,6 +36,8 @@ public class MainWindow extends JFrame {
         gradebook = loadGradebook();
         initComponents();
         initTable();
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        setVisible(true);
     }
     
     /* Private methods */     
