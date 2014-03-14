@@ -6,8 +6,7 @@ import java.awt.event.*;
 import javax.swing.*; 
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.*;
 
 /**
  * The main window of the gradebook program
@@ -55,17 +54,11 @@ public class MainWindow extends JFrame {
         studentsTbl.setGridColor(Color.gray);
         studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
-        //Set MinWidth for the first Column
-        studentsTbl.getColumnModel().getColumn(0).setMinWidth(200);
-        //Set width for the rest of the columns
-        for (int i = 1; i < studentsTbl.getModel().getColumnCount(); i++)
-            studentsTbl.getColumnModel().getColumn(i).setMinWidth(120);
-        
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 4) {
+                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 1) {
                     delDeliverableAction();
                 } else {
                     delStudentAction();
@@ -95,9 +88,8 @@ public class MainWindow extends JFrame {
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                     if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) {
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 0)
-                            && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) <= (studentsTbl.getModel().getColumnCount() - 3))) {
-
+                        
+                    } else if (studentsTbl.getModel().isCellEditable(0, column)) {
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     } else {
                         return;
@@ -126,9 +118,7 @@ public class MainWindow extends JFrame {
             if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                 if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) {
                     studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 0)
-                        && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) <= (studentsTbl.getModel().getColumnCount() - 3))) {
-
+                } else if (studentsTbl.getModel().isCellEditable(0, column)) {
                     deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                 } else {
                     return;
@@ -154,8 +144,39 @@ public class MainWindow extends JFrame {
 
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
+
+        //Set width for the columns
+        for (int i = 0; i < studentsTbl.getModel().getColumnCount(); i++) {
+            adjustColumnSizes(studentsTbl, i, 5);
+        }
     }
 
+    private void adjustColumnSizes(JTable table, int column, int margin) {
+        DefaultTableColumnModel colModel = (DefaultTableColumnModel) table.getColumnModel();
+        TableColumn col = colModel.getColumn(column);
+        int width;
+
+        TableCellRenderer renderer = col.getHeaderRenderer();
+        if (renderer == null) {
+            renderer = table.getTableHeader().getDefaultRenderer();
+        }
+        Component comp = renderer.getTableCellRendererComponent(
+                table, col.getHeaderValue(), false, false, 0, 0);
+        width = comp.getPreferredSize().width;
+
+        for (int r = 0; r < table.getRowCount(); r++) {
+            renderer = table.getCellRenderer(r, column);
+            comp = renderer.getTableCellRendererComponent(
+                    table, table.getValueAt(r, column), false, false, r, column);
+            int currentWidth = comp.getPreferredSize().width;
+            width = Math.max(width, currentWidth);
+        }
+
+        width += 2 * margin;
+
+        col.setPreferredWidth(width);
+    }
+    
     private void initComponents() {
 
         jScrollPane1 = new JScrollPane();
@@ -710,19 +731,19 @@ public class MainWindow extends JFrame {
     }
 
     private void editDeliverableAction() {
+        //Get current selected Deliverable
+        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+        
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) &&
-                (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) >= (studentsTbl.getModel().getColumnCount() - 3))) {
+        } else if (!(studentsTbl.getModel().isCellEditable(0, column))) {
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
             
-        //Get current selected Deliverable
-        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        //To get the right Deliverable from the list we use column - 1 because the Deliverables start on the 2nd Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 1);
+        //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3rd Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 2);
         
         JTextField name = new JTextField(deliverable.getName());
         JComboBox type = new JComboBox(Deliverable.TYPES);
@@ -763,19 +784,20 @@ public class MainWindow extends JFrame {
     }
 
     private void delDeliverableAction () {
+        //Get current selected Deliverable
+        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+        
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0)
-                && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) >= (studentsTbl.getModel().getColumnCount() - 3))) {
+        } else if (!(studentsTbl.getModel().isCellEditable(0, column))) {
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        //Get current selected Deliverable
-        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        //To get the right Deliverable from the list we use (column - 1) because the Deliverables start on the 2nd Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 1);
+        
+        //To get the right Deliverable from the list we use (column - 2) because the Deliverables start on the 3rd Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 2);
         
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
         
