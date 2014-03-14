@@ -2,6 +2,7 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a course in the Gradebook
@@ -17,8 +18,8 @@ public class Course implements Serializable {
     private String code;
     private String term;
     private String title;
-    private ArrayList<Student> students;
-    private ArrayList<Deliverable> deliverables;
+    private List<Student> students;
+    private List<Deliverable> deliverables;
 
     /* Constructor */
     public Course(String title, String code, String term) {
@@ -55,11 +56,11 @@ public class Course implements Serializable {
         return term;
     }
 
-    public ArrayList<Student> getStudentList() {
+    public List<Student> getStudentList() {
         return students;
     }
 
-    public ArrayList<Deliverable> getDeliverableList() {
+    public List<Deliverable> getDeliverableList() {
         return deliverables;
     }
 
@@ -93,6 +94,6 @@ public class Course implements Serializable {
 
     @Override
     public String toString() {
-        return code + term + " - " + title;
+        return code + " - " + term + " - " + title;
     }
 }

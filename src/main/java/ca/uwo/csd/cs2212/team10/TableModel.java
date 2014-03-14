@@ -1,6 +1,5 @@
 package ca.uwo.csd.cs2212.team10;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -19,17 +18,13 @@ public class TableModel extends AbstractTableModel {
     private final static int IDX_EXAM_AVG = 6;
     
     private int COLUMN_COUNT;
-    private final ArrayList<Student> students;
-    private final ArrayList<Deliverable> deliverables;
+    private final List<Student> students;
+    private final List<Deliverable> deliverables;
 
-    public TableModel(ArrayList<Student> studentsList, ArrayList<Deliverable> deliverablesList) {
+    public TableModel(List<Student> studentsList, List<Deliverable> deliverablesList) {
         students = studentsList;
         deliverables = deliverablesList;
         COLUMN_COUNT = 7 + (deliverables.size());
-    }
-    
-    public List<Student> getStudentsList() {
-        return students;
     }
     
     @Override
