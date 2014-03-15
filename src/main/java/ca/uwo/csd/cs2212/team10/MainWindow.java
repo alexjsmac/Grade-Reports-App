@@ -609,7 +609,6 @@ public class MainWindow extends JFrame {
         JTextField lastName = new JTextField(student.getLastName());
         JTextField number = new JTextField(String.valueOf(student.getNum()));
         JTextField email = new JTextField(student.getEmail());
-        int num;
 
         Object[] message = {
             "Student First Name:", firstName,
@@ -630,25 +629,17 @@ public class MainWindow extends JFrame {
             } else if (email.getText().length() == 0) {
                 JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                try {
-                    num = Integer.parseInt(number.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Not a valid Student number.", "Error", JOptionPane.ERROR_MESSAGE);
+                //Edit current selected Student
+                if (!gradebook.getActiveCourse().isEmailUnique(email.getText()) || !gradebook.getActiveCourse().isNumUnique(number.getText())){
+                    JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
-                //Edit current selected Student
                 student.setFirstName(firstName.getText());
                 student.setLastName(lastName.getText());
-                if (!(gradebook.getActiveCourse().isEmailUnique(student.getEmail())))      
-                    JOptionPane.showMessageDialog(this, "Student email already exists.", "Error", JOptionPane.ERROR_MESSAGE);  
-                else
-                    student.setEmail(email.getText());  
-                if (!(gradebook.getActiveCourse().isNumUnique(student.getNum())))
-                    JOptionPane.showMessageDialog(this, "Student number already exists.", "Error", JOptionPane.ERROR_MESSAGE);  
-                else {
-                    student.setNum(number.getText());
-                }
+                student.setEmail(email.getText());  
+                student.setNum(number.getText());
+
                 //Update JTable
                 refreshTableModel();
             }
