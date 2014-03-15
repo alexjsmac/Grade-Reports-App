@@ -64,19 +64,18 @@ public class Course implements Serializable {
         return deliverables;
     }
 
-    public boolean isUnique(Student student){
-      for (Student stdnt : students)
-        if (student != stdnt)
-          if (student.getEmail().equals(stdnt.getEmail()) || student.getNum().equals(stdnt.getNum()))
-            return false;
-      return true;
+    public boolean isUnique(Student oldStudent, String newEmail, String newNum){
+        for (Student student : students)
+            if (student != oldStudent)
+                if (newEmail.equals(student.getEmail()) || newNum.equals(student.getNum()))
+                    return false;
+        return true;
     }
     
-    public void  addStudent(Student student) throws DuplicateStudentException{
-        
+    public void addStudent(Student student) throws DuplicateStudentException{
         //Check that new student has unique student number and email
-        if (!(isUnique(student)))
-                throw new DuplicateStudentException("Student info not unique");
+        if (!isUnique(null, student.getEmail(), student.getNum()))
+            throw new DuplicateStudentException("Student info not unique");
        
         students.add(student);
 
