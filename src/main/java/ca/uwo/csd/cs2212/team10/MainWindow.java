@@ -629,12 +629,14 @@ public class MainWindow extends JFrame {
             } else if (email.getText().length() == 0) {
                 JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                //Edit current selected Student
-                if (!gradebook.getActiveCourse().isEmailUnique(email.getText()) || !gradebook.getActiveCourse().isNumUnique(number.getText())){
+
+                //Check that email address and student number are unique
+                if (!gradebook.getActiveCourse().isUnique(student)){    
                     JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
+                //Update student info
                 student.setFirstName(firstName.getText());
                 student.setLastName(lastName.getText());
                 student.setEmail(email.getText());  
