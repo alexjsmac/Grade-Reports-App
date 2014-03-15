@@ -71,8 +71,6 @@ public class TableModel extends AbstractTableModel {
             return null;
         
         Student selectedStudent = students.get(rowIndex);
-        if (columnIndex == IDX_STUDENT)
-            return (selectedStudent.getLastName() + ", " + selectedStudent.getFirstName() + "\n" + selectedStudent.getNum());
         if (columnIndex == IDX_NAME)
             return (selectedStudent.getLastName() + ", " + selectedStudent.getFirstName());
         else if (columnIndex == IDX_NUMBER)
