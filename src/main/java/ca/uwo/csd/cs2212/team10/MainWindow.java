@@ -61,6 +61,9 @@ public class MainWindow extends JFrame {
         for (int i = 1; i < studentsTbl.getModel().getColumnCount(); i++)
             studentsTbl.getColumnModel().getColumn(i).setMinWidth(120);
         
+        //Set height for the rows
+        studentsTbl.setRowHeight(22);
+        
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
