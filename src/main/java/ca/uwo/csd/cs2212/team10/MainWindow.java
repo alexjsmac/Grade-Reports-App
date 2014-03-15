@@ -74,7 +74,6 @@ public class MainWindow extends JFrame {
         });
 
         studentsTbl.addMouseListener(new MouseAdapter() {
-
             //Mouse Listener for Linux/Mac
             @Override
             public void mousePressed(MouseEvent e) {
@@ -87,55 +86,20 @@ public class MainWindow extends JFrame {
                     studentsTbl.clearSelection();
                 }
 
-                int rowindex = studentsTbl.getSelectedRow();
-                if (rowindex < 0) {
-                    return;
-                }
-
-                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
-                    if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) {
+                int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+                if (studentsTbl.getSelectedRow() >= 0 && e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    if (selectedColumn >= 0 && selectedColumn <= 1)
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 0)
-                            && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) <= (studentsTbl.getModel().getColumnCount() - 3))) {
-
+                    else if (selectedColumn >= 1 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3))
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else {
-                        return;
-                    }
-
                 }
             }
 
-        //Mouse LIstener fr Windows
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            studentsTbl.clearSelection();
-            int row = studentsTbl.rowAtPoint(e.getPoint());
-            int column = studentsTbl.columnAtPoint(e.getPoint());
-            if (row >= 0 && row < studentsTbl.getRowCount()) {
-                studentsTbl.changeSelection(row, column, false, false);
-            } else {
-                studentsTbl.clearSelection();
+            //Mouse Listener for Windows
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                mousePressed(e);
             }
-
-            int rowindex = studentsTbl.getSelectedRow();
-            if (rowindex < 0) {
-                return;
-            }
-
-            if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
-                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) {
-                    studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 0)
-                        && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) <= (studentsTbl.getModel().getColumnCount() - 3))) {
-
-                    deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                } else {
-                    return;
-                }
-
-            }
-        }
         });
     }
 
