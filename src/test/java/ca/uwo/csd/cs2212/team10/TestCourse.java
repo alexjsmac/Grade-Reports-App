@@ -47,7 +47,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testAddStudent(){
+    public void testAddStudent() throws DuplicateStudentException{
         course.addStudent(student);
         assertTrue(course.getStudentList().contains(student));
         
@@ -55,7 +55,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testRemoveStudent(){
+    public void testRemoveStudent() throws DuplicateStudentException{
         course.addStudent(student);
         
         course.removeStudent(student);
@@ -79,7 +79,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testAddStudentAlsoAddsGrades(){
+    public void testAddStudentAlsoAddsGrades() throws DuplicateStudentException{
         course.addDeliverable(deliverable);
         course.addStudent(student);
         
@@ -90,7 +90,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testAddDeliverableAlsoAddsGradesToStudents(){
+    public void testAddDeliverableAlsoAddsGradesToStudents() throws DuplicateStudentException{
         course.addStudent(student);
         course.addDeliverable(deliverable);
         
@@ -101,13 +101,19 @@ public class TestCourse{
     }
     
     @Test
-    public void testRemoveDeliverableAlsoRemovesGradesFromStudents(){
+    public void testRemoveDeliverableAlsoRemovesGradesFromStudents() throws DuplicateStudentException{
         course.addStudent(student);
         course.addDeliverable(deliverable);
         
         course.removeDeliverable(deliverable);
         
         assertNull(student.getGrade(deliverable));
+    }
+    
+    @Test(expected = DuplicateStudentException.class)
+    public void testAddingDuplicateStudentThrowsException() throws DuplicateStudentException{
+        course.addStudent(student);
+        course.addStudent(new Student("foo", "bar", student.getEmail(), student.getNum()));
     }
     
     @Test
