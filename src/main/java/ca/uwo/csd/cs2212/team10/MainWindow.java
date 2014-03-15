@@ -26,8 +26,8 @@ public class MainWindow extends JFrame {
     private JComboBox dropDownCourses;
     private JButton addCourseBtn, editCourseBtn, delCourseBtn;
     private JPopupMenu studentTblPopup, deliverableTblPopup;
-    private JMenuItem addStudentPopupMenu, editStudentPopupMenu, delStudentPopupMenu, 
-            addDeliverablePopupMenu, editDeliverablePopupMenu, delDeliverablePopupMenu;
+    private JMenuItem editStudentPopupMenu, delStudentPopupMenu, 
+            editDeliverablePopupMenu, delDeliverablePopupMenu;
     private JMenuBar jMenuBar;
     private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu;
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
@@ -86,8 +86,9 @@ public class MainWindow extends JFrame {
                     studentsTbl.clearSelection();
                 }
 
-                int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
                 if (studentsTbl.getSelectedRow() >= 0 && e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+                    
                     if (selectedColumn >= 0 && selectedColumn <= 1)
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     else if (selectedColumn >= 1 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3))
@@ -128,12 +129,10 @@ public class MainWindow extends JFrame {
         addCourseBtn = new JButton();
         editCourseBtn = new JButton();
         delCourseBtn = new JButton();
-        studentTblPopup = new JPopupMenu ("Students Menu");
-        addStudentPopupMenu = new JMenuItem();
+        studentTblPopup = new JPopupMenu("Students Menu");
         editStudentPopupMenu = new JMenuItem();
         delStudentPopupMenu = new JMenuItem();
-        deliverableTblPopup = new JPopupMenu ("Deliverables Menu");
-        addDeliverablePopupMenu = new JMenuItem();
+        deliverableTblPopup = new JPopupMenu("Deliverables Menu");
         editDeliverablePopupMenu = new JMenuItem();
         delDeliverablePopupMenu = new JMenuItem();
         jMenuBar = new JMenuBar();
@@ -325,14 +324,6 @@ public class MainWindow extends JFrame {
 
         setJMenuBar(jMenuBar);
 
-        addStudentPopupMenu.setText("Add Student");
-        addStudentPopupMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                addStudentAction();
-            }
-        });
-        studentTblPopup.add(addStudentPopupMenu);
-
         editStudentPopupMenu.setText("Edit Student");
         editStudentPopupMenu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -349,14 +340,6 @@ public class MainWindow extends JFrame {
         });
         
         studentTblPopup.add(delStudentPopupMenu);
-
-        addDeliverablePopupMenu.setText("Add Deliverable");
-        addDeliverablePopupMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                addDeliverableAction();
-            }
-        });
-        deliverableTblPopup.add(addDeliverablePopupMenu);
 
         editDeliverablePopupMenu.setText("Edit Deliverable");
         editDeliverablePopupMenu.addActionListener(new ActionListener() {
@@ -375,7 +358,6 @@ public class MainWindow extends JFrame {
         
         deliverableTblPopup.add(delDeliverablePopupMenu);
 
-        
         
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -520,7 +502,6 @@ public class MainWindow extends JFrame {
         JTextField lastName = new JTextField();
         JTextField number = new JTextField();
         JTextField email = new JTextField();
-        int num;
 
         Object[] message = {
             "Student First Name:", firstName,
@@ -559,16 +540,15 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (studentsTbl.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(this, "No student selected.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (studentsTbl.getSelectedRow() < 0){
+            JOptionPane.showMessageDialog(this, "No Student selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        }
-            
-        //Get current selected Student
-        int row = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
-        Student student = gradebook.getActiveCourse().getStudentList().get(row);
-
+        } 
         
+        //Get the Student object
+        int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
+        Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
+
         JTextField firstName = new JTextField(student.getFirstName());
         JTextField lastName = new JTextField(student.getLastName());
         JTextField number = new JTextField(String.valueOf(student.getNum()));
@@ -616,14 +596,14 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (studentsTbl.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(this, "No student selected.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (studentsTbl.getSelectedRow() < 0){
+            JOptionPane.showMessageDialog(this, "No Student selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        }
+        } 
         
-        //Get current selected Student
-        int row = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
-        Student student = gradebook.getActiveCourse().getStudentList().get(row);
+        //Get the Student object
+        int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
+        Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
         
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Student", JOptionPane.OK_CANCEL_OPTION);
         
@@ -680,16 +660,19 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0) &&
-                (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) >= (studentsTbl.getModel().getColumnCount() - 3))) {
+        } else if (studentsTbl.getSelectedColumn() < 0){
+            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } 
+        
+        int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)){
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-            
-        //Get current selected Deliverable
-        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        //To get the right Deliverable from the list we use column - 1 because the Deliverables start on the 2nd Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 1);
+
+        //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
         
         JTextField name = new JTextField(deliverable.getName());
         JComboBox type = new JComboBox(Deliverable.TYPES);
@@ -729,20 +712,23 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private void delDeliverableAction () {
+    private void delDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if ((studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) == 0)
-                && (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) >= (studentsTbl.getModel().getColumnCount() - 3))) {
+        } else if (studentsTbl.getSelectedColumn() < 0){
+            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } 
+        
+        int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)){
             JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        //Get current selected Deliverable
-        int column = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        //To get the right Deliverable from the list we use (column - 1) because the Deliverables start on the 2nd Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(column - 1);
+        //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
         
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
         
