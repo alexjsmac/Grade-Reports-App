@@ -580,10 +580,10 @@ public class MainWindow extends JFrame {
                 //Create a new Student and add it to the gradebook
                 Student student = new Student(firstName.getText(), lastName.getText(), email.getText(), number.getText());
                 try{
-                  gradebook.getActiveCourse().addStudent(student);
-                }catch (DuplicateStudentException e) {
-                  JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
-                  }
+                    gradebook.getActiveCourse().addStudent(student);
+                } catch (DuplicateStudentException e) {
+                    JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
        
                 //Update JTable
                 refreshTableModel();
@@ -631,7 +631,7 @@ public class MainWindow extends JFrame {
             } else {
 
                 //Check that email address and student number are unique
-                if (!gradebook.getActiveCourse().isUnique(student)){    
+                if (!gradebook.getActiveCourse().isUnique(student, email.getText(), number.getText())){    
                     JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
