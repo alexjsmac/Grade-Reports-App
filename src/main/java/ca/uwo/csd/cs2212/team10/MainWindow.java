@@ -53,8 +53,8 @@ public class MainWindow extends JFrame {
         studentsTbl.setAutoCreateRowSorter(true);
         studentsTbl.setCellSelectionEnabled(true);
         studentsTbl.setGridColor(Color.gray);
-        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        
+        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
         //Set MinWidth for the first Column
         studentsTbl.getColumnModel().getColumn(0).setMinWidth(200);
         //Set width for the rest of the columns
@@ -579,8 +579,12 @@ public class MainWindow extends JFrame {
             } else {
                 //Create a new Student and add it to the gradebook
                 Student student = new Student(firstName.getText(), lastName.getText(), email.getText(), number.getText());
-                gradebook.getActiveCourse().addStudent(student);
-                
+                try{
+                  gradebook.getActiveCourse().addStudent(student);
+                }catch (DuplicateStudentException e) {
+                  JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
+                  }
+       
                 //Update JTable
                 refreshTableModel();
             }
@@ -636,9 +640,15 @@ public class MainWindow extends JFrame {
                 //Edit current selected Student
                 student.setFirstName(firstName.getText());
                 student.setLastName(lastName.getText());
-                student.setEmail(email.getText());
-                student.setNum(number.getText());                
-                
+                if (!(gradebook.getActiveCourse().isEmailUnique(student.getEmail())))      
+                    JOptionPane.showMessageDialog(this, "Student email already exists.", "Error", JOptionPane.ERROR_MESSAGE);  
+                else
+                    student.setEmail(email.getText());  
+                if (!(gradebook.getActiveCourse().isNumUnique(student.getNum())))
+                    JOptionPane.showMessageDialog(this, "Student number already exists.", "Error", JOptionPane.ERROR_MESSAGE);  
+                else {
+                    student.setNum(number.getText());
+                }
                 //Update JTable
                 refreshTableModel();
             }
