@@ -707,7 +707,7 @@ public class MainWindow extends JFrame {
                 deliverable.setWeight(weightInt);
 
                 //Update JTable
-                refreshTableModel();
+                refreshTableModel()
             }
         }
     }
