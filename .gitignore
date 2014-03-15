@@ -12,6 +12,7 @@ target/
 ._*
 *~
 *.~*
+*.swp
 .Spotlight-V100
 .Trashes
 ehthumbs.db
