@@ -11,6 +11,7 @@ target/
 .LSOverride
 ._*
 *~
+~*
 *.~*
 *.swp
 .Spotlight-V100
