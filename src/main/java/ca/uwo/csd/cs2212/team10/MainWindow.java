@@ -743,6 +743,10 @@ public class MainWindow extends JFrame {
         
     }    
     
+    private void firstStartAction() {
+        //TODO: OOBE code
+    }
+    
     private int onExit() {
         storeGradebook();
         System.exit(0);
@@ -750,23 +754,32 @@ public class MainWindow extends JFrame {
     }
     
     private void loadGradebook(){
-        //try to read from main data file
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DATA_FILENAME))){ 
-            gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
-        } catch (FileNotFoundException e){
-            //!! first app startup
-            gradebook = new Gradebook(); //create an empty gradebook
+        try{
+            //try to read from main data file
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DATA_FILENAME))){ 
+                gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
+            } catch (FileNotFoundException e){
+                //!! primary data file doesn't exist
+                if (new File(BACKUP_FILENAME).isFile()){
+                    //!! backup data file exists
+                    throw e; //go to the next catch block
+                } else{
+                    //!! first app startup
+                    gradebook = new Gradebook(); //create an empty gradebook
+                    firstStartAction(); //present OOBE to the user
+                }
+            }
         } catch (IOException | ClassNotFoundException e){
-            //!! main data file corrupt
+            //!! main data file corrupt or non-existent but backup exists
             //try to read from backup data file
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME))){
                 //!! backup was OK
-                JOptionPane.showMessageDialog(this, "The main data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
                 gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
+                JOptionPane.showMessageDialog(this, "The main data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
             } catch (IOException | ClassNotFoundException ex){
                 //!! both data files corrupt
-                JOptionPane.showMessageDialog(this, "The data file was corrupt and could not be recovered. All data was lost.", "Error", JOptionPane.ERROR_MESSAGE);
                 gradebook = new Gradebook(); //create an empty gradebook
+                JOptionPane.showMessageDialog(this, "The data file was corrupt and could not be recovered. All data was lost.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
