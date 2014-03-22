@@ -22,7 +22,6 @@ public class Course implements Serializable {
     private String title;
     private List<Student> students;
     private List<Deliverable> deliverables;
-    //private CSVReader reader;
 
     /* Constructor */
     public Course(String title, String code, String term) {
@@ -108,7 +107,6 @@ public class Course implements Serializable {
     }
     
     public void importStudents(CSVReader reader) throws FileNotFoundException, IOException{
-    	//reader = new CSVReader(new FileReader(filename));
     	String[] line;
     	while ((line = reader.readNext()) != null){
     		Student toAdd = new Student(line[10],line[9],line[13],line[8]);
