@@ -785,7 +785,6 @@ public class MainWindow extends JFrame {
 		chooser.setFileFilter(filter);
 		chooser.showOpenDialog(rootPane);
 		impStudentsFileName = chooser.getSelectedFile().getAbsolutePath();
-		System.out.println(impStudentsFileName);
     }
     
     private void firstStartAction() {

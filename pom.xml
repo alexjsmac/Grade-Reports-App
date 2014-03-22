@@ -20,7 +20,7 @@
         <dependency>
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>2.0</version>
+            <version>2.3</version>
         </dependency>
     </dependencies>
 
@@ -71,7 +71,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ca.uwo.csd.cs2212.ssolisre.App</mainClass>
+                            <mainClass>ca.uwo.csd.cs2212.team10.AppLauncher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
