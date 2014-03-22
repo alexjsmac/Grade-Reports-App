@@ -35,10 +35,12 @@ public class MainWindow extends JFrame {
     private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu;
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
-            addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem;
+            addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
+            expGradesMenuItem;
     private JFileChooser chooser;
     private FileNameExtensionFilter filter;
-    private String impStudentsFileName;
+    private String impCSVName;
+    private String expCSVName;
     private CSVReader reader;
 
     /* Constructor */
@@ -161,6 +163,7 @@ public class MainWindow extends JFrame {
         editDeliverableMenuItem = new JMenuItem();
         delDeliverableMenuItem = new JMenuItem();
         impStudentsMenuItem = new JMenuItem();
+        expGradesMenuItem = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -218,6 +221,14 @@ public class MainWindow extends JFrame {
         	}
         });
         fileMenu.add(impStudentsMenuItem);
+        
+        expGradesMenuItem.setText("Export Grades");
+        expGradesMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt) {
+        		exportGradesAction();
+        	}
+        });
+        fileMenu.add(expGradesMenuItem);
 
         exitMenuItem.setIcon(new ImageIcon(getClass().getResource("/exit.png"))); // NOI18N
         exitMenuItem.setMnemonic(KeyEvent.VK_E);
@@ -760,16 +771,16 @@ public class MainWindow extends JFrame {
     }
     
     private void importStudentsAction(){
-    	chooseFile();
-    	if(impStudentsFileName == null){
+    	chooseCSVFile();
+    	if(impCSVName == null){
     		return;
     	}
-    	if(!(".csv".equalsIgnoreCase(impStudentsFileName.substring(impStudentsFileName.lastIndexOf("."),impStudentsFileName.length())))){
+    	if(!(".csv".equalsIgnoreCase(impCSVName.substring(impCSVName.lastIndexOf("."),impCSVName.length())))){
 			return;
 		}
     	
     	try {
-    		reader = new CSVReader(new FileReader(impStudentsFileName));
+    		reader = new CSVReader(new FileReader(impCSVName));
 			gradebook.getActiveCourse().importStudents(reader);
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(this, "File not found.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -780,8 +791,18 @@ public class MainWindow extends JFrame {
     	refreshTableModel();
     }
     
-    private void chooseFile(){
-    	impStudentsFileName = null;
+    private void exportGradesAction(){
+    	saveCSVFile();
+    	if(expCSVName == null){
+    		return;
+    	}
+    	if(!(".csv".equalsIgnoreCase(expCSVName.substring(expCSVName.lastIndexOf("."),expCSVName.length())))){
+			return;
+    	}
+    }
+    
+    private void chooseCSVFile(){
+    	impCSVName = null;
     	if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -789,12 +810,33 @@ public class MainWindow extends JFrame {
     	chooser = new JFileChooser();
 		filter = new FileNameExtensionFilter("CSV", "csv");
 		chooser.setFileFilter(filter);
-		chooser.showOpenDialog(rootPane);
-		impStudentsFileName = chooser.getSelectedFile().getAbsolutePath();
-		if(!(".csv".equalsIgnoreCase(impStudentsFileName.substring(impStudentsFileName.lastIndexOf("."),impStudentsFileName.length())))){
-			JOptionPane.showMessageDialog(this, "File must be .csv", "Error", JOptionPane.ERROR_MESSAGE);
+		int retrieval = chooser.showOpenDialog(rootPane);
+		if (retrieval == JFileChooser.APPROVE_OPTION){
+			impCSVName = chooser.getSelectedFile().getAbsolutePath();
+			if(!(".csv".equalsIgnoreCase(impCSVName.substring(impCSVName.lastIndexOf("."),impCSVName.length())))){
+				JOptionPane.showMessageDialog(this, "File must be .csv", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		}
+		else{
 			return;
 		}
+    }
+    
+    private void saveCSVFile(){
+    	expCSVName = null;
+    	if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+    	}
+    	chooser = new JFileChooser();
+    	int retrieval = chooser.showSaveDialog(rootPane);
+    	if (retrieval == JFileChooser.APPROVE_OPTION){
+    		expCSVName = chooser.getSelectedFile().getAbsolutePath() + ".csv";
+    	}
+    	else{
+    		return;
+    	}
     }
     
     private void firstStartAction() {
