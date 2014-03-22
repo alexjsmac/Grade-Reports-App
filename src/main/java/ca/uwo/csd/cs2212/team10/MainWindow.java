@@ -39,6 +39,7 @@ public class MainWindow extends JFrame {
     private JFileChooser chooser;
     private FileNameExtensionFilter filter;
     private String impStudentsFileName;
+    private CSVReader reader;
 
     /* Constructor */
     public MainWindow() {
@@ -764,7 +765,8 @@ public class MainWindow extends JFrame {
     		return;
     	}
     	try {
-			gradebook.getActiveCourse().importStudents(impStudentsFileName);
+    		reader = new CSVReader(new FileReader(impStudentsFileName));
+			gradebook.getActiveCourse().importStudents(reader);
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(this, "File not found.", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
