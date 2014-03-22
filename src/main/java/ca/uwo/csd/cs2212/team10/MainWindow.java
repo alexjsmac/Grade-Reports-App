@@ -764,6 +764,10 @@ public class MainWindow extends JFrame {
     	if(impStudentsFileName == null){
     		return;
     	}
+    	if(!(".csv".equalsIgnoreCase(impStudentsFileName.substring(impStudentsFileName.lastIndexOf("."),impStudentsFileName.length())))){
+			return;
+		}
+    	
     	try {
     		reader = new CSVReader(new FileReader(impStudentsFileName));
 			gradebook.getActiveCourse().importStudents(reader);
@@ -787,6 +791,10 @@ public class MainWindow extends JFrame {
 		chooser.setFileFilter(filter);
 		chooser.showOpenDialog(rootPane);
 		impStudentsFileName = chooser.getSelectedFile().getAbsolutePath();
+		if(!(".csv".equalsIgnoreCase(impStudentsFileName.substring(impStudentsFileName.lastIndexOf("."),impStudentsFileName.length())))){
+			JOptionPane.showMessageDialog(this, "File must be .csv", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
     }
     
     private void firstStartAction() {

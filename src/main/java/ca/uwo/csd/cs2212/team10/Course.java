@@ -114,6 +114,22 @@ public class Course implements Serializable {
     	}
     	reader.close();
     }
+    
+    //TODO: Finish this
+    public void importGrades(CSVReader reader) throws FileNotFoundException, IOException{
+    	String[] line;
+    	if((line = reader.readNext()) != null){
+    		if(!(line[0].equalsIgnoreCase("Student Number"))){
+    			throw new IOException("Student Number column not present");
+    		}
+    	}
+    }
+    
+    //TODO: Finish this
+    public void exportGrades(CSVWriter writer) throws IOException{
+    	String[] line;
+    	
+    }
 
     @Override
     public String toString() {
