@@ -2,7 +2,7 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Represents the main Gradebook of the project
@@ -21,6 +21,10 @@ public class Gradebook implements Serializable{
         courses = new ArrayList<Course>();
     }
 
+    public static Gradebook fromObjectInputStream(ObjectInputStream in) throws IOException, ClassNotFoundException{
+        return (Gradebook)in.readObject();
+    }
+    
     /* Public Methods */
 
     public void addCourse(Course course){
@@ -41,5 +45,9 @@ public class Gradebook implements Serializable{
 
     public void setActiveCourse(Course course){
         activeCourse = course;
+    }
+    
+    public void writeToObjectOutputStream(ObjectOutputStream out) throws IOException{
+        out.writeObject(this);
     }
 }

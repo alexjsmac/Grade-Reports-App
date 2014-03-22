@@ -36,7 +36,7 @@ public class MainWindow extends JFrame {
 
     /* Constructor */
     public MainWindow() {
-        gradebook = loadGradebook();
+        loadGradebook();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
@@ -749,63 +749,41 @@ public class MainWindow extends JFrame {
         return 0;
     }
     
-    private Gradebook loadGradebook(){
-        ObjectInputStream in = null;
-        Gradebook gradebook = null;
-        
-        try{ 
-            //attempt reading from data file
-            in = new ObjectInputStream(new FileInputStream(DATA_FILENAME));
-            gradebook = (Gradebook)in.readObject();
-        } catch (Exception e1){
-            //if that didn't work...
-            try{ 
-                //attempt reading from backup data file
-                in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME));
-                gradebook = (Gradebook)in.readObject();
-                
-                //show a warning message
-                JOptionPane.showMessageDialog(this, "The data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
-            } catch (Exception e2){
-                gradebook = new Gradebook(); //return an empty gradebook
+    private void loadGradebook(){
+        //try to read from main data file
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DATA_FILENAME))){ 
+            gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
+        } catch (FileNotFoundException e){
+            //!! first app startup
+            gradebook = new Gradebook(); //create an empty gradebook
+        } catch (IOException | ClassNotFoundException e){
+            //!! main data file corrupt
+            //try to read from backup data file
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME))){
+                //!! backup was OK
+                JOptionPane.showMessageDialog(this, "The main data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
+                gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
+            } catch (IOException | ClassNotFoundException ex){
+                //!! both data files corrupt
+                JOptionPane.showMessageDialog(this, "The data file was corrupt and could not be recovered. All data was lost.", "Error", JOptionPane.ERROR_MESSAGE);
+                gradebook = new Gradebook(); //create an empty gradebook
             }
-        } 
-        finally{
-            try{
-                in.close(); //clean up
-            } catch (Exception e){ }
         }
-        
-        return gradebook;
     }
     
     private void storeGradebook(){
-        //make a backup first
-        try{
-            File dataFile = new File(DATA_FILENAME);
-            File backupFile = new File(BACKUP_FILENAME);
-            
-            backupFile.delete(); //delete the backup first
-            dataFile.renameTo(backupFile); //then make a new one
-        } catch (Exception e) { }
+        //make a backup
+        File dataFile = new File(DATA_FILENAME);
+        File backupFile = new File(BACKUP_FILENAME);
+        backupFile.delete(); //delete the backup first
+        dataFile.renameTo(backupFile); //then make a new one
         
         //store the data
-        ObjectOutputStream out = null;
-        
-        try{
-            out = new ObjectOutputStream(new FileOutputStream(DATA_FILENAME));
-            out.writeObject(gradebook);
-        } catch (FileNotFoundException e){
-            //show a message: data file could not be created
-            JOptionPane.showMessageDialog(this, "The data file could not be created. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILENAME))){ 
+            gradebook.writeToObjectOutputStream(out); //write the gradebook
         } catch (IOException e){
-            //show a message: error writing data file
-            JOptionPane.showMessageDialog(this, "The data file could not be written. Changes have not been saved.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e){ }
-        finally{
-            try{
-                out.close(); //clean up
-            } catch (Exception e){ }
+            //!! data file could not be written
+            JOptionPane.showMessageDialog(this, "The data file could not be written. Changes were not saved.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } 
+    }
 }
