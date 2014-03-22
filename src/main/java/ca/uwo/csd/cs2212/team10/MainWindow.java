@@ -157,7 +157,7 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                onExit();
+                exitAction();
             }
         });
         
@@ -207,7 +207,7 @@ public class MainWindow extends JFrame {
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                onExit();
+                exitAction();
             }
         });
         fileMenu.add(exitMenuItem);
@@ -740,17 +740,23 @@ public class MainWindow extends JFrame {
             
             refreshTableModel();
         }
-        
     }    
     
     private void firstStartAction() {
         //TODO: OOBE code
     }
     
-    private int onExit() {
-        storeGradebook();
-        System.exit(0);
-        return 0;
+    private void exitAction() {
+        try{
+            storeGradebook();
+            System.exit(0);
+        } catch (IOException e){
+            int option = JOptionPane.showConfirmDialog(this, "There was a problem writing the data file. Changes were not saved. Exit anyway?", "Error", JOptionPane.YES_NO_OPTION);
+        
+            if (option == JOptionPane.OK_OPTION) {
+                System.exit(0);
+            }
+        }
     }
     
     private void loadGradebook(){
@@ -784,7 +790,7 @@ public class MainWindow extends JFrame {
         }
     }
     
-    private void storeGradebook(){
+    private void storeGradebook() throws IOException{
         //make a backup
         File dataFile = new File(DATA_FILENAME);
         File backupFile = new File(BACKUP_FILENAME);
@@ -792,11 +798,6 @@ public class MainWindow extends JFrame {
         dataFile.renameTo(backupFile); //then make a new one
         
         //store the data
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILENAME))){ 
-            gradebook.writeToObjectOutputStream(out); //write the gradebook
-        } catch (IOException e){
-            //!! data file could not be written
-            JOptionPane.showMessageDialog(this, "The data file could not be written. Changes were not saved.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        gradebook.writeToObjectOutputStream(new ObjectOutputStream(new FileOutputStream(DATA_FILENAME)));
     }
 }
