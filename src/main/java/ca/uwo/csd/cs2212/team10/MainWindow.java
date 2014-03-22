@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*; 
 import java.util.List;
 import java.util.ArrayList;
+import au.com.bytecode.opencsv.*;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -211,13 +212,7 @@ public class MainWindow extends JFrame {
         impStudentsMenuItem.setText("Import Students From CSV");
         impStudentsMenuItem.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt) {
-        		chooser = new JFileChooser();
-        		filter = new FileNameExtensionFilter("CSV", "csv");
-        		chooser.setFileFilter(filter);
-        		chooser.showOpenDialog(rootPane);
-        		impStudentsFileName = chooser.getSelectedFile().getAbsolutePath();
-        		System.out.println(impStudentsFileName);
-        		//importStudentsAction();
+        		importStudentsAction();
         		
         	}
         });
@@ -764,6 +759,10 @@ public class MainWindow extends JFrame {
     }
     
     private void importStudentsAction(){
+    	chooseFile();
+    	if(impStudentsFileName == null){
+    		return;
+    	}
     	try {
 			gradebook.getActiveCourse().importStudents(impStudentsFileName);
 		} catch (FileNotFoundException e) {
@@ -773,6 +772,20 @@ public class MainWindow extends JFrame {
 			JOptionPane.showMessageDialog(this, "Need a proper error message.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
     	refreshTableModel();
+    }
+    
+    private void chooseFile(){
+    	impStudentsFileName = null;
+    	if (gradebook.getActiveCourse() == null) {
+            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+    	}
+    	chooser = new JFileChooser();
+		filter = new FileNameExtensionFilter("CSV", "csv");
+		chooser.setFileFilter(filter);
+		chooser.showOpenDialog(rootPane);
+		impStudentsFileName = chooser.getSelectedFile().getAbsolutePath();
+		System.out.println(impStudentsFileName);
     }
     
     private void firstStartAction() {

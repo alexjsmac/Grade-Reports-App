@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import au.com.bytecode.opencsv.*;
 import java.io.*;
-import java.io.FileNotFoundException;
 
 /**
  * Represents a course in the Gradebook
