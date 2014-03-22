@@ -210,7 +210,7 @@ public class MainWindow extends JFrame {
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
         
-        impStudentsMenuItem.setText("Import Students From CSV");
+        impStudentsMenuItem.setText("Import Class List");
         impStudentsMenuItem.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt) {
         		importStudentsAction();
