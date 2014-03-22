@@ -6,6 +6,8 @@ import java.awt.event.*;
 import javax.swing.*; 
 import java.util.List;
 import java.util.ArrayList;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,7 +34,10 @@ public class MainWindow extends JFrame {
     private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu;
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
-            addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem;
+            addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem;
+    private JFileChooser chooser;
+    private FileNameExtensionFilter filter;
+    private String impStudentsFileName;
 
     /* Constructor */
     public MainWindow() {
@@ -152,7 +157,8 @@ public class MainWindow extends JFrame {
         deliverablesMenu = new JMenu();
         addDeliverableMenuItem = new JMenuItem();
         editDeliverableMenuItem = new JMenuItem();
-        delDeliverableMenuItem = new JMenuItem();        
+        delDeliverableMenuItem = new JMenuItem();
+        impStudentsMenuItem = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -201,6 +207,21 @@ public class MainWindow extends JFrame {
 
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
+        
+        impStudentsMenuItem.setText("Import Students From CSV");
+        impStudentsMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt) {
+        		chooser = new JFileChooser();
+        		filter = new FileNameExtensionFilter("CSV", "csv");
+        		chooser.setFileFilter(filter);
+        		chooser.showOpenDialog(rootPane);
+        		impStudentsFileName = chooser.getSelectedFile().getAbsolutePath();
+        		System.out.println(impStudentsFileName);
+        		//importStudentsAction();
+        		
+        	}
+        });
+        fileMenu.add(impStudentsMenuItem);
 
         exitMenuItem.setIcon(new ImageIcon(getClass().getResource("/exit.png"))); // NOI18N
         exitMenuItem.setMnemonic(KeyEvent.VK_E);
@@ -211,7 +232,7 @@ public class MainWindow extends JFrame {
             }
         });
         fileMenu.add(exitMenuItem);
-
+       
         jMenuBar.add(fileMenu);
 
         coursesMenu.setMnemonic(KeyEvent.VK_C);
@@ -744,7 +765,7 @@ public class MainWindow extends JFrame {
     
     private void importStudentsAction(){
     	try {
-			gradebook.getActiveCourse().importStudents("import.csv");
+			gradebook.getActiveCourse().importStudents(impStudentsFileName);
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(this, "File not found.", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
