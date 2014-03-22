@@ -740,7 +740,19 @@ public class MainWindow extends JFrame {
             
             refreshTableModel();
         }
-    }    
+    }
+    
+    private void importStudentsAction(){
+    	try {
+			gradebook.getActiveCourse().importStudents("import.csv");
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(this, "File not found.", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException e) {
+			//TODO: proper error message
+			JOptionPane.showMessageDialog(this, "Need a proper error message.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+    	refreshTableModel();
+    }
     
     private void firstStartAction() {
         //TODO: OOBE code

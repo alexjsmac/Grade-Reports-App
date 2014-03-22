@@ -3,6 +3,9 @@ package ca.uwo.csd.cs2212.team10;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import au.com.bytecode.opencsv.*;
+import java.io.*;
+import java.io.FileNotFoundException;
 
 /**
  * Represents a course in the Gradebook
@@ -20,6 +23,7 @@ public class Course implements Serializable {
     private String title;
     private List<Student> students;
     private List<Deliverable> deliverables;
+    private CSVReader reader;
 
     /* Constructor */
     public Course(String title, String code, String term) {
@@ -102,6 +106,16 @@ public class Course implements Serializable {
         //Remove the deliverable from the grade list of each student
         for (Student student : students)
             student.removeGrade(deliverable);
+    }
+    
+    public void importStudents(String filename) throws FileNotFoundException, IOException{
+    	reader = new CSVReader(new FileReader(filename));
+    	String[] line;
+    	while ((line = reader.readNext()) != null){
+    		Student toAdd = new Student(line[10],line[9],line[13],line[8]);
+    		students.add(toAdd);
+    	}
+    	reader.close();
     }
 
     @Override
