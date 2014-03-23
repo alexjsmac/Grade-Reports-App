@@ -117,14 +117,26 @@ public class Course implements Serializable {
     //TODO: Finish this
     public void importGrades(CSVReader reader) throws IOException{
     	String[] line;
+    	ArrayList<String> names = new ArrayList<String>();
     	if((line = reader.readNext()) != null){
     		if(!(line[0].equalsIgnoreCase("Student Number"))){
     			throw new IOException("Student Number column not present");
     		}
+    		for (int i=0;i<line.length;i++){
+    			names.add(line[i+1]);
+    		}
+    	}
+    	
+    	while((line = reader.readNext()) != null){
+    		for (int i=0;i<getStudentList().size();i++){
+    			if(line[0].equals(getStudentList().get(i).getNum())){
+    				
+    			}
+    		}
     	}
     }
     
-    
+   
     public void exportGrades(CSVWriter writer) throws IOException{
     	int size = deliverables.size()+4;
     	String[] header = new String[size];
