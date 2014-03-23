@@ -106,17 +106,16 @@ public class Course implements Serializable {
             student.removeGrade(deliverable);
     }
     
-    public void importStudents(CSVReader reader) throws FileNotFoundException, IOException{
+    public void importStudents(CSVReader reader) throws IOException{
     	String[] line;
     	while ((line = reader.readNext()) != null){
     		Student toAdd = new Student(line[10],line[9],line[13],line[8]);
     		students.add(toAdd);
     	}
-    	reader.close();
     }
     
     //TODO: Finish this
-    public void importGrades(CSVReader reader) throws FileNotFoundException, IOException{
+    public void importGrades(CSVReader reader) throws IOException{
     	String[] line;
     	if((line = reader.readNext()) != null){
     		if(!(line[0].equalsIgnoreCase("Student Number"))){
