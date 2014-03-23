@@ -124,10 +124,32 @@ public class Course implements Serializable {
     	}
     }
     
-    //TODO: Finish this
+    
     public void exportGrades(CSVWriter writer) throws IOException{
-    	String[] line;
-    	
+    	int size = deliverables.size()+4;
+    	String[] header = new String[size];
+    	header[0] = "First Name";
+    	header[1] = "Last Name";
+    	header[2] = "Student Number";
+    	header[3] = "Email";
+        for(int i=0;i<deliverables.size();i++){
+        	header[i+4] = deliverables.get(i).getName();
+        }
+        writer.writeNext(header);
+        
+        String[] student = new String[size];
+        for (int i=0;i<getStudentList().size();i++){
+        	student[0] = getStudentList().get(i).getFirstName();
+        	student[1] = getStudentList().get(i).getLastName();
+        	student[2] = getStudentList().get(i).getNum();
+        	student[3] = getStudentList().get(i).getEmail();
+        	
+        	for(int j=0;j<deliverables.size();j++){
+        		student[j+4] = Double.toString(getStudentList().get(i).getGrade(deliverables.get(j)));
+        	}
+        	writer.writeNext(student);
+        }
+    	writer.close();    	
     }
 
     @Override
