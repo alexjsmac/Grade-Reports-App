@@ -110,22 +110,25 @@ public class UserEntryPrompter{
         retval = JOptionPane.showOptionDialog(parent, message, dialogTitle, JOptionPane.DEFAULT_OPTION,
                                                     JOptionPane.QUESTION_MESSAGE, null, options, ok);
         
-        output = new String[]{title.getText(), code.getText(), term.getText()};
+        if (retval == OK_PRESSED)
+            output = new String[]{title.getText(), code.getText(), term.getText()};
     }
     
     private void showDeliverableDialog(Component parent, int dialogType, String oldName, int oldType, 
                                         String oldWeight, final Course course){
-        final int errorMsgLength = 55; //the amount of space to reserve for the error message
+        final int errorMsgLength = 100; //the amount of space to reserve for the error message
         
         final JTextField name = new JTextField(oldName);
         final JComboBox type = new JComboBox(Deliverable.TYPES);
         final JTextField weight = new JTextField(oldWeight);
-        final JLabel errorMsg = new JLabel(new String(new char[errorMsgLength]).replace("\0", " "));
+        final JLabel errorMsg = new JLabel("<html>" + new String(new char[errorMsgLength]).replace("\0", " ") + "<br> </html>");
         
         final JButton ok = new JButton("OK");
         final JButton cancel = new JButton("Cancel");
         final JButton delete = new JButton("Delete Deliverable");
         
+        if (oldWeight == null)
+            oldWeight = "0";
         final Integer oldWeightVal = new Integer(oldWeight);
         
         type.setSelectedIndex(oldType);
@@ -153,7 +156,7 @@ public class UserEntryPrompter{
                         errorMsg.setText("You must enter a positive integer for the weight.");
                         return;
                     } catch (IllegalArgumentException ex){
-                        errorMsg.setText("The total weights in the course cannot add up to more than 100%.");
+                        errorMsg.setText("<html>The total weights in the course cannot add up to more than 100%.</html>");
                         return;
                     }
                     
@@ -194,12 +197,13 @@ public class UserEntryPrompter{
         retval = JOptionPane.showOptionDialog(parent, message, dialogTitle, JOptionPane.DEFAULT_OPTION,
                                                     JOptionPane.QUESTION_MESSAGE, null, options, ok);
         
-        output = new Object[]{name.getText(), type.getSelectedIndex(), Integer.parseInt(weight.getText())};
+        if (retval == OK_PRESSED)
+            output = new Object[]{name.getText(), type.getSelectedIndex(), Integer.parseInt(weight.getText())};
     }
 
     private void showStudentDialog(Component parent, int dialogType, String oldFirstName, String oldLastName, 
                                     String oldNum, String oldEmail, final Course course, final Student student){
-        final int errorMsgLength = 55; //the amount of space to reserve for the error message
+        final int errorMsgLength = 100; //the amount of space to reserve for the error message
         
         final JTextField firstName = new JTextField(oldFirstName);
         final JTextField lastName = new JTextField(oldLastName);
@@ -272,7 +276,8 @@ public class UserEntryPrompter{
         retval = JOptionPane.showOptionDialog(parent, message, dialogTitle, JOptionPane.DEFAULT_OPTION,
                                                     JOptionPane.QUESTION_MESSAGE, null, options, ok);
         
-        output = new String[]{firstName.getText(), lastName.getText(), number.getText(), email.getText()};
+        if (retval == OK_PRESSED)
+            output = new String[]{firstName.getText(), lastName.getText(), number.getText(), email.getText()};
     }
     
     private static JOptionPane getParentOptionPane(Component c) {
