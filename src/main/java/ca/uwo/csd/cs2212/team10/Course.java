@@ -127,7 +127,10 @@ public class Course implements Serializable {
     	
     	while((line = reader.readNext()) != null){
     		for (int i=0;i<getStudentList().size();i++){
-    			if(line[0].equals(getStudentList().get(i).getNum())){
+    			if(line[0] == null){
+    				throw new IOException("Student Number must be present");
+    			}
+    			else if(line[0].equals(getStudentList().get(i).getNum())){
     				
     			}
     		}
