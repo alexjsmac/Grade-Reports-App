@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
     private JMenuItem editStudentPopupMenu, delStudentPopupMenu, 
             editDeliverablePopupMenu, delDeliverablePopupMenu;
     private JMenuBar jMenuBar;
-    private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu;
+    private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu, importMenu, exportMenu;
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
@@ -62,12 +62,6 @@ public class MainWindow extends JFrame {
         studentsTbl.setGridColor(Color.gray);
         studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        //Set MinWidth for the first Column
-        studentsTbl.getColumnModel().getColumn(0).setMinWidth(200);
-        //Set width for the rest of the columns
-        for (int i = 1; i < studentsTbl.getModel().getColumnCount(); i++)
-            studentsTbl.getColumnModel().getColumn(i).setMinWidth(120);
-        
         //Set height for the rows
         studentsTbl.setRowHeight(22);
         
@@ -148,6 +142,8 @@ public class MainWindow extends JFrame {
         delDeliverablePopupMenu = new JMenuItem();
         jMenuBar = new JMenuBar();
         fileMenu = new JMenu();
+        importMenu = new JMenu();
+        exportMenu = new JMenu();
         exitMenuItem = new JMenuItem();
         coursesMenu = new JMenu();
         addMenuItem = new JMenuItem();
@@ -232,7 +228,15 @@ public class MainWindow extends JFrame {
 
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
+        
+        importMenu.setMnemonic(KeyEvent.VK_I);
+        importMenu.setText("Import");
+        fileMenu.add(importMenu);
 
+        exportMenu.setMnemonic(KeyEvent.VK_E);
+        exportMenu.setText("Export");
+        fileMenu.add(exportMenu);
+        
         impStudentsMenuItem.setText("Import Class List");
         impStudentsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -240,7 +244,7 @@ public class MainWindow extends JFrame {
 
             }
         });
-        fileMenu.add(impStudentsMenuItem);
+        importMenu.add(impStudentsMenuItem);
 
         expGradesMenuItem.setText("Export Grades");
         expGradesMenuItem.addActionListener(new ActionListener() {
@@ -248,9 +252,9 @@ public class MainWindow extends JFrame {
                 exportGradesAction();
             }
         });
-        fileMenu.add(expGradesMenuItem);
+        exportMenu.add(expGradesMenuItem);
 
-        exitMenuItem.setMnemonic(KeyEvent.VK_E);
+        exitMenuItem.setMnemonic(KeyEvent.VK_X);
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
