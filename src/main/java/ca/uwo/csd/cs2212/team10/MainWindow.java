@@ -745,7 +745,10 @@ public class MainWindow extends JFrame {
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error writing selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            
+            setStatusBar("Exported CSV to file: " + chooser.getSelectedFile().getAbsolutePath());
         }
     }
     
