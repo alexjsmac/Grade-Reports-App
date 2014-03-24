@@ -12,7 +12,7 @@ public class TestCourse{
     @Before
     public void setup(){
         course = new Course("foo", "bar", "daz");
-        student = new Student("foo", "bar", "daz", "1");
+        student = new Student("foo", "bar", "1", "daz");
         deliverable = new Deliverable("Foo", Deliverable.ASSIGNMENT_TYPE, 0);
     }
     
@@ -111,9 +111,20 @@ public class TestCourse{
     }
     
     @Test(expected = DuplicateStudentException.class)
-    public void testAddingDuplicateStudentThrowsException() throws DuplicateStudentException{
+    public void testNewDuplicateStudentFailsValidation() throws DuplicateStudentException{
         course.addStudent(student);
-        course.addStudent(new Student("foo", "bar", student.getEmail(), student.getNum()));
+        
+        course.validateStudentModification(null, student.getEmail(), student.getNum());
+    }
+    
+    @Test(expected = DuplicateStudentException.class)
+    public void testExistingDuplicateStudentFailsValidation() throws DuplicateStudentException{
+        Student student2 = new Student("foo", "bar", "2", "quux");
+        
+        course.addStudent(student);
+        course.addStudent(student2);
+        
+        course.validateStudentModification(student2, student.getEmail(), student.getNum());
     }
     
     @Test

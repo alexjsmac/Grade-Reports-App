@@ -66,19 +66,17 @@ public class Course implements Serializable {
         return deliverables;
     }
 
-    public boolean isUnique(Student oldStudent, String newEmail, String newNum){
-        for (Student student : students)
-            if (student != oldStudent)
-                if (newEmail.equals(student.getEmail()) || newNum.equals(student.getNum()))
-                    return false;
-        return true;
+    public void validateStudentModification(Student student, String newEmail, String newNum) throws DuplicateStudentException{
+        for (Student s : students)
+            if (s != student){
+                if (newEmail.equals(s.getEmail()))
+                    throw new DuplicateStudentException(DuplicateStudentException.DUP_EMAIL);
+                else if (newNum.equals(s.getNum()))
+                    throw new DuplicateStudentException(DuplicateStudentException.DUP_NUMBER);
+            }
     }
     
-    public void addStudent(Student student) throws DuplicateStudentException{
-        //Check that new student has unique student number and email
-        if (!isUnique(null, student.getEmail(), student.getNum()))
-            throw new DuplicateStudentException("Student info not unique");
-       
+    public void addStudent(Student student){
         students.add(student);
 
         //Add each deliverable to the grade list

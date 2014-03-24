@@ -13,7 +13,7 @@ public class TestStudent{
     
     @Before
     public void setup(){
-        student = new Student("John", "Doe", "jdoe@example.com","123456789");
+        student = new Student("John", "Doe", "1234567890", "jdoe@example.com");
         
         asn1 = new Deliverable("Asn1", Deliverable.ASSIGNMENT_TYPE, 5);
         asn2 = new Deliverable("Asn2", Deliverable.ASSIGNMENT_TYPE, 10);
@@ -21,18 +21,14 @@ public class TestStudent{
         exam2 = new Deliverable("Final", Deliverable.EXAM_TYPE, 50);
     }
     
-    private void setGradeValues(){
-        
-    }
-    
     @Test
     public void testConstructorSetsAttributes(){
-        student = new Student("John", "Doe", "jdoe@example.com", "123456789");
+        student = new Student("John", "Doe", "1234567890", "jdoe@example.com");
         
         assertEquals("John", student.getFirstName());
         assertEquals("Doe", student.getLastName());
+        assertEquals("1234567890", student.getNum());
         assertEquals("jdoe@example.com", student.getEmail());
-        assertEquals("123456789", student.getNum());
     }
     
     @Test

@@ -16,16 +16,16 @@ public class Student implements Serializable {
     /* Attributes */
     private String firstName;
     private String lastName;
-    private String email;
     private String num;
+    private String email;
     private HashMap<Deliverable, Double> grades;
     
     /* Constructor */
-    public Student(String firstName, String lastName, String email, String num){
+    public Student(String firstName, String lastName, String num, String email){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.num = num;
+        this.email = email;
         
         grades = new HashMap<Deliverable, Double>();
     }
@@ -40,12 +40,12 @@ public class Student implements Serializable {
         this.lastName = lastName;
     }
     
-    public void setEmail(String email){
-        this.email = email;
-    }
-    
     public void setNum(String num){
         this.num = num;
+    }
+    
+    public void setEmail(String email){
+        this.email = email;
     }
     
     public String getFirstName(){
@@ -56,12 +56,12 @@ public class Student implements Serializable {
         return lastName;
     }
     
-    public String getEmail(){
-        return email;
-    }
-    
     public String getNum(){
         return num;
+    }
+    
+    public String getEmail(){
+        return email;
     }
     
     public void removeGrade(Deliverable deliverable){

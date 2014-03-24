@@ -466,40 +466,23 @@ public class MainWindow extends JFrame {
     }
 
     private void addCourseAction(){                     
-        JTextField title = new JTextField();
-        JTextField code = new JTextField();
-        JTextField term = new JTextField();
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showAddCourseDialog(this);
         
-        Object[] message = {
-            "Course title:", title,
-            "Course code:", code,
-            "Term:", term
-        };
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
+            String[] output = (String[])prompt.getOutput();
         
-        int option = JOptionPane.showConfirmDialog(this, message, "Add Course", JOptionPane.OK_CANCEL_OPTION);
-        
-        if (option == JOptionPane.OK_OPTION) {
-            dropDownCourses.removeItem("Add Course");
+            //Create a new Course and add it to the gradebook
+            Course course = new Course(output[0], output[1], output[2]);
+            gradebook.addCourse(course);
+                  
+            //Add the entry to the dropdown list
+            dropDownCourses.addItem(course);
             
-            if (title.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (code.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (term.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else{
-                //Create a new Course and add it to the gradebook
-                Course course = new Course(title.getText(), code.getText(), term.getText());
-                gradebook.addCourse(course);
-                      
-                //Add the entry to the dropdown list
-                dropDownCourses.addItem(course);
-                
-                //Make "Add Course" the last Item on the list                
-                dropDownCourses.addItem("Add Course");
-                
-                dropDownCourses.setSelectedItem(course);
-            }
+            //Make "Add Course" the last Item on the list                
+            dropDownCourses.addItem("Add Course");
+            
+            dropDownCourses.setSelectedItem(course);
         }
     }
 
@@ -509,43 +492,31 @@ public class MainWindow extends JFrame {
             return;
         }
     
-        JTextField title = new JTextField(gradebook.getActiveCourse().getTitle());
-        JTextField code = new JTextField(gradebook.getActiveCourse().getCode());
-        JTextField term = new JTextField(gradebook.getActiveCourse().getTerm());
+        Course activeCourse = gradebook.getActiveCourse();
         
-        Object[] message = {
-            "Course title:", title,
-            "Course code:", code,
-            "Term:", term
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "Edit Course", JOptionPane.OK_CANCEL_OPTION);
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showEditCourseDialog(this, activeCourse);
         
-        if (option == JOptionPane.OK_OPTION) {
-            if (title.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (code.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No code entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (term.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No term entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else{
-                Course activeCourse = gradebook.getActiveCourse();
+        int retval = prompt.getReturnValue();
+        if (retval == UserEntryPrompter.OK_PRESSED){
+            String[] output = (String[])prompt.getOutput();
             
-                //Set the attributes
-                activeCourse.setTitle(title.getText());
-                activeCourse.setCode(code.getText());
-                activeCourse.setTerm(term.getText());
-                
-                //Refresh the dropdown list entry
-                dropDownCourses.removeItem(activeCourse);
-                dropDownCourses.addItem(activeCourse);
-                
-                //Make "Add Course" the last Item on the list
-                dropDownCourses.removeItem("Add Course");
-                dropDownCourses.addItem("Add Course");
-                
-                dropDownCourses.setSelectedItem(activeCourse);
-            }
+            //Set the attributes
+            activeCourse.setTitle(output[0]);
+            activeCourse.setCode(output[1]);
+            activeCourse.setTerm(output[2]);
+            
+            //Refresh the dropdown list entry
+            dropDownCourses.removeItem(activeCourse);
+            dropDownCourses.addItem(activeCourse);
+            
+            //Make "Add Course" the last Item on the list
+            dropDownCourses.removeItem("Add Course");
+            dropDownCourses.addItem("Add Course");
+            
+            dropDownCourses.setSelectedItem(activeCourse);
+        } else if (retval == UserEntryPrompter.DELETE_PRESSED){
+            delCourseAction();
         }
     }
 
@@ -570,42 +541,21 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        JTextField firstName = new JTextField();
-        JTextField lastName = new JTextField();
-        JTextField number = new JTextField();
-        JTextField email = new JTextField();
-
-        Object[] message = {
-            "Student First Name:", firstName,
-            "Student Last Name:", lastName,
-            "Student Number:", number,
-            "Student Email:", email
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "Add Student", JOptionPane.OK_CANCEL_OPTION);
-
-        if (option == JOptionPane.OK_OPTION) {
-            if (firstName.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No First Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (lastName.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Last Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (number.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Student number entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (email.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                //Create a new Student and add it to the gradebook
-                Student student = new Student(firstName.getText(), lastName.getText(), email.getText(), number.getText());
-                try{
-                    gradebook.getActiveCourse().addStudent(student);
-                } catch (DuplicateStudentException e) {
-                    JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-       
-                //Update JTable
-                refreshTableModel();
-                setStatusBar("Added new Student");
-            }
+        Course activeCourse = gradebook.getActiveCourse();
+        
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showAddStudentDialog(this, activeCourse);
+        
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
+            String[] output = (String[])prompt.getOutput();
+        
+            //Create a new Student and add it to the gradebook
+            Student student = new Student(output[0], output[1], output[2], output[3]);
+            gradebook.getActiveCourse().addStudent(student);
+   
+            //Update JTable
+            refreshTableModel();
+            setStatusBar("Added new Student");
         }
     }
 
@@ -621,52 +571,30 @@ public class MainWindow extends JFrame {
         //Get the Student object
         int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
         Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
+        Course activeCourse = gradebook.getActiveCourse();
 
-        JTextField firstName = new JTextField(student.getFirstName());
-        JTextField lastName = new JTextField(student.getLastName());
-        JTextField number = new JTextField(String.valueOf(student.getNum()));
-        JTextField email = new JTextField(student.getEmail());
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showEditStudentDialog(this, student, activeCourse);
+        
+        int retval = prompt.getReturnValue();
+        if (retval == UserEntryPrompter.OK_PRESSED){
+            String[] output = (String[])prompt.getOutput();
+            
+            //Update student info
+            student.setFirstName(output[0]);
+            student.setLastName(output[1]);
+            student.setNum(output[2]);
+            student.setEmail(output[3]);
 
-        Object[] message = {
-            "Student First Name:", firstName,
-            "Student Last Name:", lastName,
-            "Student Number:", number,
-            "Student Email:", email
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "Edit Student", JOptionPane.OK_CANCEL_OPTION);
-
-        if (option == JOptionPane.OK_OPTION) {
-            if (firstName.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No First Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (lastName.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Last Name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (number.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Student number entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (email.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No Student email entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-
-                //Check that email address and student number are unique
-                if (!gradebook.getActiveCourse().isUnique(student, email.getText(), number.getText())){    
-                    JOptionPane.showMessageDialog(this, "Student info not unique.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                //Update student info
-                student.setFirstName(firstName.getText());
-                student.setLastName(lastName.getText());
-                student.setEmail(email.getText());  
-                student.setNum(number.getText());
-
-                //Update JTable
-                refreshTableModel();
-                setStatusBar("Edited Student");
-            }
+            //Update JTable
+            refreshTableModel();
+            setStatusBar("Edited Student");
+        } else if (retval == UserEntryPrompter.DELETE_PRESSED){
+            delStudentAction();
         }
     }
 
-    private void delStudentAction () {
+    private void delStudentAction() {
         if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -695,40 +623,21 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        JTextField name = new JTextField();
-        JComboBox type = new JComboBox(Deliverable.TYPES);
-        JTextField weight = new JTextField();
-        int weightInt;
+        Course activeCourse = gradebook.getActiveCourse();
+        
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showAddDeliverableDialog(this, activeCourse);
+        
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
+            Object[] output = prompt.getOutput();
 
-        Object[] message = {
-            "Deliverable Name:", name,
-            "Deliverable Type:", type,
-            "Deliverable Weight:", weight
-        };
+            //Create a new Deliverable and add it to the Course
+            Deliverable deliverable = new Deliverable((String)output[0], (int)output[1], (int)output[2]);
+            gradebook.getActiveCourse().addDeliverable(deliverable);
 
-        int option = JOptionPane.showConfirmDialog(this, message, "Add Deliverable", JOptionPane.OK_CANCEL_OPTION);
-
-        if (option == JOptionPane.OK_OPTION) {
-            if (name.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (weight.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                try {
-                    weightInt = Integer.parseInt(weight.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "The weight must be an integer.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                //Create a new Deliverable and add it to the Course
-                Deliverable deliverable = new Deliverable(name.getText(), type.getSelectedIndex(), weightInt);
-                gradebook.getActiveCourse().addDeliverable(deliverable);
-
-                //Update JTable
-                refreshTableModel();
-                setStatusBar("Added new Deliverable");
-            }
+            //Update JTable
+            refreshTableModel();
+            setStatusBar("Added new Deliverable");
         }
     }
 
@@ -749,43 +658,25 @@ public class MainWindow extends JFrame {
 
         //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
+        Course activeCourse = gradebook.getActiveCourse();
         
-        JTextField name = new JTextField(deliverable.getName());
-        JComboBox type = new JComboBox(Deliverable.TYPES);
-        type.setSelectedIndex(deliverable.getType());
-        JTextField weight = new JTextField(String.valueOf(deliverable.getWeight()));
-        int weightInt;
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showEditDeliverableDialog(this, deliverable, activeCourse);
+        
+        int retval = prompt.getReturnValue();
+        if (retval == UserEntryPrompter.OK_PRESSED){
+            Object[] output = prompt.getOutput();
+            
+            //Update Deliverable
+            deliverable.setName((String)output[0]);
+            deliverable.setType((int)output[1]);
+            deliverable.setWeight((int)output[2]);
 
-        Object[] message = {
-            "Deliverable Name:", name,
-            "Deliverable Type:", type,
-            "Deliverable Weight:", weight
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "Edit Deliverable", JOptionPane.OK_CANCEL_OPTION);
-
-        if (option == JOptionPane.OK_OPTION) {
-            if (name.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No name entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (weight.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this, "No weight entered.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                try {
-                    weightInt = Integer.parseInt(weight.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "The weight must be an integer.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                //Updates Deliverable
-                deliverable.setName(name.getText());
-                deliverable.setType(type.getSelectedIndex());
-                deliverable.setWeight(weightInt);
-
-                //Update JTable
-                refreshTableModel();
-                setStatusBar("Edited Deliverable");
-            }
+            //Update JTable
+            refreshTableModel();
+            setStatusBar("Edited Deliverable");
+        } else if (retval == UserEntryPrompter.DELETE_PRESSED){
+            delDeliverableAction();
         }
     }
 
@@ -823,7 +714,7 @@ public class MainWindow extends JFrame {
             return;
     	}
         
-    	JFileChooser chooser = new JFileChooser();
+    	CustomFileChooser chooser = new CustomFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
         
 		int option = chooser.showOpenDialog(rootPane);
