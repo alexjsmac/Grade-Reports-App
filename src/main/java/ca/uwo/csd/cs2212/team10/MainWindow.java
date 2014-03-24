@@ -709,16 +709,16 @@ public class MainWindow extends JFrame {
     }
     
     private void importStudentsAction(){
-    	if (gradebook.getActiveCourse() == null) {
+        if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-    	}
+        }
         
-    	CustomFileChooser chooser = new CustomFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
+        CustomFileChooser chooser = new CustomFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
         
-		int option = chooser.showOpenDialog(rootPane);
-		if (option == JFileChooser.APPROVE_OPTION){
+        int option = chooser.showOpenDialog(rootPane);
+        if (option == JFileChooser.APPROVE_OPTION){
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().importStudents(reader);
             } catch (IOException e) {
@@ -727,26 +727,26 @@ public class MainWindow extends JFrame {
             
             refreshTableModel();
             setStatusBar(null);
-		}
+        }
     }
     
     private void exportGradesAction(){
-    	if (gradebook.getActiveCourse() == null) {
+        if (gradebook.getActiveCourse() == null) {
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-    	}
+        }
         
-    	CustomFileChooser chooser = new CustomFileChooser();
+        CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
         
-    	int option = chooser.showSaveDialog(rootPane);
-    	if (option == JFileChooser.APPROVE_OPTION){
+        int option = chooser.showSaveDialog(rootPane);
+        if (option == JFileChooser.APPROVE_OPTION){
             try (CSVWriter writer = new CSVWriter(new FileWriter(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error writing selected file.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-    	}
+        }
     }
     
     private void setStatusBar(String status) {

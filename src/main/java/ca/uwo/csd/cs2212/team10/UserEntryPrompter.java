@@ -14,6 +14,8 @@ public class UserEntryPrompter{
     private static final int ADD_TYPE = 1;
     private static final int EDIT_TYPE = 2;
     
+    private static final int MAX_ERROR_WIDTH = 220;
+    
     private int retval;
     private Object[] output;
     
@@ -66,13 +68,16 @@ public class UserEntryPrompter{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (title.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a title.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a title."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else if (code.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a course code.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a course code."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else if (term.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a term.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a term."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else{
                     getParentOptionPane((Component)e.getSource()).setValue(ok);
@@ -138,7 +143,8 @@ public class UserEntryPrompter{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (name.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a name.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                            "You must enter a name."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else {
                     try {
@@ -155,11 +161,13 @@ public class UserEntryPrompter{
                             throw new IllegalArgumentException();
                         
                     } catch (NumberFormatException ex) {
-                        errorMsg.setText("<html>You must enter a positive integer for the weight.</html>");
+                        errorMsg.setText(formatForErrorLabel(
+                            "You must enter a positive integer for the weight."));
                         getParentDialog((Component)e.getSource()).pack();
                         return;
                     } catch (IllegalArgumentException ex){
-                        errorMsg.setText("<html>The total weights in the course cannot add up to more than 100%.</html>");
+                        errorMsg.setText(formatForErrorLabel(
+                            "The total weights in the course cannot add up to more than 100%."));
                         getParentDialog((Component)e.getSource()).pack();
                         return;
                     }
@@ -224,26 +232,32 @@ public class UserEntryPrompter{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (firstName.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a first name.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a first name."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else if (lastName.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a last name.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a last name."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else if (number.getText().trim().isEmpty()) {
-                    errorMsg.setText("<html>You must enter a student number.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a student number."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else if (!isValidEmail(email.getText())) {
-                    errorMsg.setText("<html>You must enter a valid email address.</html>");
+                    errorMsg.setText(formatForErrorLabel(
+                        "You must enter a valid email address."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else {
                     try {
                         containingCourse.validateStudentModification(student, email.getText(), number.getText());
                     } catch (DuplicateStudentException ex) {
                         if (ex.getReason() == DuplicateStudentException.DUP_NUMBER){
-                            errorMsg.setText("<html>The student number entered is already used by another student.</html>");
+                            errorMsg.setText(formatForErrorLabel(
+                                "The student number entered is already used by another student."));
                             getParentDialog((Component)e.getSource()).pack();
                         } else if (ex.getReason() == DuplicateStudentException.DUP_EMAIL){
-                            errorMsg.setText("<html>The email address entered is already used by another student.</html>");
+                            errorMsg.setText(formatForErrorLabel(
+                                "The email address entered is already used by another student."));
                             getParentDialog((Component)e.getSource()).pack();
                         }
                         return;
@@ -311,12 +325,16 @@ public class UserEntryPrompter{
         return null;
     }
     
-    private boolean isValidEmail(String email) {
+    private static boolean isValidEmail(String email) {
         try {
             InternetAddress internetAddress = new InternetAddress(email);
             internetAddress.validate();
             return true;
         } catch (AddressException e) { }
         return false;
+    }
+    
+    private static String formatForErrorLabel(String text){
+        return String.format("<html><div WIDTH=%d>%s</div><html>", MAX_ERROR_WIDTH, text);
     }
 }
