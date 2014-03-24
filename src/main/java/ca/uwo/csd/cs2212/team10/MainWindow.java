@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
 import au.com.bytecode.opencsv.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -26,7 +27,10 @@ public class MainWindow extends JFrame {
     private JScrollPane jScrollPane1;
     private JTable studentsTbl;
     private JComboBox dropDownCourses;
-    private JButton addCourseBtn, editCourseBtn, delCourseBtn;
+    private JPanel statusPanel;
+    private JLabel statusLabel;
+    private JButton addStudentBtn, addDeliverableBtn, editDeliverableBtn, 
+            emailBtn, genRepBtn;
     private JPopupMenu studentTblPopup, deliverableTblPopup;
     private JMenuItem editStudentPopupMenu, delStudentPopupMenu, 
             editDeliverablePopupMenu, delDeliverablePopupMenu;
@@ -128,13 +132,14 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-
         jScrollPane1 = new JScrollPane();
         studentsTbl = new JTable();
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
-        addCourseBtn = new JButton();
-        editCourseBtn = new JButton();
-        delCourseBtn = new JButton();
+        addStudentBtn = new JButton();
+        addDeliverableBtn = new JButton();
+        editDeliverableBtn = new JButton();
+        emailBtn = new JButton();
+        genRepBtn = new JButton();
         studentTblPopup = new JPopupMenu("Students Menu");
         editStudentPopupMenu = new JMenuItem();
         delStudentPopupMenu = new JMenuItem();
@@ -165,66 +170,86 @@ public class MainWindow extends JFrame {
                 exitAction();
             }
         });
-        
+
         setTitle("Gradebook");
 
         jScrollPane1.setViewportView(studentsTbl);
 
+        dropDownCourses.addItem("Add Course");
+        dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
         dropDownCourses.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent evt) {
                 dropDownItemChanged(evt);
             }
         });
-        dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
+        
+        
 
-        addCourseBtn.setIcon(new ImageIcon(getClass().getResource("/new.png"))); // NOI18N
-        addCourseBtn.setMnemonic(KeyEvent.VK_N);
-        addCourseBtn.setToolTipText("Add a new Course (Alt+N)");
-        addCourseBtn.addActionListener(new ActionListener() {
+        addStudentBtn.setText("Add Student");
+        addStudentBtn.setMnemonic(KeyEvent.VK_B);
+        addStudentBtn.setToolTipText("Add a new Student to the active Course (Alt+B)");
+        addStudentBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                addCourseAction(evt);
+                addStudentAction();
             }
         });
 
-        editCourseBtn.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
-        editCourseBtn.setMnemonic(KeyEvent.VK_E);
-        editCourseBtn.setToolTipText("Edit Selected Course (Alt+E)");
-        editCourseBtn.addActionListener(new ActionListener() {
+        addDeliverableBtn.setText("Add Deliverable");
+        addDeliverableBtn.setMnemonic(KeyEvent.VK_N);
+        addDeliverableBtn.setToolTipText("Add a new Deliverable to the active Course (Alt+N)");
+        addDeliverableBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                editCourseAction(evt);
+                addDeliverableAction();
             }
         });
 
-        delCourseBtn.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
-        delCourseBtn.setMnemonic(KeyEvent.VK_D);
-        delCourseBtn.setToolTipText("Delete Selected Course (Alt+D)");
-        delCourseBtn.addActionListener(new ActionListener() {
+        editDeliverableBtn.setText("Edit Deliverable");
+        editDeliverableBtn.setMnemonic(KeyEvent.VK_E);
+        editDeliverableBtn.setToolTipText("Edit selected Deliverable (Alt+E)");
+        editDeliverableBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                delCourseAction(evt);
+                editDeliverableAction();
+            }
+        });
+
+        emailBtn.setText("Email");
+        emailBtn.setMnemonic(KeyEvent.VK_M);
+        emailBtn.setToolTipText("Send email (ALT+M)");
+        emailBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                //TODO implement email action
+            }
+        });
+
+        genRepBtn.setText("Generate Reports");
+        genRepBtn.setMnemonic(KeyEvent.VK_R);
+        genRepBtn.setToolTipText("Generate grade reports (ALT+R)");
+        genRepBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                //TODO implement Generate Reports Action
             }
         });
 
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
-        
+
         impStudentsMenuItem.setText("Import Class List");
         impStudentsMenuItem.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent evt) {
-        		importStudentsAction();
-        		
-        	}
+            public void actionPerformed(ActionEvent evt) {
+                importStudentsAction();
+
+            }
         });
         fileMenu.add(impStudentsMenuItem);
-        
+
         expGradesMenuItem.setText("Export Grades");
         expGradesMenuItem.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent evt) {
-        		exportGradesAction();
-        	}
+            public void actionPerformed(ActionEvent evt) {
+                exportGradesAction();
+            }
         });
         fileMenu.add(expGradesMenuItem);
 
-        exitMenuItem.setIcon(new ImageIcon(getClass().getResource("/exit.png"))); // NOI18N
         exitMenuItem.setMnemonic(KeyEvent.VK_E);
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
@@ -233,38 +258,35 @@ public class MainWindow extends JFrame {
             }
         });
         fileMenu.add(exitMenuItem);
-       
+
         jMenuBar.add(fileMenu);
 
         coursesMenu.setMnemonic(KeyEvent.VK_C);
         coursesMenu.setText("Courses");
 
-        addMenuItem.setIcon(new ImageIcon(getClass().getResource("/new.png"))); // NOI18N
         addMenuItem.setMnemonic(KeyEvent.VK_A);
         addMenuItem.setText("Add Course");
         addMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                addCourseAction(evt);
+                addCourseAction();
             }
         });
         coursesMenu.add(addMenuItem);
 
-        editMenuItem.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
         editMenuItem.setMnemonic(KeyEvent.VK_E);
         editMenuItem.setText("Edit Course");
         editMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                editCourseAction(evt);
+                editCourseAction();
             }
         });
         coursesMenu.add(editMenuItem);
 
-        delMenuItem.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
         delMenuItem.setMnemonic(KeyEvent.VK_D);
         delMenuItem.setText("Delete Course");
         delMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                delCourseAction(evt);
+                delCourseAction();
             }
         });
         coursesMenu.add(delMenuItem);
@@ -274,8 +296,6 @@ public class MainWindow extends JFrame {
         studentsMenu.setMnemonic(KeyEvent.VK_S);
         studentsMenu.setText("Students");
 
-        //TODO Get icon?
-        //addStudentMenuItem.setIcon(new ImageIcon(getClass().getResource("/newStudent.png"))); // NOI18N
         addStudentMenuItem.setMnemonic(KeyEvent.VK_A);
         addStudentMenuItem.setText("Add Student");
         addStudentMenuItem.addActionListener(new ActionListener() {
@@ -285,8 +305,6 @@ public class MainWindow extends JFrame {
         });
         studentsMenu.add(addStudentMenuItem);
 
-        //TODO Get Icon
-        //editStudentMenuItem.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
         editStudentMenuItem.setMnemonic(KeyEvent.VK_E);
         editStudentMenuItem.setText("Edit Student");
         editStudentMenuItem.addActionListener(new ActionListener() {
@@ -296,8 +314,6 @@ public class MainWindow extends JFrame {
         });
         studentsMenu.add(editStudentMenuItem);
 
-        //TODO get icon
-        //delStudentMenuItem.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
         delStudentMenuItem.setMnemonic(KeyEvent.VK_D);
         delStudentMenuItem.setText("Delete Student");
         delStudentMenuItem.addActionListener(new ActionListener() {
@@ -312,8 +328,6 @@ public class MainWindow extends JFrame {
         deliverablesMenu.setMnemonic(KeyEvent.VK_D);
         deliverablesMenu.setText("Deliverables");
 
-        //TODO Get icon?
-        //addDeliverableMenuItem.setIcon(new ImageIcon(getClass().getResource("/newStudent.png"))); // NOI18N
         addDeliverableMenuItem.setMnemonic(KeyEvent.VK_A);
         addDeliverableMenuItem.setText("Add Deliverable");
         addDeliverableMenuItem.addActionListener(new ActionListener() {
@@ -323,8 +337,6 @@ public class MainWindow extends JFrame {
         });
         deliverablesMenu.add(addDeliverableMenuItem);
 
-        //TODO Get Icon
-        //editDeliverableMenuItem.setIcon(new ImageIcon(getClass().getResource("/edit.png"))); // NOI18N
         editDeliverableMenuItem.setMnemonic(KeyEvent.VK_E);
         editDeliverableMenuItem.setText("Edit Deliverable");
         editDeliverableMenuItem.addActionListener(new ActionListener() {
@@ -334,8 +346,6 @@ public class MainWindow extends JFrame {
         });
         deliverablesMenu.add(editDeliverableMenuItem);
 
-        //TODO get icon
-        //delDeliverableMenuItem.setIcon(new ImageIcon(getClass().getResource("/del.png"))); // NOI18N
         delDeliverableMenuItem.setMnemonic(KeyEvent.VK_D);
         delDeliverableMenuItem.setText("Delete Deliverable");
         delDeliverableMenuItem.addActionListener(new ActionListener() {
@@ -363,7 +373,7 @@ public class MainWindow extends JFrame {
                 delStudentAction();
             }
         });
-        
+
         studentTblPopup.add(delStudentPopupMenu);
 
         editDeliverablePopupMenu.setText("Edit Deliverable");
@@ -380,56 +390,79 @@ public class MainWindow extends JFrame {
                 delDeliverableAction();
             }
         });
-        
+
         deliverableTblPopup.add(delDeliverablePopupMenu);
 
-        
+        //Set Status Bar
+        statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        statusPanel.setPreferredSize(new Dimension(this.getWidth(), 16));
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        statusLabel = new JLabel();
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusPanel.add(statusLabel);
+        setStatusBar(null);
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(addCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delCourseBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(addStudentBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(addDeliverableBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(editDeliverableBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(emailBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(genRepBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(dropDownCourses, 250, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addContainerGap())
+                .addComponent(statusPanel, GroupLayout.PREFERRED_SIZE, this.getWidth(), Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(addCourseBtn)
-                            .addComponent(editCourseBtn)
-                            .addComponent(delCourseBtn))
-                        .addGap(24, 24, 24))
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dropDownCourses, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, Short.MAX_VALUE)
-                .addContainerGap())
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(addStudentBtn)
+                                                .addComponent(addDeliverableBtn)
+                                                .addComponent(editDeliverableBtn)
+                                                .addComponent(emailBtn)
+                                                .addComponent(genRepBtn)
+                                                .addComponent(dropDownCourses))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, Short.MAX_VALUE)
+                        .addGap(20)
+                        .addComponent(statusPanel))
         );
 
         pack();
     }
-    
+
     private void dropDownItemChanged(ItemEvent evt) {
-        gradebook.setActiveCourse((Course)dropDownCourses.getSelectedItem());
-        refreshTableModel();
+        if (dropDownCourses.getSelectedItem() != null) {
+            if (dropDownCourses.getSelectedItem().equals("Add Course"))
+                addCourseAction();
+            else {
+                gradebook.setActiveCourse((Course) dropDownCourses.getSelectedItem());
+                refreshTableModel();
+                setStatusBar(null);
+            }
+        }
     }
 
-    private void addCourseAction(ActionEvent evt){                                             
+    private void addCourseAction(){     
+        dropDownCourses.removeItem("Add Course");
+        
         JTextField title = new JTextField();
         JTextField code = new JTextField();
         JTextField term = new JTextField();
@@ -453,15 +486,19 @@ public class MainWindow extends JFrame {
                 //Create a new Course and add it to the gradebook
                 Course course = new Course(title.getText(), code.getText(), term.getText());
                 gradebook.addCourse(course);
-        
+                      
                 //Add the entry to the dropdown list
                 dropDownCourses.addItem(course);
+                
+                //Make "Add Course" the last Item on the list
+                dropDownCourses.addItem("Add Course");
+                
                 dropDownCourses.setSelectedItem(course);
             }
         }
     }
 
-    private void editCourseAction(ActionEvent evt) {   
+    private void editCourseAction() {   
         if (gradebook.getActiveCourse() == null){
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -497,12 +534,17 @@ public class MainWindow extends JFrame {
                 //Refresh the dropdown list entry
                 dropDownCourses.removeItem(activeCourse);
                 dropDownCourses.addItem(activeCourse);
+                
+                //Make "Add Course" the last Item on the list
+                dropDownCourses.removeItem("Add Course");
+                dropDownCourses.addItem("Add Course");
+                
                 dropDownCourses.setSelectedItem(activeCourse);
             }
         }
     }
 
-    private void delCourseAction(ActionEvent evt) {                                             
+    private void delCourseAction() {                                             
         if (gradebook.getActiveCourse() == null){
             JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -557,6 +599,7 @@ public class MainWindow extends JFrame {
        
                 //Update JTable
                 refreshTableModel();
+                setStatusBar("Added new Student");
             }
         }
     }
@@ -613,6 +656,7 @@ public class MainWindow extends JFrame {
 
                 //Update JTable
                 refreshTableModel();
+                setStatusBar("Edited Student");
             }
         }
     }
@@ -635,6 +679,7 @@ public class MainWindow extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             gradebook.getActiveCourse().removeStudent(student);
             refreshTableModel();
+            setStatusBar("Deleted Student");
         }
         
     }
@@ -677,6 +722,7 @@ public class MainWindow extends JFrame {
 
                 //Update JTable
                 refreshTableModel();
+                setStatusBar("Added new Deliverable");
             }
         }
     }
@@ -733,6 +779,7 @@ public class MainWindow extends JFrame {
 
                 //Update JTable
                 refreshTableModel();
+                setStatusBar("Edited Deliverable");
             }
         }
     }
@@ -761,6 +808,7 @@ public class MainWindow extends JFrame {
             gradebook.getActiveCourse().removeDeliverable(deliverable);
             
             refreshTableModel();
+            setStatusBar("Deliverable Deleted");
         }
     }
     
@@ -782,6 +830,7 @@ public class MainWindow extends JFrame {
             }
             
             refreshTableModel();
+            setStatusBar(null);
 		}
     }
     
@@ -802,6 +851,20 @@ public class MainWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error writing selected file.", "Error", JOptionPane.ERROR_MESSAGE);
             }
     	}
+    }
+    
+    private void setStatusBar(String status) {
+        StringBuilder sb = new StringBuilder();
+        if (status == null)
+            sb.append("Ready");
+        else sb.append(status);
+        
+        sb.append(" | ");
+        
+        if (gradebook.getActiveCourse() != null)
+            sb.append(gradebook.getActiveCourse().toString());
+        
+            statusLabel.setText(String.valueOf(sb));
     }
     
     private void firstStartAction() {

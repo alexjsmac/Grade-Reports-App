@@ -25,6 +25,7 @@ public class DoubleCellEditor extends AbstractCellEditor implements TableCellEdi
     public Component getTableCellEditorComponent(JTable table, Object value,
             boolean isSelected, int rowIndex, int vColIndex) {
 
+        field.setHorizontalAlignment(JTextField.RIGHT);
         field.setText(String.valueOf(value));
         field.requestFocus();
 
