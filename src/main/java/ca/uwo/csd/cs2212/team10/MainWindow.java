@@ -454,9 +454,10 @@ public class MainWindow extends JFrame {
 
     private void dropDownItemChanged(ItemEvent evt) {
         if (dropDownCourses.getSelectedItem() != null) {
-            if (dropDownCourses.getSelectedItem().equals("Add Course"))
-                addCourseAction();
-            else {
+            if (dropDownCourses.getSelectedItem().equals("Add Course")) {
+                if (evt.getStateChange() == ItemEvent.SELECTED)
+                    addCourseAction();
+            } else {
                 gradebook.setActiveCourse((Course) dropDownCourses.getSelectedItem());
                 refreshTableModel();
                 setStatusBar(null);
@@ -464,9 +465,7 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private void addCourseAction(){     
-        dropDownCourses.removeItem("Add Course");
-        
+    private void addCourseAction(){                     
         JTextField title = new JTextField();
         JTextField code = new JTextField();
         JTextField term = new JTextField();
@@ -476,10 +475,12 @@ public class MainWindow extends JFrame {
             "Course code:", code,
             "Term:", term
         };
-
+        
         int option = JOptionPane.showConfirmDialog(this, message, "Add Course", JOptionPane.OK_CANCEL_OPTION);
         
         if (option == JOptionPane.OK_OPTION) {
+            dropDownCourses.removeItem("Add Course");
+            
             if (title.getText().length() == 0) {
                 JOptionPane.showMessageDialog(this, "No title entered.", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (code.getText().length() == 0) {
@@ -494,7 +495,7 @@ public class MainWindow extends JFrame {
                 //Add the entry to the dropdown list
                 dropDownCourses.addItem(course);
                 
-                //Make "Add Course" the last Item on the list
+                //Make "Add Course" the last Item on the list                
                 dropDownCourses.addItem("Add Course");
                 
                 dropDownCourses.setSelectedItem(course);
