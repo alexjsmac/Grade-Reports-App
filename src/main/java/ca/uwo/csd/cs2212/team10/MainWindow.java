@@ -845,7 +845,7 @@ public class MainWindow extends JFrame {
             return;
     	}
         
-    	JFileChooser chooser = new JFileChooser();
+    	CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
         
     	int option = chooser.showSaveDialog(rootPane);
