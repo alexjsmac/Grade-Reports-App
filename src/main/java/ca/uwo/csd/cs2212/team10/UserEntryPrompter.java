@@ -225,7 +225,7 @@ public class UserEntryPrompter{
                     errorMsg.setText("You must enter a valid email address.");
                 } else {
                     try {
-                        course.validateStudentModification(student, number.getText(), email.getText());
+                        course.validateStudentModification(student, email.getText(), number.getText());
                     } catch (DuplicateStudentException ex) {
                         if (ex.getReason() == DuplicateStudentException.DUP_NUMBER)
                             errorMsg.setText("The student number entered is already used by another student.");
