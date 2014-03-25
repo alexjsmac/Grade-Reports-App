@@ -39,7 +39,7 @@ public class MainWindow extends JFrame {
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
-            expGradesMenuItem;
+            expGradesMenuItem, impGradesMenuItem;
 
     /* Constructor */
     public MainWindow() {
@@ -159,6 +159,7 @@ public class MainWindow extends JFrame {
         delDeliverableMenuItem = new JMenuItem();
         impStudentsMenuItem = new JMenuItem();
         expGradesMenuItem = new JMenuItem();
+        impGradesMenuItem = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -245,6 +246,15 @@ public class MainWindow extends JFrame {
             }
         });
         importMenu.add(impStudentsMenuItem);
+        
+        impGradesMenuItem.setText("Import Grades");
+        impGradesMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                importGradesAction();
+
+            }
+        });
+        importMenu.add(impGradesMenuItem);
 
         expGradesMenuItem.setText("Export Grades");
         expGradesMenuItem.addActionListener(new ActionListener() {
@@ -253,7 +263,8 @@ public class MainWindow extends JFrame {
             }
         });
         exportMenu.add(expGradesMenuItem);
-
+        
+     
         exitMenuItem.setMnemonic(KeyEvent.VK_X);
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
@@ -729,6 +740,28 @@ public class MainWindow extends JFrame {
         if (option == JFileChooser.APPROVE_OPTION){
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().importStudents(reader);
+            } catch (IOException e) {
+                showErrorMessage("The selected file could not be read.");
+            }
+            
+            refreshTableModel();
+            setStatusBar(null);
+        }
+    }
+    
+    private void importGradesAction(){
+        if (gradebook.getActiveCourse() == null) {
+            showErrorMessage("You must create a course first.");
+            return;
+        }
+        
+        CustomFileChooser chooser = new CustomFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
+        
+        int option = chooser.showOpenDialog(rootPane);
+        if (option == JFileChooser.APPROVE_OPTION){
+            try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
+                gradebook.getActiveCourse().importGrades(reader);
             } catch (IOException e) {
                 showErrorMessage("The selected file could not be read.");
             }

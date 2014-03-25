@@ -107,12 +107,13 @@ public class Course implements Serializable {
     public void importStudents(CSVReader reader) throws IOException{
     	String[] line;
     	while ((line = reader.readNext()) != null){
-    		Student toAdd = new Student(line[10],line[9],line[13],line[8]);
+    		Student toAdd = new Student(line[10],line[9],line[8],line[13]);
     		students.add(toAdd);
     	}
     }
     
     //TODO: Finish this
+    
     public void importGrades(CSVReader reader) throws IOException{
     	String[] line;
     	ArrayList<String> names = new ArrayList<String>();
@@ -131,7 +132,16 @@ public class Course implements Serializable {
     				throw new IOException("Student Number must be present");
     			}
     			else if(line[0].equals(getStudentList().get(i).getNum())){
-    				
+    				for(int j=0;j<names.size();j++){
+    					for(int k=0;k<deliverables.size();k++){
+    						if(deliverables.get(k).getName().equalsIgnoreCase(names.get(j))){
+    							getStudentList().get(i).setGrade(deliverables.get(k), Double.parseDouble(line[j]));
+    						}
+    					}
+    				}
+    			}
+    			else{
+    				throw new IOException("Student does not exist in the course");
     			}
     		}
     	}
