@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import au.com.bytecode.opencsv.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * The main window of the gradebook program
@@ -69,9 +67,10 @@ public class MainWindow extends JFrame {
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                if (studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn()) > 4) {
+                int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+                if (selectedColumn >= 1 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
                     delDeliverableAction();
-                } else {
+                } else if (studentsTbl.getSelectedRow() != -1) {
                     delStudentAction();
                 }
             }
@@ -95,12 +94,31 @@ public class MainWindow extends JFrame {
                     
                     if (selectedColumn >= 0 && selectedColumn <= 1)
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    else if (selectedColumn >= 1 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3))
+                    else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3))
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
 
             //Mouse Listener for Windows
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                mousePressed(e);
+            }
+        });
+
+        //Right-Click on a Deliverable column header open a Popup menu
+        studentsTbl.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.columnAtPoint(e.getPoint()));
+                    if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
+                        studentsTbl.changeSelection(-1, selectedColumn, false, false);
+                        deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+            
             @Override
             public void mouseReleased(MouseEvent e) {
                 mousePressed(e);
@@ -123,6 +141,7 @@ public class MainWindow extends JFrame {
 
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
+        //studentsTbl.setDefaultRenderer(Object.class, new CustomTableRenderer());
     }
 
     private void initComponents() {
@@ -749,7 +768,7 @@ public class MainWindow extends JFrame {
             setStatusBar("Exported CSV to file: " + chooser.getSelectedFile().getAbsolutePath());
         }
     }
-    
+        
     private void setStatusBar(String status) {
         StringBuilder sb = new StringBuilder();
         if (status == null)
