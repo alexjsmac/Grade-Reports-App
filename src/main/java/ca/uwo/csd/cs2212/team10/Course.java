@@ -177,6 +177,6 @@ public class Course implements Serializable {
 
     @Override
     public String toString() {
-        return code + " - " + term + " - " + title;
+        return title + " " + code + " - " + term;
     }
 }

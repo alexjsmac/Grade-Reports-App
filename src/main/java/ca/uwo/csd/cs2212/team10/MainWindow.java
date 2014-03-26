@@ -29,7 +29,7 @@ public class MainWindow extends JFrame {
     private JComboBox dropDownCourses;
     private JPanel statusPanel;
     private JLabel statusLabel;
-    private JButton addStudentBtn, addDeliverableBtn, editDeliverableBtn, 
+    private JButton addStudentBtn, addDeliverableBtn, 
             emailBtn, genRepBtn;
     private JPopupMenu studentTblPopup, deliverableTblPopup;
     private JMenuItem editStudentPopupMenu, delStudentPopupMenu, 
@@ -131,7 +131,6 @@ public class MainWindow extends JFrame {
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
         addStudentBtn = new JButton();
         addDeliverableBtn = new JButton();
-        editDeliverableBtn = new JButton();
         emailBtn = new JButton();
         genRepBtn = new JButton();
         studentTblPopup = new JPopupMenu("Students Menu");
@@ -196,15 +195,6 @@ public class MainWindow extends JFrame {
         addDeliverableBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 addDeliverableAction();
-            }
-        });
-
-        editDeliverableBtn.setText("Edit Deliverable");
-        editDeliverableBtn.setMnemonic(KeyEvent.VK_E);
-        editDeliverableBtn.setToolTipText("Edit selected Deliverable (Alt+E)");
-        editDeliverableBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                editDeliverableAction();
             }
         });
 
@@ -419,8 +409,6 @@ public class MainWindow extends JFrame {
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(addDeliverableBtn)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(editDeliverableBtn)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(emailBtn)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(genRepBtn)
@@ -439,7 +427,6 @@ public class MainWindow extends JFrame {
                                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                 .addComponent(addStudentBtn)
                                                 .addComponent(addDeliverableBtn)
-                                                .addComponent(editDeliverableBtn)
                                                 .addComponent(emailBtn)
                                                 .addComponent(genRepBtn)
                                                 .addComponent(dropDownCourses))
