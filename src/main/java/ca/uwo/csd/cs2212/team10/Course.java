@@ -136,35 +136,61 @@ public class Course implements Serializable {
     
     public void importGrades(CSVReader reader) throws IOException, CSVException{
         String[] line;
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<Deliverable> dList = new ArrayList<Deliverable>();
+        Student currStudent;
+        
         if((line = reader.readNext()) != null){
-            if(!(line[0].equalsIgnoreCase("Student Number"))){
-                throw new IOException("Student Number column not present");
+            if(!line[0].equals("Student Number")){
+                throw new CSVException(CSVException.BAD_FORMAT);
             }
-            for (int i=0;i<line.length;i++){
-                names.add(line[i+1]);
+            
+            for (int i = 1; i < line.length; i++){
+                for (Deliverable d : deliverables){
+                    if (d.getName().equals(line[i])){
+                        dList.add(d);
+                        break;
+                    }
+                }
+                if (dList.size() != i)
+                    throw new CSVException(CSVException.BAD_FORMAT);
             }
         }
         
+        int firstLineLength = line.length;
+        int invalidLines = 0;
+        double currGrade;
         while((line = reader.readNext()) != null){
-            for (int i=0;i<getStudentList().size();i++){
-                if(line[0] == null){
-                    throw new IOException("Student Number must be present");
-                }
-                else if(line[0].equals(getStudentList().get(i).getNum())){
-                    for(int j=0;j<names.size();j++){
-                        for(int k=0;k<deliverables.size();k++){
-                            if(deliverables.get(k).getName().equalsIgnoreCase(names.get(j))){
-                                getStudentList().get(i).setGrade(deliverables.get(k), Double.parseDouble(line[j]));
-                            }
-                        }
-                    }
-                }
-                else{
-                    throw new IOException("Student does not exist in the course");
+            if (line.length != firstLineLength){
+                invalidLines++;
+                continue;
+            }
+            
+            currStudent = null;
+            for (Student s : students){
+                if (s.getNum().equals(line[0])){
+                    currStudent = s;
+                    break;
                 }
             }
+            if (currStudent == null){
+                invalidLines++;
+                continue;
+            }
+            
+            for (int i = 1; i < line.length; i++){
+                try{
+                    currGrade = Double.parseDouble(line[i]);
+                } catch (NumberFormatException e){
+                    //TODO: is this the right behaviour?
+                    continue;
+                }
+                
+                currStudent.setGrade(dList.get(i), currGrade);
+            }
         }
+        
+        if (invalidLines > 0)
+            throw new CSVException(invalidLines);
     }
     
     public void exportGrades(CSVWriter writer){

@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
-            expGradesMenuItem;
+            impGradesMenuItem, expGradesMenuItem;
 
     /* Constructor */
     public MainWindow() {
@@ -176,6 +176,7 @@ public class MainWindow extends JFrame {
         editDeliverableMenuItem = new JMenuItem();
         delDeliverableMenuItem = new JMenuItem();
         impStudentsMenuItem = new JMenuItem();
+        impGradesMenuItem = new JMenuItem();
         expGradesMenuItem = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -266,7 +267,7 @@ public class MainWindow extends JFrame {
         exportMenu.setText("Export");
         fileMenu.add(exportMenu);
         
-        impStudentsMenuItem.setText("Import Class List");
+        impStudentsMenuItem.setText("Import students from CSV file");
         impStudentsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 importStudentsAction();
@@ -274,8 +275,17 @@ public class MainWindow extends JFrame {
             }
         });
         importMenu.add(impStudentsMenuItem);
+        
+        impGradesMenuItem.setText("Import grades from CSV file");
+        impGradesMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                importGradesAction();
 
-        expGradesMenuItem.setText("Export Grades");
+            }
+        });
+        importMenu.add(impGradesMenuItem);
+
+        expGradesMenuItem.setText("Export grades to CSV file");
         expGradesMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 exportGradesAction();
@@ -797,8 +807,11 @@ public class MainWindow extends JFrame {
                 showErrorMessage("The selected file could not be read.");
             } catch (CSVException e){
                 int numLines = e.getNumBadLines();
-                showErrorMessage("" + numLines + " line" + (numLines == 1 ? "" : "s") + 
-                                    " in the file were in an unknown format and could not be imported.");
+                if (numLines == CSVException.BAD_FORMAT)
+                    showErrorMessage("The file is in an unknown format. No grades were imported.");
+                else
+                    showErrorMessage("" + numLines + " line" + (numLines == 1 ? "" : "s") + 
+                                        " in the file were in an unknown format and could not be imported.");
             }
             
             refreshTableModel();
@@ -820,7 +833,7 @@ public class MainWindow extends JFrame {
             try (CSVWriter writer = new CSVWriter(new FileWriter(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
-                showErrorMessage("The selected file could not be written. Try another filename.");
+                showErrorMessage("The selected file could not be written. Try a different filename.");
                 return;
             }
             
