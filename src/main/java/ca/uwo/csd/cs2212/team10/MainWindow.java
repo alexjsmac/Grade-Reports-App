@@ -196,8 +196,28 @@ public class MainWindow extends JFrame {
                 dropDownItemChanged(evt);
             }
         });
-        
-        
+        dropDownCourses.setRenderer(new ListCellRenderer(){
+            private ListCellRenderer delegate;
+            private JPanel separatorPanel = new JPanel(new BorderLayout());
+            private JSeparator separator = new JSeparator();
+            
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus){
+                Component comp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if(index != -1 && "Add Course".equals(value)){
+                    separatorPanel.removeAll();
+                    separatorPanel.add(separator, BorderLayout.NORTH);
+                    separatorPanel.add(comp, BorderLayout.CENTER);
+                    return separatorPanel;
+                } else
+                    return comp;
+            }
+            
+            private ListCellRenderer init(ListCellRenderer delegate){
+                this.delegate = delegate;
+                return this;
+            }
+        }.init(dropDownCourses.getRenderer()));
 
         addStudentBtn.setText("Add Student");
         addStudentBtn.setMnemonic(KeyEvent.VK_B);
