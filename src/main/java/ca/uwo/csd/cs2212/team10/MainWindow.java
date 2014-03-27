@@ -491,6 +491,7 @@ public class MainWindow extends JFrame {
                 }else {
                     dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
                 }
+                refreshTableModel();
             }
         }
     }
