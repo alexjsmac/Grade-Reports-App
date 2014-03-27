@@ -520,7 +520,7 @@ public class MainWindow extends JFrame {
 
     private void editCourseAction() {   
         if (gradebook.getActiveCourse() == null){
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("There are no courses in the gradebook.");
             return;
         }
     
@@ -554,7 +554,7 @@ public class MainWindow extends JFrame {
 
     private void delCourseAction() {                                             
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("There are no courses in the gradebook.");
             return;
         }
 
@@ -575,7 +575,11 @@ public class MainWindow extends JFrame {
     
     private void addStudentAction() {
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
+        
+            if (option == JOptionPane.YES_OPTION) {
+                addCourseAction();
+            }
             return;
         }
 
@@ -599,10 +603,10 @@ public class MainWindow extends JFrame {
 
     private void editStudentAction() {
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a student first.");
             return;
         } else if (studentsTbl.getSelectedRow() < 0){
-            JOptionPane.showMessageDialog(this, "No Student selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a student first.");
             return;
         } 
         
@@ -634,10 +638,10 @@ public class MainWindow extends JFrame {
 
     private void delStudentAction() {
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a student first.");
             return;
         } else if (studentsTbl.getSelectedRow() < 0){
-            JOptionPane.showMessageDialog(this, "No Student selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a student first.");
             return;
         } 
         
@@ -657,7 +661,11 @@ public class MainWindow extends JFrame {
     
     private void addDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
+        
+            if (option == JOptionPane.YES_OPTION) {
+                addCourseAction();
+            }
             return;
         }
 
@@ -681,16 +689,16 @@ public class MainWindow extends JFrame {
 
     private void editDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a deliverable first.");
             return;
         } else if (studentsTbl.getSelectedColumn() < 0){
-            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a deliverable first.");
             return;
         } 
         
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
         if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)){
-            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a deliverable first.");
             return;
         }
 
@@ -720,16 +728,16 @@ public class MainWindow extends JFrame {
 
     private void delDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a deliverable first.");
             return;
         } else if (studentsTbl.getSelectedColumn() < 0){
-            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a deliverable first.");
             return;
         } 
         
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
         if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)){
-            JOptionPane.showMessageDialog(this, "No Deliverable selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Select a deliverable first.");
             return;
         }
 
@@ -748,7 +756,7 @@ public class MainWindow extends JFrame {
     
     private void importStudentsAction(){
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("You must create a course first.");
             return;
         }
         
@@ -760,6 +768,32 @@ public class MainWindow extends JFrame {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().importStudents(reader);
             } catch (IOException e) {
+                showErrorMessage("The selected file could not be read.");
+            } catch (CSVException e){
+                int numLines = e.getNumBadLines();
+                showErrorMessage("" + numLines + " line" + (numLines == 1 ? "" : "s") + 
+                                    " in the file were in an unknown format and could not be imported.");
+            }
+            
+            refreshTableModel();
+            setStatusBar(null);
+        }
+    }
+    
+    private void importGradesAction(){
+        if (gradebook.getActiveCourse() == null) {
+            showErrorMessage("You must create a course first.");
+            return;
+        }
+        
+        CustomFileChooser chooser = new CustomFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
+        
+        int option = chooser.showOpenDialog(rootPane);
+        if (option == JFileChooser.APPROVE_OPTION){
+            try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
+                gradebook.getActiveCourse().importGrades(reader);
+            } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error reading selected file.", "Error", JOptionPane.ERROR_MESSAGE);
             }
             
@@ -770,7 +804,7 @@ public class MainWindow extends JFrame {
     
     private void exportGradesAction(){
         if (gradebook.getActiveCourse() == null) {
-            JOptionPane.showMessageDialog(this, "No active course selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("You must create a course first.");
             return;
         }
         
@@ -815,7 +849,7 @@ public class MainWindow extends JFrame {
         } catch (IOException e){
             int option = JOptionPane.showConfirmDialog(this, "There was a problem writing the data file. Changes were not saved. Exit anyway?", "Error", JOptionPane.YES_NO_OPTION);
         
-            if (option == JOptionPane.OK_OPTION) {
+            if (option == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
         }
@@ -843,11 +877,11 @@ public class MainWindow extends JFrame {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME))){
                 //!! backup was OK
                 gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
-                JOptionPane.showMessageDialog(this, "The main data file could not be read. A backup was opened instead.", "Warning", JOptionPane.WARNING_MESSAGE);
+                showWarningMessage("The main data file could not be read. A backup was opened instead.");
             } catch (IOException | ClassNotFoundException ex){
                 //!! both data files corrupt
                 gradebook = new Gradebook(); //create an empty gradebook
-                JOptionPane.showMessageDialog(this, "The data file was corrupt and could not be recovered. All data was lost.", "Error", JOptionPane.ERROR_MESSAGE);
+                showErrorMessage("The data file was corrupt and could not be recovered. All data was lost.");
             }
         }
     }
@@ -861,5 +895,14 @@ public class MainWindow extends JFrame {
         
         //store the data
         gradebook.writeToObjectOutputStream(new ObjectOutputStream(new FileOutputStream(DATA_FILENAME)));
+    }
+    
+    
+    private void showErrorMessage(String text){
+        JOptionPane.showMessageDialog(this, text, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    private void showWarningMessage(String text){
+        JOptionPane.showMessageDialog(this, text, "Warning", JOptionPane.WARNING_MESSAGE);
     }
 }

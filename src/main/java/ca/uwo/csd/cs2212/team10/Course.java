@@ -104,12 +104,34 @@ public class Course implements Serializable {
             student.removeGrade(deliverable);
     }
     
-    public void importStudents(CSVReader reader) throws IOException{
+    public void importStudents(CSVReader reader) throws IOException, CSVException{
         String[] line;
+        String firstName, lastName, num, email;
+        int invalidLines = 0;
+        
         while ((line = reader.readNext()) != null){
-            Student toAdd = new Student(line[10],line[9],line[8],line[13]);
-            students.add(toAdd);
+            if (line.length != 14){
+                invalidLines++;
+                continue;
+            }
+            
+            firstName = line[10];
+            lastName = line[9];
+            num = line[8];
+            email = line[13];
+            
+            try{
+                validateStudentModification(null, email, num);
+            } catch (DuplicateStudentException e){
+                invalidLines++;
+                continue;
+            }
+            
+            addStudent(new Student(firstName, lastName, num, email));
         }
+        
+        if (invalidLines > 0)
+            throw new CSVException(invalidLines);
     }
     
     public void importGrades(CSVReader reader) throws IOException{
