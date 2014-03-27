@@ -794,7 +794,11 @@ public class MainWindow extends JFrame {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().importGrades(reader);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error reading selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                showErrorMessage("The selected file could not be read.");
+            } catch (CSVException e){
+                int numLines = e.getNumBadLines();
+                showErrorMessage("" + numLines + " line" + (numLines == 1 ? "" : "s") + 
+                                    " in the file were in an unknown format and could not be imported.");
             }
             
             refreshTableModel();
@@ -816,7 +820,7 @@ public class MainWindow extends JFrame {
             try (CSVWriter writer = new CSVWriter(new FileWriter(chooser.getSelectedFile()))){
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error writing selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                showErrorMessage("The selected file could not be written. Try another filename.");
                 return;
             }
             

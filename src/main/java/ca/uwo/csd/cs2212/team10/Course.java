@@ -134,7 +134,7 @@ public class Course implements Serializable {
             throw new CSVException(invalidLines);
     }
     
-    public void importGrades(CSVReader reader) throws IOException{
+    public void importGrades(CSVReader reader) throws IOException, CSVException{
         String[] line;
         ArrayList<String> names = new ArrayList<String>();
         if((line = reader.readNext()) != null){
@@ -167,31 +167,34 @@ public class Course implements Serializable {
         }
     }
     
-    public void exportGrades(CSVWriter writer) throws IOException{
-        int size = deliverables.size()+4;
-        String[] header = new String[size];
-        header[0] = "First Name";
-        header[1] = "Last Name";
-        header[2] = "Student Number";
-        header[3] = "Email";
-        for(int i=0;i<deliverables.size();i++){
-            header[i+4] = deliverables.get(i).getName();
-        }
-        writer.writeNext(header);
+    public void exportGrades(CSVWriter writer){
+        ArrayList<String> currLine;
         
-        String[] student = new String[size];
-        for (int i=0;i<getStudentList().size();i++){
-            student[0] = getStudentList().get(i).getFirstName();
-            student[1] = getStudentList().get(i).getLastName();
-            student[2] = getStudentList().get(i).getNum();
-            student[3] = getStudentList().get(i).getEmail();
+        //write the header
+        currLine = new ArrayList<String>();
+        
+        currLine.add("First Name");
+        currLine.add("Last Name");
+        currLine.add("Student Number");
+        currLine.add("Email");
+        for(Deliverable d : deliverables)
+            currLine.add(d.getName());
+        
+        writer.writeNext(currLine.toArray(new String[0]));
+        
+        //write each student
+        for (Student s : students){
+            currLine = new ArrayList<String>();
             
-            for(int j=0;j<deliverables.size();j++){
-                student[j+4] = Double.toString(getStudentList().get(i).getGrade(deliverables.get(j)));
-            }
-            writer.writeNext(student);
+            currLine.add(s.getFirstName());
+            currLine.add(s.getLastName());
+            currLine.add(s.getNum());
+            currLine.add(s.getEmail());
+            for(Deliverable d : deliverables)
+                currLine.add(s.getGrade(d).toString());
+            
+            writer.writeNext(currLine.toArray(new String[0]));
         }
-        writer.close();        
     }
 
     @Override
