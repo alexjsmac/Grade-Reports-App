@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
     private JMenuItem exitMenuItem, addMenuItem, editMenuItem, delMenuItem,
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
-            impGradesMenuItem, expGradesMenuItem;
+            impGradesMenuItem, expGradesMenuItem, emailMenuItem, genRepMenuItem;
 
     /* Constructor */
     public MainWindow() {
@@ -178,6 +178,8 @@ public class MainWindow extends JFrame {
         impStudentsMenuItem = new JMenuItem();
         impGradesMenuItem = new JMenuItem();
         expGradesMenuItem = new JMenuItem();
+        emailMenuItem = new JMenuItem();
+        genRepMenuItem = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -267,11 +269,12 @@ public class MainWindow extends JFrame {
         exportMenu.setText("Export");
         fileMenu.add(exportMenu);
         
+        fileMenu.addSeparator();
+        
         impStudentsMenuItem.setText("Import students from CSV file");
         impStudentsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 importStudentsAction();
-
             }
         });
         importMenu.add(impStudentsMenuItem);
@@ -280,7 +283,6 @@ public class MainWindow extends JFrame {
         impGradesMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 importGradesAction();
-
             }
         });
         importMenu.add(impGradesMenuItem);
@@ -292,6 +294,22 @@ public class MainWindow extends JFrame {
             }
         });
         exportMenu.add(expGradesMenuItem);
+        
+        emailMenuItem.setText("Send grade reports by email");
+        emailMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                //TODO
+            }
+        });
+        exportMenu.add(emailMenuItem);
+        
+        genRepMenuItem.setText("Save grade reports as PDF");
+        genRepMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                //TODO
+            }
+        });
+        exportMenu.add(genRepMenuItem);
 
         exitMenuItem.setMnemonic(KeyEvent.VK_X);
         exitMenuItem.setText("Exit");
