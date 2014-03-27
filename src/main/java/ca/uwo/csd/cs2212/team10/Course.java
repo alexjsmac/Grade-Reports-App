@@ -105,74 +105,71 @@ public class Course implements Serializable {
     }
     
     public void importStudents(CSVReader reader) throws IOException{
-    	String[] line;
-    	while ((line = reader.readNext()) != null){
-    		Student toAdd = new Student(line[10],line[9],line[8],line[13]);
-    		students.add(toAdd);
-    	}
+        String[] line;
+        while ((line = reader.readNext()) != null){
+            Student toAdd = new Student(line[10],line[9],line[8],line[13]);
+            students.add(toAdd);
+        }
     }
-    
-    //TODO: Finish this
     
     public void importGrades(CSVReader reader) throws IOException{
-    	String[] line;
-    	ArrayList<String> names = new ArrayList<String>();
-    	if((line = reader.readNext()) != null){
-    		if(!(line[0].equalsIgnoreCase("Student Number"))){
-    			throw new IOException("Student Number column not present");
-    		}
-    		for (int i=0;i<line.length;i++){
-    			names.add(line[i+1]);
-    		}
-    	}
-    	
-    	while((line = reader.readNext()) != null){
-    		for (int i=0;i<getStudentList().size();i++){
-    			if(line[0] == null){
-    				throw new IOException("Student Number must be present");
-    			}
-    			else if(line[0].equals(getStudentList().get(i).getNum())){
-    				for(int j=0;j<names.size();j++){
-    					for(int k=0;k<deliverables.size();k++){
-    						if(deliverables.get(k).getName().equalsIgnoreCase(names.get(j))){
-    							getStudentList().get(i).setGrade(deliverables.get(k), Double.parseDouble(line[j]));
-    						}
-    					}
-    				}
-    			}
-    			else{
-    				throw new IOException("Student does not exist in the course");
-    			}
-    		}
-    	}
+        String[] line;
+        ArrayList<String> names = new ArrayList<String>();
+        if((line = reader.readNext()) != null){
+            if(!(line[0].equalsIgnoreCase("Student Number"))){
+                throw new IOException("Student Number column not present");
+            }
+            for (int i=0;i<line.length;i++){
+                names.add(line[i+1]);
+            }
+        }
+        
+        while((line = reader.readNext()) != null){
+            for (int i=0;i<getStudentList().size();i++){
+                if(line[0] == null){
+                    throw new IOException("Student Number must be present");
+                }
+                else if(line[0].equals(getStudentList().get(i).getNum())){
+                    for(int j=0;j<names.size();j++){
+                        for(int k=0;k<deliverables.size();k++){
+                            if(deliverables.get(k).getName().equalsIgnoreCase(names.get(j))){
+                                getStudentList().get(i).setGrade(deliverables.get(k), Double.parseDouble(line[j]));
+                            }
+                        }
+                    }
+                }
+                else{
+                    throw new IOException("Student does not exist in the course");
+                }
+            }
+        }
     }
     
-   
     public void exportGrades(CSVWriter writer) throws IOException{
-    	int size = deliverables.size()+4;
-    	String[] header = new String[size];
-    	header[0] = "First Name";
-    	header[1] = "Last Name";
-    	header[2] = "Student Number";
-    	header[3] = "Email";
+        int size = deliverables.size()+4;
+        String[] header = new String[size];
+        header[0] = "First Name";
+        header[1] = "Last Name";
+        header[2] = "Student Number";
+        header[3] = "Email";
         for(int i=0;i<deliverables.size();i++){
-        	header[i+4] = deliverables.get(i).getName();
+            header[i+4] = deliverables.get(i).getName();
         }
         writer.writeNext(header);
         
         String[] student = new String[size];
         for (int i=0;i<getStudentList().size();i++){
-        	student[0] = getStudentList().get(i).getFirstName();
-        	student[1] = getStudentList().get(i).getLastName();
-        	student[2] = getStudentList().get(i).getNum();
-        	student[3] = getStudentList().get(i).getEmail();
-        	
-        	for(int j=0;j<deliverables.size();j++){
-        		student[j+4] = Double.toString(getStudentList().get(i).getGrade(deliverables.get(j)));
-        	}
-        	writer.writeNext(student);
+            student[0] = getStudentList().get(i).getFirstName();
+            student[1] = getStudentList().get(i).getLastName();
+            student[2] = getStudentList().get(i).getNum();
+            student[3] = getStudentList().get(i).getEmail();
+            
+            for(int j=0;j<deliverables.size();j++){
+                student[j+4] = Double.toString(getStudentList().get(i).getGrade(deliverables.get(j)));
+            }
+            writer.writeNext(student);
         }
-    	writer.close();    	
+        writer.close();        
     }
 
     @Override
