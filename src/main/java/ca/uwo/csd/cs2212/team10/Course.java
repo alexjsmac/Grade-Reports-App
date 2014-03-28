@@ -110,6 +110,42 @@ public class Course implements Serializable {
             student.removeGrade(deliverable);
     }
     
+    public double calcAverage(){
+		if (students.isEmpty())
+			return 0;
+		
+		double total = 0;
+		for (Student s : students){
+			total += s.calcAverage();
+		}
+		
+		return total/students.size();
+    }
+    
+    public double calcAverage(int type){
+		if (students.isEmpty())
+			return 0;
+		
+		double total = 0;
+		for (Student s : students){
+			total += s.calcAverage(type);
+		}
+		
+		return total/students.size();
+    }
+    
+    public double calcAverage(Deliverable deliverable){
+		if (students.isEmpty())
+			return 0;
+		
+		double total = 0;
+		for (Student s : students){
+			total += s.getGrade(deliverable);
+		}
+		
+		return total/students.size();
+    }
+    
     public void importStudents(CSVReader reader) throws IOException, CSVException{
         String[] line;
         String firstName, lastName, num, email;
