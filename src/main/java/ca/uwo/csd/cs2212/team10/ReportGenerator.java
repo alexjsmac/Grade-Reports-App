@@ -33,6 +33,12 @@ public class ReportGenerator {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("courseTitle", course.getTitle());
         parameters.put("courseCode", course.getCode());
+        parameters.put("courseTerm", course.getTerm());
+        parameters.put("firstName", student.getFirstName());
+        parameters.put("lastName", student.getLastName());
+        parameters.put("email", student.getEmail());
+        parameters.put("number", student.getNum());
+        parameters.put("average", student.calcAverage());
 
         return JasperFillManager.fillReport(report, parameters, beanColDataSource);
     }
