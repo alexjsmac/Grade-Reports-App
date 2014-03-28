@@ -33,23 +33,9 @@ public class DataProvider {
         stud1.setGrade(midterm, 90.0);
         stud1.setGrade(finalExam, 82.0);
 
-        JavaBean bean1 = new JavaBean(stud1.getFirstName(), stud1.getLastName(), stud1.getNum(), stud1.getEmail(),
-                math.getTitle(), math.getCode(), math.getTerm(), asn1.getName(), stud1.getGrade(asn1), stud1.calcAverage());
-        beans.add(bean1);
-
-        JavaBean bean2 = new JavaBean(stud1.getFirstName(), stud1.getLastName(), stud1.getNum(), stud1.getEmail(),
-                math.getTitle(), math.getCode(), math.getTerm(), asn2.getName(), stud1.getGrade(asn2), stud1.calcAverage());
-        beans.add(bean2);
+        for (Deliverable d : math.getDeliverableList())
+             beans.add(new JavaBean(d.getName(), stud1.getGrade(d), math.calcAverage(d)));
         
-        beans.add(new JavaBean(stud1.getFirstName(), stud1.getLastName(), stud1.getNum(), stud1.getEmail(),
-                math.getTitle(), math.getCode(), math.getTerm(), asn3.getName(), stud1.getGrade(asn3), stud1.calcAverage()));
-
-        beans.add(new JavaBean(stud1.getFirstName(), stud1.getLastName(), stud1.getNum(), stud1.getEmail(),
-                math.getTitle(), math.getCode(), math.getTerm(), midterm.getName(), stud1.getGrade(midterm), stud1.calcAverage()));
-
-        beans.add(new JavaBean(stud1.getFirstName(), stud1.getLastName(), stud1.getNum(), stud1.getEmail(),
-                math.getTitle(), math.getCode(), math.getTerm(), finalExam.getName(), stud1.getGrade(finalExam), stud1.calcAverage()));
-
         return beans;
     }
 }

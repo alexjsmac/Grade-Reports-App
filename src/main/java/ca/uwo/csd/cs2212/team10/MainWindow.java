@@ -21,7 +21,8 @@ public class MainWindow extends JFrame {
     
     /* Attributes */
     private Gradebook gradebook;
-    
+    private ReportGenerator reportGenerator;
+
     private JScrollPane jScrollPane1;
     private JTable studentsTbl;
     private JComboBox dropDownCourses;
@@ -42,6 +43,7 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
+        reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
