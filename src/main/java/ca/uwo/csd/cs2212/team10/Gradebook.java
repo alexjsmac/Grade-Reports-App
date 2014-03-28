@@ -47,7 +47,13 @@ public class Gradebook implements Serializable{
         activeCourse = course;
     }
     
-    public void writeToObjectOutputStream(ObjectOutputStream out) throws IOException{
+    public void toObjectOutputStream(ObjectOutputStream out) throws IOException{
         out.writeObject(this);
+    }
+    
+    public void validateCourseModification(Course course, String newCode, String newTerm) throws DuplicateObjectException{
+        for (Course c : courses)
+            if (c != course && c.equals(new Course("", newCode, newTerm)))
+                throw new DuplicateObjectException();
     }
 }

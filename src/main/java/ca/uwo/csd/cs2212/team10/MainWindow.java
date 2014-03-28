@@ -526,7 +526,7 @@ public class MainWindow extends JFrame {
 
     private void addCourseAction(){                     
         UserEntryPrompter prompt = new UserEntryPrompter();
-        prompt.showAddCourseDialog(this);
+        prompt.showAddCourseDialog(this, gradebook);
         
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
             String[] output = (String[])prompt.getOutput();
@@ -555,7 +555,7 @@ public class MainWindow extends JFrame {
         Course activeCourse = gradebook.getActiveCourse();
         
         UserEntryPrompter prompt = new UserEntryPrompter();
-        prompt.showEditCourseDialog(this, activeCourse);
+        prompt.showEditCourseDialog(this, activeCourse, gradebook);
         
         int retval = prompt.getReturnValue();
         if (retval == UserEntryPrompter.OK_PRESSED){
@@ -929,7 +929,7 @@ public class MainWindow extends JFrame {
         dataFile.renameTo(backupFile); //then make a new one
         
         //store the data
-        gradebook.writeToObjectOutputStream(new ObjectOutputStream(new FileOutputStream(DATA_FILENAME)));
+        gradebook.toObjectOutputStream(new ObjectOutputStream(new FileOutputStream(DATA_FILENAME)));
     }
     
     

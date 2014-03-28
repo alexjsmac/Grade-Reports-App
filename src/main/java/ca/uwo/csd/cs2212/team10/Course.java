@@ -66,14 +66,20 @@ public class Course implements Serializable {
         return deliverables;
     }
 
-    public void validateStudentModification(Student student, String newEmail, String newNum) throws DuplicateStudentException{
+    public void validateStudentModification(Student student, String newEmail, String newNum) throws DuplicateObjectException{
         for (Student s : students)
             if (s != student){
                 if (newEmail.equals(s.getEmail()))
-                    throw new DuplicateStudentException(DuplicateStudentException.DUP_EMAIL);
+                    throw new DuplicateObjectException(DuplicateObjectException.DUP_EMAIL);
                 else if (newNum.equals(s.getNum()))
-                    throw new DuplicateStudentException(DuplicateStudentException.DUP_NUMBER);
+                    throw new DuplicateObjectException(DuplicateObjectException.DUP_NUMBER);
             }
+    }
+    
+    public void validateDeliverableModification(Deliverable deliverable, String newName) throws DuplicateObjectException{
+        for (Deliverable d : deliverables)
+            if (d != deliverable && d.equals(new Deliverable(newName, Deliverable.ASSIGNMENT_TYPE, 0)))
+                throw new DuplicateObjectException();
     }
     
     public void addStudent(Student student){
@@ -122,7 +128,7 @@ public class Course implements Serializable {
             
             try{
                 validateStudentModification(null, email, num);
-            } catch (DuplicateStudentException e){
+            } catch (DuplicateObjectException e){
                 invalidLines++;
                 continue;
             }
@@ -226,5 +232,9 @@ public class Course implements Serializable {
     @Override
     public String toString() {
         return title + " " + code + " - " + term;
+    }
+    
+    public boolean equals(Course c) {
+        return code.equals(c.getCode()) && term.equals(c.getTerm());
     }
 }
