@@ -3,7 +3,6 @@ package ca.uwo.csd.cs2212.team10;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
-import java.util.Collection;
 
 /**
  * Represents the main Gradebook of the project
