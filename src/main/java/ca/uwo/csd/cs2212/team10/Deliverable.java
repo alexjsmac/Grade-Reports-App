@@ -52,4 +52,8 @@ public class Deliverable implements Serializable{
     public void setWeight(int weight){
         this.weight = weight;
     }
+    
+    public boolean equals(Deliverable d){
+        return name.equals(d.getName());
+    }
 }

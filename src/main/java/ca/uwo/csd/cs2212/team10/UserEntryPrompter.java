@@ -27,20 +27,20 @@ public class UserEntryPrompter{
         return output;
     }
     
-    public void showAddCourseDialog(Component parent){
-        showCourseDialog(parent, ADD_TYPE, null, null, null);
+    public void showAddCourseDialog(Component parent, Gradebook containingGradebook){
+        showCourseDialog(parent, ADD_TYPE, null, null, null, containingGradebook, null);
     }
     
-    public void showEditCourseDialog(Component parent, Course oldCourse){
-        showCourseDialog(parent, EDIT_TYPE, oldCourse.getTitle(), oldCourse.getCode(), oldCourse.getTerm());
+    public void showEditCourseDialog(Component parent, Course oldCourse, Gradebook containingGradebook){
+        showCourseDialog(parent, EDIT_TYPE, oldCourse.getTitle(), oldCourse.getCode(), oldCourse.getTerm(), containingGradebook, oldCourse);
     }
     
     public void showAddDeliverableDialog(Component parent, Course containingCourse){
-        showDeliverableDialog(parent, ADD_TYPE, null, 0, null, containingCourse);
+        showDeliverableDialog(parent, ADD_TYPE, null, 0, null, containingCourse, null);
     }
     
     public void showEditDeliverableDialog(Component parent, Deliverable oldDeliverable, Course containingCourse){
-        showDeliverableDialog(parent, EDIT_TYPE, oldDeliverable.getName(), oldDeliverable.getType(), ""+oldDeliverable.getWeight(), containingCourse);
+        showDeliverableDialog(parent, EDIT_TYPE, oldDeliverable.getName(), oldDeliverable.getType(), ""+oldDeliverable.getWeight(), containingCourse, oldDeliverable);
     }
     
     public void showAddStudentDialog(Component parent, Course containingCourse){
@@ -52,7 +52,8 @@ public class UserEntryPrompter{
     }
     
     private void showCourseDialog(Component parent, int dialogType, String oldTitle, String oldCode, 
-                                    String oldTerm){
+                                    String oldTerm, final Gradebook containingGradebook, 
+                                    final Course oldCourse){
         
         final JTextField title = new JTextField(oldTitle);
         final JTextField code = new JTextField(oldCode);
@@ -80,6 +81,15 @@ public class UserEntryPrompter{
                         "You must enter a term."));
                     getParentDialog((Component)e.getSource()).pack();
                 } else{
+					try {
+                        containingGradebook.validateCourseModification(oldCourse, code.getText(), term.getText());
+                    } catch (DuplicateObjectException ex) {
+                        errorMsg.setText(formatForErrorLabel(
+                            "The code and term entered are already used by another course."));
+                        getParentDialog((Component)e.getSource()).pack();
+                        return;
+                    }
+					
                     getParentOptionPane((Component)e.getSource()).setValue(ok);
                 }
             }
@@ -122,7 +132,8 @@ public class UserEntryPrompter{
     }
     
     private void showDeliverableDialog(Component parent, int dialogType, String oldName, int oldType, 
-                                        String oldWeight, final Course containingCourse){
+                                        String oldWeight, final Course containingCourse,
+                                        final Deliverable oldDeliverable){
         
         final JTextField name = new JTextField(oldName);
         final JComboBox type = new JComboBox(Deliverable.TYPES);
@@ -148,6 +159,9 @@ public class UserEntryPrompter{
                     getParentDialog((Component)e.getSource()).pack();
                 } else {
                     try {
+						//check for duplicate name
+						containingCourse.validateDeliverableModification(oldDeliverable, name.getText());
+						
                         //check that the weight is a positive integer
                         int newWeightVal = Integer.parseInt(weight.getText());
                         if (newWeightVal <= 0)
@@ -160,6 +174,11 @@ public class UserEntryPrompter{
                         if (total + newWeightVal - oldWeightVal > 100)
                             throw new IllegalArgumentException();
                         
+                    } catch (DuplicateObjectException ex) {
+                        errorMsg.setText(formatForErrorLabel(
+                            "The name entered is already used by another deliverable."));
+                        getParentDialog((Component)e.getSource()).pack();
+                        return;
                     } catch (NumberFormatException ex) {
                         errorMsg.setText(formatForErrorLabel(
                             "You must enter a positive integer for the weight."));
@@ -215,7 +234,7 @@ public class UserEntryPrompter{
 
     private void showStudentDialog(Component parent, int dialogType, String oldFirstName, String oldLastName, 
                                     String oldNum, String oldEmail, final Course containingCourse, 
-                                    final Student student){
+                                    final Student oldStudent){
         
         final JTextField firstName = new JTextField(oldFirstName);
         final JTextField lastName = new JTextField(oldLastName);
@@ -249,13 +268,13 @@ public class UserEntryPrompter{
                     getParentDialog((Component)e.getSource()).pack();
                 } else {
                     try {
-                        containingCourse.validateStudentModification(student, email.getText(), number.getText());
-                    } catch (DuplicateStudentException ex) {
-                        if (ex.getReason() == DuplicateStudentException.DUP_NUMBER){
+                        containingCourse.validateStudentModification(oldStudent, email.getText(), number.getText());
+                    } catch (DuplicateObjectException ex) {
+                        if (ex.getReason() == DuplicateObjectException.DUP_NUMBER){
                             errorMsg.setText(formatForErrorLabel(
                                 "The student number entered is already used by another student."));
                             getParentDialog((Component)e.getSource()).pack();
-                        } else if (ex.getReason() == DuplicateStudentException.DUP_EMAIL){
+                        } else if (ex.getReason() == DuplicateObjectException.DUP_EMAIL){
                             errorMsg.setText(formatForErrorLabel(
                                 "The email address entered is already used by another student."));
                             getParentDialog((Component)e.getSource()).pack();

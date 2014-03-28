@@ -66,14 +66,20 @@ public class Course implements Serializable {
         return deliverables;
     }
 
-    public void validateStudentModification(Student student, String newEmail, String newNum) throws DuplicateStudentException{
+    public void validateStudentModification(Student student, String newEmail, String newNum) throws DuplicateObjectException{
         for (Student s : students)
             if (s != student){
                 if (newEmail.equals(s.getEmail()))
-                    throw new DuplicateStudentException(DuplicateStudentException.DUP_EMAIL);
+                    throw new DuplicateObjectException(DuplicateObjectException.DUP_EMAIL);
                 else if (newNum.equals(s.getNum()))
-                    throw new DuplicateStudentException(DuplicateStudentException.DUP_NUMBER);
+                    throw new DuplicateObjectException(DuplicateObjectException.DUP_NUMBER);
             }
+    }
+    
+    public void validateDeliverableModification(Deliverable deliverable, String newName) throws DuplicateObjectException{
+        for (Deliverable d : deliverables)
+            if (d != deliverable && d.equals(new Deliverable(newName, Deliverable.ASSIGNMENT_TYPE, 0)))
+                throw new DuplicateObjectException();
     }
     
     public void addStudent(Student student){
@@ -104,79 +110,167 @@ public class Course implements Serializable {
             student.removeGrade(deliverable);
     }
     
-    public void importStudents(CSVReader reader) throws IOException{
-    	String[] line;
-    	while ((line = reader.readNext()) != null){
-    		Student toAdd = new Student(line[10],line[9],line[8],line[13]);
-    		students.add(toAdd);
-    	}
+    public double calcAverage(){
+		if (students.isEmpty())
+			return 0;
+		
+		double total = 0;
+		for (Student s : students){
+			total += s.calcAverage();
+		}
+		
+		return total/students.size();
     }
     
-    //TODO: Finish this
-    
-    public void importGrades(CSVReader reader) throws IOException{
-    	String[] line;
-    	ArrayList<String> names = new ArrayList<String>();
-    	if((line = reader.readNext()) != null){
-    		if(!(line[0].equalsIgnoreCase("Student Number"))){
-    			throw new IOException("Student Number column not present");
-    		}
-    		for (int i=0;i<line.length;i++){
-    			names.add(line[i+1]);
-    		}
-    	}
-    	
-    	while((line = reader.readNext()) != null){
-    		for (int i=0;i<getStudentList().size();i++){
-    			if(line[0] == null){
-    				throw new IOException("Student Number must be present");
-    			}
-    			else if(line[0].equals(getStudentList().get(i).getNum())){
-    				for(int j=0;j<names.size();j++){
-    					for(int k=0;k<deliverables.size();k++){
-    						if(deliverables.get(k).getName().equalsIgnoreCase(names.get(j))){
-    							getStudentList().get(i).setGrade(deliverables.get(k), Double.parseDouble(line[j]));
-    						}
-    					}
-    				}
-    			}
-    			else{
-    				throw new IOException("Student does not exist in the course");
-    			}
-    		}
-    	}
+    public double calcAverage(int type){
+		if (students.isEmpty())
+			return 0;
+		
+		double total = 0;
+		for (Student s : students){
+			total += s.calcAverage(type);
+		}
+		
+		return total/students.size();
     }
     
-   
-    public void exportGrades(CSVWriter writer) throws IOException{
-    	int size = deliverables.size()+4;
-    	String[] header = new String[size];
-    	header[0] = "First Name";
-    	header[1] = "Last Name";
-    	header[2] = "Student Number";
-    	header[3] = "Email";
-        for(int i=0;i<deliverables.size();i++){
-        	header[i+4] = deliverables.get(i).getName();
-        }
-        writer.writeNext(header);
+    public double calcAverage(Deliverable deliverable){
+		if (students.isEmpty())
+			return 0;
+		
+		double total = 0;
+		for (Student s : students){
+			total += s.getGrade(deliverable);
+		}
+		
+		return total/students.size();
+    }
+    
+    public void importStudents(CSVReader reader) throws IOException, CSVException{
+        String[] line;
+        String firstName, lastName, num, email;
+        int invalidLines = 0;
         
-        String[] student = new String[size];
-        for (int i=0;i<getStudentList().size();i++){
-        	student[0] = getStudentList().get(i).getFirstName();
-        	student[1] = getStudentList().get(i).getLastName();
-        	student[2] = getStudentList().get(i).getNum();
-        	student[3] = getStudentList().get(i).getEmail();
-        	
-        	for(int j=0;j<deliverables.size();j++){
-        		student[j+4] = Double.toString(getStudentList().get(i).getGrade(deliverables.get(j)));
-        	}
-        	writer.writeNext(student);
+        while ((line = reader.readNext()) != null){
+            if (line.length != 14){
+                invalidLines++;
+                continue;
+            }
+            
+            firstName = line[10];
+            lastName = line[9];
+            num = line[8];
+            email = line[13];
+            
+            try{
+                validateStudentModification(null, email, num);
+            } catch (DuplicateObjectException e){
+                invalidLines++;
+                continue;
+            }
+            
+            addStudent(new Student(firstName, lastName, num, email));
         }
-    	writer.close();    	
+        
+        if (invalidLines > 0)
+            throw new CSVException(invalidLines);
+    }
+    
+    public void importGrades(CSVReader reader) throws IOException, CSVException{
+        String[] line;
+        ArrayList<Deliverable> dList = new ArrayList<Deliverable>();
+        Student currStudent;
+        
+        if((line = reader.readNext()) != null){
+            if(!line[0].equals("Student Number")){
+                throw new CSVException(CSVException.BAD_FORMAT);
+            }
+            
+            for (int i = 1; i < line.length; i++){
+                for (Deliverable d : deliverables){
+                    if (d.getName().equals(line[i])){
+                        dList.add(d);
+                        break;
+                    }
+                }
+                if (dList.size() != i)
+                    throw new CSVException(CSVException.BAD_FORMAT);
+            }
+        }
+        
+        int firstLineLength = line.length;
+        int invalidLines = 0;
+        double currGrade;
+        while((line = reader.readNext()) != null){
+            if (line.length != firstLineLength){
+                invalidLines++;
+                continue;
+            }
+            
+            currStudent = null;
+            for (Student s : students){
+                if (s.getNum().equals(line[0])){
+                    currStudent = s;
+                    break;
+                }
+            }
+            if (currStudent == null){
+                invalidLines++;
+                continue;
+            }
+            
+            for (int i = 1; i < line.length; i++){
+                try{
+                    currGrade = Double.parseDouble(line[i]);
+                } catch (NumberFormatException e){
+                    //TODO: is this the right behaviour?
+                    continue;
+                }
+                
+                currStudent.setGrade(dList.get(i), currGrade);
+            }
+        }
+        
+        if (invalidLines > 0)
+            throw new CSVException(invalidLines);
+    }
+    
+    public void exportGrades(CSVWriter writer){
+        ArrayList<String> currLine;
+        
+        //write the header
+        currLine = new ArrayList<String>();
+        
+        currLine.add("First Name");
+        currLine.add("Last Name");
+        currLine.add("Student Number");
+        currLine.add("Email");
+        for(Deliverable d : deliverables)
+            currLine.add(d.getName());
+        
+        writer.writeNext(currLine.toArray(new String[0]));
+        
+        //write each student
+        for (Student s : students){
+            currLine = new ArrayList<String>();
+            
+            currLine.add(s.getFirstName());
+            currLine.add(s.getLastName());
+            currLine.add(s.getNum());
+            currLine.add(s.getEmail());
+            for(Deliverable d : deliverables)
+                currLine.add(s.getGrade(d).toString());
+            
+            writer.writeNext(currLine.toArray(new String[0]));
+        }
     }
 
     @Override
     public String toString() {
         return title + " " + code + " - " + term;
+    }
+    
+    public boolean equals(Course c) {
+        return code.equals(c.getCode()) && term.equals(c.getTerm());
     }
 }

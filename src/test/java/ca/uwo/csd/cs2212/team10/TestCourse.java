@@ -47,7 +47,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testAddStudent() throws DuplicateStudentException{
+    public void testAddStudent(){
         course.addStudent(student);
         assertTrue(course.getStudentList().contains(student));
         
@@ -55,7 +55,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testRemoveStudent() throws DuplicateStudentException{
+    public void testRemoveStudent(){
         course.addStudent(student);
         
         course.removeStudent(student);
@@ -79,7 +79,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testAddStudentAlsoAddsGrades() throws DuplicateStudentException{
+    public void testAddStudentAlsoAddsGrades(){
         course.addDeliverable(deliverable);
         course.addStudent(student);
         
@@ -90,7 +90,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testAddDeliverableAlsoAddsGradesToStudents() throws DuplicateStudentException{
+    public void testAddDeliverableAlsoAddsGradesToStudents(){
         course.addStudent(student);
         course.addDeliverable(deliverable);
         
@@ -101,7 +101,7 @@ public class TestCourse{
     }
     
     @Test
-    public void testRemoveDeliverableAlsoRemovesGradesFromStudents() throws DuplicateStudentException{
+    public void testRemoveDeliverableAlsoRemovesGradesFromStudents(){
         course.addStudent(student);
         course.addDeliverable(deliverable);
         
@@ -110,15 +110,15 @@ public class TestCourse{
         assertNull(student.getGrade(deliverable));
     }
     
-    @Test(expected = DuplicateStudentException.class)
-    public void testNewDuplicateStudentFailsValidation() throws DuplicateStudentException{
+    @Test(expected = DuplicateObjectException.class)
+    public void testNewDuplicateStudentFailsValidation() throws DuplicateObjectException{
         course.addStudent(student);
         
         course.validateStudentModification(null, student.getEmail(), student.getNum());
     }
     
-    @Test(expected = DuplicateStudentException.class)
-    public void testExistingDuplicateStudentFailsValidation() throws DuplicateStudentException{
+    @Test(expected = DuplicateObjectException.class)
+    public void testExistingDuplicateStudentFailsValidation() throws DuplicateObjectException{
         Student student2 = new Student("foo", "bar", "2", "quux");
         
         course.addStudent(student);
