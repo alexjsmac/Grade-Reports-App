@@ -4,6 +4,7 @@ import java.io.*;
 import javax.activation.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.mail.util.ByteArrayDataSource;
 import java.util.*;
 import java.io.InputStream;
 import org.apache.velocity.Template;
@@ -65,10 +66,10 @@ public class Mail {
     
     MimeBodyPart fileAttachmentPart = new MimeBodyPart();
   
-    OutputStream output = new ByteArrayOutputStream();
-    JasperPrint printer = JasperFillManager.fillReport();
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    JasperPrint printer = null;
     JasperExportManager.exportReportToPdfStream(printer, output);
-    DataSource source = new ByteArrayDataSource(((ByteArrayOutputStream)output).toByteArray()"application/pdf");
+    DataSource source = new ByteArrayDataSource(output.toByteArray(), "application/pdf");
     
     fileAttachmentPart.setDataHandler(new DataHandler(source));
     fileAttachmentPart.setFileName("Grade_Report.pdf");
