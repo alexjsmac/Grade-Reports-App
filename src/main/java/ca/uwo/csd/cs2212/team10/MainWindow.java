@@ -797,8 +797,9 @@ public class MainWindow extends JFrame {
                 showErrorMessage("The selected file could not be read.");
             } catch (CSVException e){
                 int numLines = e.getNumBadLines();
-                showErrorMessage("" + numLines + " line" + (numLines == 1 ? "" : "s") + 
-                                    " in the file were in an unknown format and could not be imported.");
+                showErrorMessage("Problems were encountered on " + numLines + 
+                                " line" + (numLines == 1 ? "" : "s") + 
+                                " of the file. They may not have been imported fully.");
             }
             
             refreshTableModel();
@@ -824,10 +825,11 @@ public class MainWindow extends JFrame {
             } catch (CSVException e){
                 int numLines = e.getNumBadLines();
                 if (numLines == CSVException.BAD_FORMAT)
-                    showErrorMessage("The file is in an unknown format. No grades were imported.");
+                    showErrorMessage("The file's header is invalid. No grades could be imported.");
                 else
-                    showErrorMessage("" + numLines + " line" + (numLines == 1 ? "" : "s") + 
-                                        " in the file were in an unknown format and could not be imported.");
+                    showErrorMessage("Problems were encountered on " + numLines + 
+                                    " line" + (numLines == 1 ? "" : "s") + 
+                                    " of the file. They may not have been imported fully.");
             }
             
             refreshTableModel();

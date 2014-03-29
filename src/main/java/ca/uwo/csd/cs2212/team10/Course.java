@@ -201,6 +201,7 @@ public class Course implements Serializable {
         int firstLineLength = line.length;
         int invalidLines = 0;
         double currGrade;
+        boolean errorOnCurrLine;
         while((line = reader.readNext()) != null){
             if (line.length != firstLineLength){
                 invalidLines++;
@@ -219,16 +220,19 @@ public class Course implements Serializable {
                 continue;
             }
             
+            errorOnCurrLine = false;
             for (int i = 1; i < line.length; i++){
                 try{
                     currGrade = Double.parseDouble(line[i]);
                 } catch (NumberFormatException e){
-                    //TODO: is this the right behaviour?
+                    errorOnCurrLine = true;
                     continue;
                 }
                 
                 currStudent.setGrade(dList.get(i-1), currGrade);
             }
+            if (errorOnCurrLine)
+                invalidLines++;
         }
         
         if (invalidLines > 0)
