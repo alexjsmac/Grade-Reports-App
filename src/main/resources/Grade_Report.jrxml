@@ -167,7 +167,7 @@
 				<text><![CDATA[Overall Average:]]></text>
 			</staticText>
 			<barChart>
-				<chart evaluationTime="Report">
+				<chart evaluationTime="Report" customizerClass="ca.uwo.csd.cs2212.team10.ChartCustomizer">
 					<reportElement x="0" y="80" width="572" height="220" uuid="47e67b23-3c82-430c-b6a2-aa8289b42d2f"/>
 					<chartTitle>
 						<font size="16"/>
