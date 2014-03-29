@@ -227,7 +227,7 @@ public class Course implements Serializable {
                     continue;
                 }
                 
-                currStudent.setGrade(dList.get(i), currGrade);
+                currStudent.setGrade(dList.get(i-1), currGrade);
             }
         }
         

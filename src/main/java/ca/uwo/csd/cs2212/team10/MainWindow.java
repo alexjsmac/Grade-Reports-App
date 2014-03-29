@@ -464,7 +464,7 @@ public class MainWindow extends JFrame {
         statusLabel = new JLabel();
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusPanel.add(statusLabel);
-        setStatusBar(null);
+        updateStatusBar();
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -510,11 +510,7 @@ public class MainWindow extends JFrame {
 
     private void dropDownItemChanged(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (dropDownCourses.getSelectedItem().getClass() == Course.class) {
-                gradebook.setActiveCourse((Course) dropDownCourses.getSelectedItem());
-                refreshTableModel();
-                setStatusBar(null);
-            } else if (dropDownCourses.getSelectedItem().equals("Add Course")) {
+            if (dropDownCourses.getSelectedItem().equals("Add Course")) {
                 addCourseAction();
                 if (dropDownCourses.getItemCount() == 1) {
                     dropDownCourses.setSelectedIndex(-1);
@@ -522,6 +518,10 @@ public class MainWindow extends JFrame {
                     dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
                 }
                 refreshTableModel();
+            } else{
+                gradebook.setActiveCourse((Course) dropDownCourses.getSelectedItem());
+                refreshTableModel();
+                updateStatusBar();
             }
         }
     }
@@ -627,7 +627,7 @@ public class MainWindow extends JFrame {
    
             //Update JTable
             refreshTableModel();
-            setStatusBar("Added new Student");
+            updateStatusBar();
         }
     }
 
@@ -660,7 +660,6 @@ public class MainWindow extends JFrame {
 
             //Update JTable
             refreshTableModel();
-            setStatusBar("Edited Student");
         } else if (retval == UserEntryPrompter.DELETE_PRESSED){
             delStudentAction();
         }
@@ -684,7 +683,7 @@ public class MainWindow extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             gradebook.getActiveCourse().removeStudent(student);
             refreshTableModel();
-            setStatusBar("Deleted Student");
+            updateStatusBar();
         }
         
     }
@@ -713,7 +712,6 @@ public class MainWindow extends JFrame {
 
             //Update JTable
             refreshTableModel();
-            setStatusBar("Added new Deliverable");
         }
     }
 
@@ -750,7 +748,6 @@ public class MainWindow extends JFrame {
 
             //Update JTable
             refreshTableModel();
-            setStatusBar("Edited Deliverable");
         } else if (retval == UserEntryPrompter.DELETE_PRESSED){
             delDeliverableAction();
         }
@@ -780,7 +777,6 @@ public class MainWindow extends JFrame {
             gradebook.getActiveCourse().removeDeliverable(deliverable);
             
             refreshTableModel();
-            setStatusBar("Deliverable Deleted");
         }
     }
     
@@ -806,7 +802,7 @@ public class MainWindow extends JFrame {
             }
             
             refreshTableModel();
-            setStatusBar(null);
+            updateStatusBar();
         }
     }
     
@@ -835,7 +831,6 @@ public class MainWindow extends JFrame {
             }
             
             refreshTableModel();
-            setStatusBar(null);
         }
     }
     
@@ -856,23 +851,15 @@ public class MainWindow extends JFrame {
                 showErrorMessage("The selected file could not be written. Try a different filename.");
                 return;
             }
-            
-            setStatusBar("Exported CSV to file: " + chooser.getSelectedFile().getAbsolutePath());
         }
     }
         
-    private void setStatusBar(String status) {
-        StringBuilder sb = new StringBuilder();
-        if (status == null)
-            sb.append("Ready");
-        else sb.append(status);
-        
-        sb.append(" | ");
-        
-        if (gradebook.getActiveCourse() != null)
-            sb.append(gradebook.getActiveCourse().toString());
-        
-            statusLabel.setText(String.valueOf(sb));
+    private void updateStatusBar() {
+        if (gradebook.getActiveCourse() == null)
+            statusLabel.setText("No course selected");
+        else
+            statusLabel.setText(gradebook.getActiveCourse().toString() + " | " + 
+                gradebook.getActiveCourse().getStudentList().size() + " students");
     }
     
     private void firstStartAction() {
