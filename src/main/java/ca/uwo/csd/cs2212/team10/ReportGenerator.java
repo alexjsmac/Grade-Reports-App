@@ -39,6 +39,8 @@ public class ReportGenerator {
         parameters.put("email", student.getEmail());
         parameters.put("number", student.getNum());
         parameters.put("average", student.calcAverage());
+        parameters.put("asnAverage", student.calcAverage(0));
+        parameters.put("examAverage", student.calcAverage(1));
 
         return JasperFillManager.fillReport(report, parameters, beanColDataSource);
     }
