@@ -247,7 +247,7 @@ public class MainWindow extends JFrame {
         emailBtn.setToolTipText("Send email (ALT+M)");
         emailBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                //TODO implement email action
+                sendEmailAction();
             }
         });
 
@@ -256,7 +256,7 @@ public class MainWindow extends JFrame {
         genRepBtn.setToolTipText("Generate grade reports (ALT+R)");
         genRepBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                //TODO implement Generate Reports Action
+                genReportsAction();
             }
         });
 
@@ -300,7 +300,7 @@ public class MainWindow extends JFrame {
         emailMenuItem.setText("Send grade reports by email");
         emailMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                //TODO
+                sendEmailAction();
             }
         });
         exportMenu.add(emailMenuItem);
@@ -308,7 +308,7 @@ public class MainWindow extends JFrame {
         genRepMenuItem.setText("Save grade reports as PDF");
         genRepMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                //TODO
+                genReportsAction();
             }
         });
         exportMenu.add(genRepMenuItem);
@@ -855,7 +855,15 @@ public class MainWindow extends JFrame {
             }
         }
     }
-        
+    
+    private void sendEmailAction(){
+        //TODO: email
+    }
+    
+    private void genReportsAction(){
+        //TODO: reports
+    }
+    
     private void updateStatusBar() {
         if (gradebook.getActiveCourse() == null)
             statusLabel.setText("No course selected");

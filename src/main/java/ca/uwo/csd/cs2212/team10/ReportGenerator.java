@@ -8,7 +8,6 @@ import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.xml.*;
 
 public class ReportGenerator {
-
     private final static String REPORT_FILENAME = "grade_report.jrxml";
 
     /* Attributes */
@@ -16,10 +15,12 @@ public class ReportGenerator {
 
     public ReportGenerator() {
         try { 
-            InputStream reportStream = AppLauncher.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
+            InputStream reportStream = ReportGenerator.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
             JasperDesign jasperDesign = JRXmlLoader.load(reportStream);
             report = JasperCompileManager.compileReport(jasperDesign);
-        } catch (Exception e){ }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
     
     private JasperPrint fillReport(Course course, Student student) throws JRException {
@@ -30,6 +31,7 @@ public class ReportGenerator {
             beans.add(new JavaBean(d.getName(), student.getGrade(d), course.calcAverage(d)));
         
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(beans);
+        
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("courseTitle", course.getTitle());
         parameters.put("courseCode", course.getCode());
@@ -39,8 +41,8 @@ public class ReportGenerator {
         parameters.put("email", student.getEmail());
         parameters.put("number", student.getNum());
         parameters.put("average", student.calcAverage());
-        parameters.put("asnAverage", student.calcAverage(0));
-        parameters.put("examAverage", student.calcAverage(1));
+        parameters.put("asnAverage", student.calcAverage(Deliverable.ASSIGNMENT_TYPE));
+        parameters.put("examAverage", student.calcAverage(Deliverable.EXAM_TYPE));
 
         return JasperFillManager.fillReport(report, parameters, beanColDataSource);
     }
