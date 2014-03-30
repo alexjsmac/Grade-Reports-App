@@ -862,6 +862,10 @@ public class MainWindow extends JFrame {
     
     private void genReportsAction(){
         //TODO: reports
+        //uncomment below for testing only (Henrique should remove this)
+        /* try{
+            reportGenerator.exportPDF("", gradebook.getActiveCourse(), gradebook.getActiveCourse().getStudentList());
+        } catch(Exception e){} */
     }
     
     private void updateStatusBar() {

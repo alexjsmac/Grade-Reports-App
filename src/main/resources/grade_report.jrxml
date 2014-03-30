@@ -11,23 +11,16 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<style name="Grade" pattern="#,##0.###%"/>
 	<style name="Regular" isDefault="true" pdfFontName="Helvetica" pdfEncoding="UTF8" isPdfEmbedded="false"/>
 	<style name="Bold" pdfFontName="Helvetica-Bold" pdfEncoding="UTF8" isPdfEmbedded="false"/>
-	<parameter name="courseTitle" class="java.lang.String" isForPrompting="false">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-	</parameter>
-	<parameter name="courseCode" class="java.lang.Object" isForPrompting="false">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-	</parameter>
+	<parameter name="courseTitle" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="courseCode" class="java.lang.Object" isForPrompting="false"/>
 	<parameter name="courseTerm" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="firstName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="lastName" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="email" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="number" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="average" class="java.lang.Double" isForPrompting="false">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-	</parameter>
+	<parameter name="average" class="java.lang.Double" isForPrompting="false"/>
 	<parameter name="asnAverage" class="java.lang.Double" isForPrompting="false"/>
 	<parameter name="examAverage" class="java.lang.Double" isForPrompting="false"/>
 	<queryString language="SQL">
@@ -42,12 +35,6 @@
 	<field name="deliverableAvg" class="java.lang.Double">
 		<fieldDescription><![CDATA[deliverableAvg]]></fieldDescription>
 	</field>
-	<variable name="deliverableGrade_SUM" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{deliverableGrade}]]></variableExpression>
-	</variable>
-	<variable name="Deliverable Grade" class="java.lang.Double">
-		<variableExpression><![CDATA[$F{deliverableGrade}]]></variableExpression>
-	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -61,25 +48,11 @@
 				<text><![CDATA[Grade Report]]></text>
 			</staticText>
 			<textField>
-				<reportElement style="Bold" x="204" y="0" width="150" height="30" uuid="039b55e8-03ca-4873-8c80-0038b72b848f"/>
+				<reportElement style="Bold" x="69" y="0" width="420" height="30" uuid="039b55e8-03ca-4873-8c80-0038b72b848f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{courseCode}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Bold" x="354" y="0" width="150" height="30" uuid="bd55eabb-d04c-4235-9dae-35c106cd96b9"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="15" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{courseTerm}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Bold" x="54" y="0" width="150" height="30" uuid="a4fb0cae-c73a-4486-a27d-bb1a2988f363"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="15" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{courseTitle}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{courseTitle} + " " + $P{courseCode} + " - " + $P{courseTerm}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -89,32 +62,11 @@
 				<reportElement x="20" y="20" width="551" height="1" uuid="851378aa-6b79-4914-9a1b-926cb0efe235"/>
 			</line>
 			<textField>
-				<reportElement style="Bold" x="20" y="0" width="120" height="20" uuid="8ea35621-79c6-403b-9bb8-c2122657a672"/>
-				<textElement>
+				<reportElement style="Bold" x="61" y="0" width="450" height="20" uuid="8ea35621-79c6-403b-9bb8-c2122657a672"/>
+				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{firstName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Bold" x="150" y="0" width="120" height="20" uuid="1e2dc9d1-2755-45f6-a4dd-fba0628bd5ee"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{lastName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Bold" x="410" y="0" width="120" height="20" uuid="884e5cee-3f1f-41b6-a2d3-86e78189de27"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{number}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Bold" x="280" y="1" width="120" height="20" uuid="4144d0cf-cff3-4c5d-86b8-ac6e874e256a"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{email}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{firstName} + " " + $P{lastName} + " - " + $P{number} + " - " + $P{email}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -144,30 +96,23 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="19" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="20" y="0" width="70" height="19" uuid="9bb77222-6808-4521-8135-63503edbc320"/>
+				<reportElement x="20" y="0" width="70" height="20" uuid="9bb77222-6808-4521-8135-63503edbc320"/>
 				<textFieldExpression><![CDATA[$F{deliverableName}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Auto" pattern="#,##0.##%">
-				<reportElement x="151" y="0" width="70" height="19" uuid="ae9a43c6-7a8b-40e4-bf1e-93e502da9e19"/>
+			<textField pattern="#,##0.##%">
+				<reportElement x="151" y="0" width="70" height="20" uuid="ae9a43c6-7a8b-40e4-bf1e-93e502da9e19"/>
 				<textFieldExpression><![CDATA[new Double($F{deliverableGrade}.doubleValue() / 100)]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##%">
-				<reportElement x="280" y="-1" width="70" height="20" uuid="aab95453-ae60-4a56-8d3c-1325f643f5c0"/>
+				<reportElement x="280" y="0" width="70" height="20" uuid="aab95453-ae60-4a56-8d3c-1325f643f5c0"/>
 				<textFieldExpression><![CDATA[new Double($F{deliverableAvg} / 100)]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
 		<band height="320" splitType="Stretch">
-			<staticText>
-				<reportElement style="Bold" x="20" y="50" width="120" height="20" uuid="fb1c7b49-29a7-4e60-89f0-f84013902dfe"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Overall Average:]]></text>
-			</staticText>
 			<barChart>
 				<chart evaluationTime="Report" customizerClass="ca.uwo.csd.cs2212.team10.ChartCustomizer">
 					<reportElement style="Bold" x="0" y="80" width="572" height="220" uuid="47e67b23-3c82-430c-b6a2-aa8289b42d2f"/>
@@ -201,6 +146,13 @@
 					</valueAxisFormat>
 				</barPlot>
 			</barChart>
+			<staticText>
+				<reportElement style="Bold" x="20" y="50" width="120" height="20" uuid="fb1c7b49-29a7-4e60-89f0-f84013902dfe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Overall Average:]]></text>
+			</staticText>
 			<textField pattern="#,##0.##%">
 				<reportElement x="140" y="50" width="70" height="20" uuid="94d41f2f-e522-4314-980c-d439561a8f6c"/>
 				<textFieldExpression><![CDATA[new Double ($P{average} / 100)]]></textFieldExpression>
