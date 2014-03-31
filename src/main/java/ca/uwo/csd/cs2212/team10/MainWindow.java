@@ -509,20 +509,26 @@ public class MainWindow extends JFrame {
     }
 
     private void dropDownItemChanged(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (dropDownCourses.getSelectedItem().equals("Add Course")) {
+        if (dropDownCourses.getSelectedItem() == null){
+            gradebook.setActiveCourse(null);
+            
+            refreshTableModel();
+            updateStatusBar();
+        } else if (evt.getStateChange() == ItemEvent.SELECTED){
+            if (dropDownCourses.getSelectedItem().equals("Add Course")){
                 addCourseAction();
-                if (dropDownCourses.getItemCount() == 1) {
-                    dropDownCourses.setSelectedIndex(-1);
-                }else {
+                if (gradebook.getCourseList().size() == 0)
+                    dropDownCourses.setSelectedItem(null);
+                else
                     dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
-                }
-                refreshTableModel();
-            } else{
-                gradebook.setActiveCourse((Course) dropDownCourses.getSelectedItem());
+                
                 refreshTableModel();
                 updateStatusBar();
-            }
+            } else
+                gradebook.setActiveCourse((Course)dropDownCourses.getSelectedItem());
+        
+            refreshTableModel();
+            updateStatusBar();
         }
     }
 
@@ -540,10 +546,11 @@ public class MainWindow extends JFrame {
             //Add the entry to the dropdown list
             dropDownCourses.addItem(course);
             
-            //Make "Add Course" the last Item on the list   
+            //Make "Add Course" the last item in the list   
             dropDownCourses.removeItem("Add Course");
             dropDownCourses.addItem("Add Course");
             
+            //Make the new course selected
             dropDownCourses.setSelectedItem(course);
         }
     }
@@ -568,8 +575,9 @@ public class MainWindow extends JFrame {
             activeCourse.setCode(output[1]);
             activeCourse.setTerm(output[2]);
             
-            //Refresh the dropdown list
+            //Refresh the dropdown list and status bar
             dropDownCourses.revalidate();
+            updateStatusBar();
         } else if (retval == UserEntryPrompter.DELETE_PRESSED){
             delCourseAction();
         }
@@ -584,15 +592,16 @@ public class MainWindow extends JFrame {
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Course", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
-            //remove the course
-            if (dropDownCourses.getItemCount() == 2) {
-                dropDownCourses.setSelectedIndex(-1);
-            }
-            dropDownCourses.removeItem(gradebook.getActiveCourse());
-            gradebook.removeCourse(gradebook.getActiveCourse());
-            if (dropDownCourses.getItemCount() == 1) {
-                dropDownCourses.setSelectedIndex(-1);
-            }
+            //get the active course
+            Course activeCourse = gradebook.getActiveCourse();
+            
+            //remove it from the gradebook
+            gradebook.removeCourse(activeCourse);
+            
+            //remove it from the dropdown list
+            if (gradebook.getCourseList().size() == 0)
+                dropDownCourses.setSelectedItem(null);
+            dropDownCourses.removeItem(activeCourse);
         }
     }
     
