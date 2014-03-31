@@ -59,6 +59,7 @@ public class MainWindow extends JFrame {
 
         studentsTbl.setAutoCreateRowSorter(true);
         studentsTbl.setCellSelectionEnabled(true);
+        studentsTbl.getRowSorter().toggleSortOrder(0);
         studentsTbl.setGridColor(Color.gray);
         studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
