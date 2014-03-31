@@ -2,6 +2,8 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Class to set the Model of the Student's Table
@@ -74,11 +76,11 @@ public class TableModel extends AbstractTableModel {
             return selectedStudent.getNum();
         
         else if (columnIndex == IDX_ASSIG_AVG)
-            return selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE);
+            return new BigDecimal(selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE)).setScale(2, RoundingMode.HALF_UP).doubleValue();
         else if (columnIndex == IDX_EXAM_AVG)
-            return selectedStudent.calcAverage(Deliverable.EXAM_TYPE);
+            return new BigDecimal(selectedStudent.calcAverage(Deliverable.EXAM_TYPE)).setScale(2, RoundingMode.HALF_UP).doubleValue();
         else if (columnIndex == IDX_AVG)
-            return selectedStudent.calcAverage();
+            return new BigDecimal(selectedStudent.calcAverage()).setScale(2, RoundingMode.HALF_UP).doubleValue();
         else
             return selectedStudent.getGrade(deliverables.get(columnIndex - 2));
     }

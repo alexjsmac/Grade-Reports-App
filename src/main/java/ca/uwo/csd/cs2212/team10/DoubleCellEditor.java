@@ -3,6 +3,8 @@ package ca.uwo.csd.cs2212.team10;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Implements the Cell Editor used in the JTable
@@ -19,7 +21,7 @@ public class DoubleCellEditor extends AbstractCellEditor implements TableCellEdi
 
     @Override
     public Object getCellEditorValue() {
-        return Double.valueOf(field.getText());
+        return new BigDecimal(Double.valueOf(field.getText())).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value,
