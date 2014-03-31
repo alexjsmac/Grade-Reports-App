@@ -54,8 +54,9 @@ public class MainWindow extends JFrame {
     private void initTable() {
         refreshTableModel();
 
-        //Set custom Cell Editor for Columns with type Double (Correspond to the cells with the grades)
-        studentsTbl.setDefaultEditor(Double.class, new DoubleCellEditor());
+        //Set cell editors and renderers for grades
+        studentsTbl.setDefaultEditor(Double.class, new GradeCellEditor());
+        studentsTbl.setDefaultRenderer(Double.class, new GradeCellRenderer());
 
         studentsTbl.setAutoCreateRowSorter(true);
         studentsTbl.setCellSelectionEnabled(true);

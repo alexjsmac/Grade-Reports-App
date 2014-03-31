@@ -76,11 +76,11 @@ public class TableModel extends AbstractTableModel {
             return selectedStudent.getNum();
         
         else if (columnIndex == IDX_ASSIG_AVG)
-            return new BigDecimal(selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE)).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE);
         else if (columnIndex == IDX_EXAM_AVG)
-            return new BigDecimal(selectedStudent.calcAverage(Deliverable.EXAM_TYPE)).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return selectedStudent.calcAverage(Deliverable.EXAM_TYPE);
         else if (columnIndex == IDX_AVG)
-            return new BigDecimal(selectedStudent.calcAverage()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return selectedStudent.calcAverage();
         else
             return selectedStudent.getGrade(deliverables.get(columnIndex - 2));
     }
