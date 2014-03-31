@@ -2,25 +2,15 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.io.*;
 import java.util.*;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.*;
 import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.xml.*;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
+import org.apache.velocity.*;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
@@ -71,12 +61,14 @@ public class ReportGenerator {
         }
     }
 
-    public void sendReportByEmail(String smtpServer, final String username, final String password, String fromAddress,
-            Course course, List<Student> students) throws Exception {
+    public void sendReportByEmail(String smtpServer, String smtpPort, final String username, 
+            final String password, String fromAddress, Course course, List<Student> students)
+            throws AddressException, MessagingException, JRException {
         
         Properties props = new Properties();
  
         props.put("mail.smtp.host", smtpServer);
+        props.put("mail.smtp.port", smtpPort);
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
@@ -89,7 +81,6 @@ public class ReportGenerator {
         );
             
         for (Student s : students){
-            
             Message msg = new MimeMessage(session);
 
             Address sender = new InternetAddress(fromAddress);
@@ -102,10 +93,10 @@ public class ReportGenerator {
             Multipart multiPart = new MimeMultipart();
 
             MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText(loadTemplate("email.text.vm", s.getFirstName()), "utf -8");
+            textPart.setText(loadTemplate("email.text.vm", s.getFirstName()), "utf-8");
 
             MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset =utf -8");
+            htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset=utf-8");
 
             MimeBodyPart fileAttachmentPart = new MimeBodyPart();
 
@@ -114,7 +105,7 @@ public class ReportGenerator {
             DataSource source = new ByteArrayDataSource(output.toByteArray(), "application/pdf");
             
             fileAttachmentPart.setDataHandler(new DataHandler(source));
-            fileAttachmentPart.setFileName("Grade_Report.pdf");
+            fileAttachmentPart.setFileName("grade_report.pdf");
 
             multiPart.addBodyPart(textPart);
             multiPart.addBodyPart(htmlPart);
@@ -127,20 +118,19 @@ public class ReportGenerator {
     } 
     
     private static String loadTemplate(String filename, String name) {
-      
-      VelocityEngine ve = new VelocityEngine();
-      ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-      ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-              
-      Template template = ve.getTemplate(filename);
-      
-      VelocityContext context = new VelocityContext();
-      context.put("studentName", name);
-      
-      StringWriter out = new StringWriter();
-      template.merge(context, out);
-      
-      return out.toString();
-  }
+        VelocityEngine ve = new VelocityEngine();
+        ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+        
+        Template template = ve.getTemplate(filename);
+        
+        VelocityContext context = new VelocityContext();
+        context.put("studentName", name);
+        
+        StringWriter out = new StringWriter();
+        template.merge(context, out);
+        
+        return out.toString();
+    }
 }
 
