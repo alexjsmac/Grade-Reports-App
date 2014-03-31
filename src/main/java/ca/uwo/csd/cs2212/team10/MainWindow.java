@@ -568,15 +568,8 @@ public class MainWindow extends JFrame {
             activeCourse.setCode(output[1]);
             activeCourse.setTerm(output[2]);
             
-            //Refresh the dropdown list entry
-            dropDownCourses.removeItem(activeCourse);
-            dropDownCourses.addItem(activeCourse);
-            
-            //Make "Add Course" the last Item on the list
-            dropDownCourses.removeItem("Add Course");
-            dropDownCourses.addItem("Add Course");
-            
-            dropDownCourses.setSelectedItem(activeCourse);
+            //Refresh the dropdown list
+            dropDownCourses.revalidate();
         } else if (retval == UserEntryPrompter.DELETE_PRESSED){
             delCourseAction();
         }
