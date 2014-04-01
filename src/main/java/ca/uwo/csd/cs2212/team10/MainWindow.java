@@ -155,7 +155,7 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-        jScrollPane1 = new JScrollPane();
+        jScrollPane1 = new JScrollPane(studentsTbl, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         studentsTbl = new JTable();
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
         addStudentBtn = new JButton();
