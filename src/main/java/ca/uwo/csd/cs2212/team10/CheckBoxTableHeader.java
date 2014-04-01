@@ -36,22 +36,14 @@ class CheckBoxTableHeader extends JCheckBox
                 header.addMouseListener(rendererComponent);
             }
         }
-        setColumn(column);
         Border border = UIManager.getBorder("TableHeader.cellBorder");
         rendererComponent.setBorder(border);
         rendererComponent.setBorderPainted(true);
         return rendererComponent;
     }
 
-    protected void setColumn(int column) {
-        this.column = column;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    protected void handleClickEvent(MouseEvent e) {
+    @Override
+    public void mouseClicked(MouseEvent e) {
         if (mousePressed) {
             mousePressed = false;
             JTableHeader header = (JTableHeader) (e.getSource());
@@ -64,23 +56,23 @@ class CheckBoxTableHeader extends JCheckBox
                 doClick();
             }
         }
-    }
-
-    public void mouseClicked(MouseEvent e) {
-        handleClickEvent(e);
         ((JTableHeader) e.getSource()).repaint();
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         mousePressed = true;
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 }

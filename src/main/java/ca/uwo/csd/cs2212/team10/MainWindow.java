@@ -106,7 +106,7 @@ public class MainWindow extends JFrame {
 
                     if (selectedColumn >= 0 && selectedColumn <= 1) {
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
+                    } else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 4)) {
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -117,6 +117,23 @@ public class MainWindow extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 mousePressed(e);
             }
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                studentsTbl.clearSelection();
+                int row = studentsTbl.rowAtPoint(e.getPoint());
+                int column = studentsTbl.columnAtPoint(e.getPoint());
+                if (row >= 0 && row < studentsTbl.getRowCount()) {
+                    studentsTbl.changeSelection(row, column, false, false);
+                } else {
+                    studentsTbl.clearSelection();
+                }
+
+                if ((studentsTbl.getSelectedColumn() == studentsTbl.getModel().getColumnCount() - 1)
+                        && (e.getButton() == MouseEvent.BUTTON1) && e.getComponent() instanceof JTable) {
+                    editStudentAction();
+                }
+            }
         });
 
         //Right-Click on a Deliverable column header open a Popup menu
@@ -124,9 +141,12 @@ public class MainWindow extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.isPopupTrigger()) {
-                    int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.columnAtPoint(e.getPoint()));
-                    if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
-                        studentsTbl.changeSelection(-1, selectedColumn, false, false);
+                    studentsTbl.clearSelection();
+                    int column = studentsTbl.columnAtPoint(e.getPoint());
+                    
+                    if (studentsTbl.convertColumnIndexToModel(column) >= 2 
+                            && studentsTbl.convertColumnIndexToModel(column) < (studentsTbl.getModel().getColumnCount() - 4)) {
+                        studentsTbl.changeSelection(-1, column, false, false);
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -137,6 +157,10 @@ public class MainWindow extends JFrame {
                 mousePressed(e);
             }
         });
+        
+        //Add custom renderer so the last column looks like a button to edit each Student
+        ButtonColumn buttonColumn = new ButtonColumn(studentsTbl);
+        studentsTbl.getColumnModel().getColumn(studentsTbl.getColumnCount()-1).setCellRenderer(buttonColumn);
     }
 
     private void refreshTableModel() {
@@ -154,7 +178,10 @@ public class MainWindow extends JFrame {
 
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
-        //studentsTbl.setDefaultRenderer(Object.class, new CustomTableRenderer());
+                
+        //Add custom renderer so the last column looks like a button to edit each Student
+        ButtonColumn buttonColumn = new ButtonColumn(studentsTbl);
+        studentsTbl.getColumnModel().getColumn(studentsTbl.getColumnCount()-1).setCellRenderer(buttonColumn);
         updateColumnSize();
     }
 
@@ -755,7 +782,7 @@ public class MainWindow extends JFrame {
         }
 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 4)) {
             showErrorMessage("Select a deliverable first.");
             return;
         }
@@ -793,7 +820,7 @@ public class MainWindow extends JFrame {
         }
 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 4)) {
             showErrorMessage("Select a deliverable first.");
             return;
         }
