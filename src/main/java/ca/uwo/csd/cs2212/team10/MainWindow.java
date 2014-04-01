@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
 import net.sf.jasperreports.engine.JRException;
+import org.jdesktop.swingx.*;
 
 /**
  * The main window of the gradebook program
@@ -30,7 +31,7 @@ public class MainWindow extends JFrame {
     private ReportGenerator reportGenerator;
 
     private JScrollPane jScrollPane1;
-    private JTable studentsTbl;
+    private JXTable studentsTbl;
     private JComboBox dropDownCourses;
     private JPanel statusPanel;
     private JLabel statusLabel;
@@ -70,7 +71,8 @@ public class MainWindow extends JFrame {
         studentsTbl.setCellSelectionEnabled(true);
         studentsTbl.getRowSorter().toggleSortOrder(0);
         studentsTbl.setGridColor(Color.gray);
-        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        studentsTbl.setHorizontalScrollEnabled(true);
 
         //Set height for the rows
         studentsTbl.setRowHeight(22);
@@ -106,7 +108,7 @@ public class MainWindow extends JFrame {
 
                     if (selectedColumn >= 0 && selectedColumn <= 1) {
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 4)) {
+                    } else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -145,7 +147,7 @@ public class MainWindow extends JFrame {
                     int column = studentsTbl.columnAtPoint(e.getPoint());
                     
                     if (studentsTbl.convertColumnIndexToModel(column) >= 2 
-                            && studentsTbl.convertColumnIndexToModel(column) < (studentsTbl.getModel().getColumnCount() - 4)) {
+                            && studentsTbl.convertColumnIndexToModel(column) < (studentsTbl.getModel().getColumnCount() - 3)) {
                         studentsTbl.changeSelection(-1, column, false, false);
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
@@ -156,11 +158,7 @@ public class MainWindow extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 mousePressed(e);
             }
-        });
-        
-        //Add custom renderer so the last column looks like a button to edit each Student
-        ButtonColumn buttonColumn = new ButtonColumn(studentsTbl);
-        studentsTbl.getColumnModel().getColumn(studentsTbl.getColumnCount()-1).setCellRenderer(buttonColumn);
+        });        
     }
 
     private void refreshTableModel() {
@@ -179,15 +177,12 @@ public class MainWindow extends JFrame {
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
                 
-        //Add custom renderer so the last column looks like a button to edit each Student
-        ButtonColumn buttonColumn = new ButtonColumn(studentsTbl);
-        studentsTbl.getColumnModel().getColumn(studentsTbl.getColumnCount()-1).setCellRenderer(buttonColumn);
         updateColumnSize();
     }
 
     private void initComponents() {
         jScrollPane1 = new JScrollPane(studentsTbl, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        studentsTbl = new JTable() {
+        studentsTbl = new JXTable() {
             public Component prepareEditor(TableCellEditor editor, int row, int column) {
                 Component c = super.prepareEditor(editor, row, column);
                 if (c instanceof JTextComponent) {
@@ -782,7 +777,7 @@ public class MainWindow extends JFrame {
         }
 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 4)) {
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
             showErrorMessage("Select a deliverable first.");
             return;
         }
@@ -820,7 +815,7 @@ public class MainWindow extends JFrame {
         }
 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 4)) {
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
             showErrorMessage("Select a deliverable first.");
             return;
         }
