@@ -7,6 +7,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.table.*;
+import org.jdesktop.swingx.JXTable;
 
 /**
  * Dialog to handle email sending
@@ -31,7 +32,7 @@ public class EmailDialog extends JDialog {
     private JLabel smtpPsswdLabel;
     private JLabel smtpUserLabel;
     private JTextField smtpUsername;
-    private JTable studentsTbl;
+    private JXTable studentsTbl;
 
     public EmailDialog(Frame parent, boolean modal, List<Student> studentsList) {
         super(parent, modal);
@@ -50,7 +51,7 @@ public class EmailDialog extends JDialog {
         smtpPsswdLabel = new JLabel();
         smtpUsername = new JTextField();
         jScrollPane1 = new JScrollPane();
-        studentsTbl = new JTable();
+        studentsTbl = new JXTable();
         ok = new JButton();
         cancel = new JButton();
         smtpPortLabel = new JLabel();
@@ -60,7 +61,7 @@ public class EmailDialog extends JDialog {
         setMinimumSize(new Dimension(100, 100));
         setResizable(false);
 
-        emailLabel.setText("From Email Address:");
+        emailLabel.setText("Origin Email Address:");
 
         smtpLabel.setText("SMTP Server:");
 

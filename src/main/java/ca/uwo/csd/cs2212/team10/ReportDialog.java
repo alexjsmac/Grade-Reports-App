@@ -2,30 +2,30 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.awt.Color;
 import java.awt.Frame;
-import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.table.*;
+import org.jdesktop.swingx.JXTable;
 
 /**
- * Dialog to handle report saving
+ * Dialog to handle the Generate Report Action
  *
  * @author team10
  */
-public class ReportDialog extends JDialog {
-    private int retval;
-    private Object[] output;
-    private static List<Student> students;
-    
+public class ReportDialog extends javax.swing.JDialog {
     private JButton cancel;
     private JScrollPane jScrollPane1;
     private JButton ok;
     private JButton pathBtn;
     private JLabel pathLabel;
     private JTextField pathTxt;
-    private JTable studentsTbl;
+    private JXTable studentsTbl;
+
+    private int retval;
+    private Object[] output;
+    private static List<Student> students;
 
     public ReportDialog(Frame parent, boolean modal, List<Student> studentsList) {
         super(parent, modal);
@@ -35,33 +35,35 @@ public class ReportDialog extends JDialog {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void initComponents() {
-        pathLabel = new JLabel();
-        jScrollPane1 = new JScrollPane();
-        studentsTbl = new JTable();
-        ok = new JButton();
-        cancel = new JButton();
-        pathTxt = new JTextField();
-        pathBtn = new JButton();
 
-        setTitle("Save PDF Reports");
-        setMinimumSize(new Dimension(100, 100));
+        pathLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        studentsTbl = new JXTable();
+        ok = new javax.swing.JButton();
+        cancel = new javax.swing.JButton();
+        pathTxt = new javax.swing.JTextField();
+        pathBtn = new javax.swing.JButton();
+
+        setTitle("Generate PDF Report");
+        setMinimumSize(new java.awt.Dimension(100, 100));
         setResizable(false);
 
-        pathLabel.setText("Select destination folder:");
+        pathLabel.setText("Select Folder to save:");
 
         jScrollPane1.setViewportView(studentsTbl);
 
-        ok.setText("Save");
+        ok.setText("Send Email");
         ok.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okActionPerformed(evt);
             }
         });
 
         cancel.setText("Cancel");
         cancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelActionPerformed(evt);
             }
         });
@@ -70,7 +72,7 @@ public class ReportDialog extends JDialog {
 
         pathBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png"))); // NOI18N
         pathBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pathBtnActionPerformed(evt);
             }
         });
@@ -149,7 +151,7 @@ public class ReportDialog extends JDialog {
         }));
     }
 
-    private void okActionPerformed(ActionEvent evt) {
+    private void okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okActionPerformed
         if (pathTxt.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "You must choose a folder.");
             return;
@@ -157,32 +159,32 @@ public class ReportDialog extends JDialog {
         retval = 0;
         
         List<Student> selectedStudents = new ArrayList();
-        for (int i = 0; i < studentsTbl.getRowCount(); i++) {
-            if ((boolean)studentsTbl.getValueAt(i, 0)){
-                selectedStudents.add(students.get(studentsTbl.convertRowIndexToModel(i)));
-            }
+        for (int i = 0; i < students.size(); i++) {
+            if ((boolean)studentsTbl.getValueAt(i, 0))
+                selectedStudents.add(students.get(i));
         }
         
         output = new Object[] {pathTxt.getText(), selectedStudents};
         setVisible(false);
-    }
+    }//GEN-LAST:event_okActionPerformed
 
-    private void cancelActionPerformed(ActionEvent evt) {
+    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
         retval = 1;
         setVisible(false);
-    }
+    }//GEN-LAST:event_cancelActionPerformed
 
-    private void pathBtnActionPerformed(ActionEvent evt) {
+    private void pathBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathBtnActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         
         int option = chooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
+            System.out.println(file.toString());
             pathTxt.setText(file.getAbsolutePath());
         }
         
-    }
+    }//GEN-LAST:event_pathBtnActionPerformed
 
     public int showDialog() {
         setVisible(true);
