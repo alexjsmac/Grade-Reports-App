@@ -875,9 +875,12 @@ public class MainWindow extends JFrame {
     private void updateStatusBar() {
         if (gradebook.getActiveCourse() == null)
             statusLabel.setText("No course selected");
-        else
+        else{
+            int numStudents = gradebook.getActiveCourse().getStudentList().size();
+            
             statusLabel.setText(gradebook.getActiveCourse().toString() + " | " + 
-                gradebook.getActiveCourse().getStudentList().size() + " students");
+                numStudents + " student" + (numStudents == 1 ? "" : "s"));
+        }
     }
     
     private void firstStartAction() {

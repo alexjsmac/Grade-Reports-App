@@ -87,7 +87,7 @@ public class Course implements Serializable {
 
         //Add each deliverable to the grade list
         for (Deliverable deliverable : deliverables)
-            student.setGrade(deliverable, 0.0);
+            student.addGrade(deliverable);
     }
 
     public void removeStudent(Student student) {
@@ -99,7 +99,7 @@ public class Course implements Serializable {
         
         //Add the deliverable to the grade list of each student
         for (Student student : students)
-            student.setGrade(deliverable, 0.0);
+            student.addGrade(deliverable);
     }
 
     public void removeDeliverable(Deliverable deliverable) {
@@ -140,7 +140,9 @@ public class Course implements Serializable {
 		
 		double total = 0;
 		for (Student s : students){
-			total += s.getGrade(deliverable);
+            Double currGrade = s.getGrade(deliverable);
+            if (currGrade != Student.NO_GRADE)
+                total += currGrade;
 		}
 		
 		return total/students.size();

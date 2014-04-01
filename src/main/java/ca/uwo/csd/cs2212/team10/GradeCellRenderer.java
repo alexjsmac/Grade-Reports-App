@@ -21,6 +21,11 @@ public class GradeCellRenderer extends DefaultTableCellRenderer {
     
     @Override
     public void setValue(Object aValue) {
-        super.setValue(formatter.format((Double)aValue));
+        Double val = (Double)aValue;
+        
+        if (val == Student.NO_GRADE)
+            super.setValue("---");
+        else
+            super.setValue(formatter.format(val));
     }
 }

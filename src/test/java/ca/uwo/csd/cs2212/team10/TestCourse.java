@@ -83,7 +83,7 @@ public class TestCourse{
         course.addDeliverable(deliverable);
         course.addStudent(student);
         
-        assertEquals(0.0, student.getGrade(deliverable));
+        assertEquals(Student.NO_GRADE, student.getGrade(deliverable));
         
         course.removeStudent(student);
         course.removeDeliverable(deliverable);
@@ -94,7 +94,7 @@ public class TestCourse{
         course.addStudent(student);
         course.addDeliverable(deliverable);
         
-        assertEquals(0.0, student.getGrade(deliverable));
+        assertEquals(Student.NO_GRADE, student.getGrade(deliverable));
         
         course.removeDeliverable(deliverable);
         course.removeStudent(student);

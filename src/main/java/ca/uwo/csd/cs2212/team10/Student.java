@@ -10,6 +10,7 @@ import java.util.Map.Entry;
  */
 public class Student implements Serializable {
     /* Constants */
+    public static final double NO_GRADE = -1;
     private static final long serialVersionUID = 1L; //for serializing
     
     /* Attributes */
@@ -105,7 +106,15 @@ public class Student implements Serializable {
     }
     
     /**
-     * Adds or edits the grade for a given deliverable
+     * Adds a grade for a given deliverable
+     * @param deliverable the deliverable whose grade should be modified
+     */
+    public void addGrade(Deliverable deliverable){
+        grades.put(deliverable, NO_GRADE);
+    }
+    
+    /**
+     * Edits the grade for a given deliverable
      * @param deliverable the deliverable whose grade should be modified
      * @param grade the grade to assign
      */
@@ -122,9 +131,11 @@ public class Student implements Serializable {
         
         //loop through each grade
         for (Entry<Deliverable, Double> grade : grades.entrySet()){
-            //keep a running total of the grades and the weights
-            total += grade.getValue() * grade.getKey().getWeight();
-            weights += grade.getKey().getWeight();
+            if (grade.getValue() != NO_GRADE){
+                //keep a running total of the grades and the weights
+                total += grade.getValue() * grade.getKey().getWeight();
+                weights += grade.getKey().getWeight();
+            }
         }
         
         if (weights == 0)
@@ -143,8 +154,8 @@ public class Student implements Serializable {
         
         //loop through each grade
         for (Entry<Deliverable, Double> grade : grades.entrySet()){
-            //if the type matches the desired one...
-            if (grade.getKey().getType() == type){
+            //if the type matches the desired one and there's a grade there...
+            if (grade.getValue() != NO_GRADE && grade.getKey().getType() == type){
                 //keep a running total of the grades and the weights
                 total += grade.getValue() * grade.getKey().getWeight();
                 weights += grade.getKey().getWeight();
