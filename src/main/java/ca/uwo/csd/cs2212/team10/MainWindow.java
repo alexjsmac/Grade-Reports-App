@@ -12,6 +12,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.mail.internet.AddressException;
 import javax.mail.MessagingException;
+import javax.swing.table.TableCellEditor;
+import javax.swing.text.JTextComponent;
 import net.sf.jasperreports.engine.JRException;
 
 /**
@@ -158,7 +160,15 @@ public class MainWindow extends JFrame {
 
     private void initComponents() {
         jScrollPane1 = new JScrollPane(studentsTbl, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        studentsTbl = new JTable();
+        studentsTbl = new JTable() {
+            public Component prepareEditor(TableCellEditor editor, int row, int column) {
+                Component c = super.prepareEditor(editor, row, column);
+                if (c instanceof JTextComponent) {
+                    ((JTextComponent) c).selectAll();
+                }
+                return c;
+            }
+        };
         dropDownCourses = new JComboBox(gradebook.getCourseList().toArray());
         addStudentBtn = new JButton();
         addDeliverableBtn = new JButton();
@@ -235,7 +245,8 @@ public class MainWindow extends JFrame {
             }
         }.init(dropDownCourses.getRenderer()));
 
-        addStudentBtn.setText("Add Student");
+        //addStudentBtn.setText("Add Student");
+        addStudentBtn.setIcon(new ImageIcon(getClass().getResource("/addStudent.png")));
         addStudentBtn.setMnemonic(KeyEvent.VK_B);
         addStudentBtn.setToolTipText("Add a new Student to the active Course (Alt+B)");
         addStudentBtn.addActionListener(new ActionListener() {
@@ -244,7 +255,8 @@ public class MainWindow extends JFrame {
             }
         });
 
-        addDeliverableBtn.setText("Add Deliverable");
+        //addDeliverableBtn.setText("Add Deliverable");
+        addDeliverableBtn.setIcon(new ImageIcon(getClass().getResource("/addDeliverable.png")));
         addDeliverableBtn.setMnemonic(KeyEvent.VK_N);
         addDeliverableBtn.setToolTipText("Add a new Deliverable to the active Course (Alt+N)");
         addDeliverableBtn.addActionListener(new ActionListener() {
@@ -253,7 +265,8 @@ public class MainWindow extends JFrame {
             }
         });
 
-        emailBtn.setText("Email");
+        //emailBtn.setText("Email");
+        emailBtn.setIcon(new ImageIcon(getClass().getResource("/email.png")));
         emailBtn.setMnemonic(KeyEvent.VK_M);
         emailBtn.setToolTipText("Send email (ALT+M)");
         emailBtn.addActionListener(new ActionListener() {
@@ -262,7 +275,8 @@ public class MainWindow extends JFrame {
             }
         });
 
-        genRepBtn.setText("Generate Reports");
+        //genRepBtn.setText("Generate Reports");
+        genRepBtn.setIcon(new ImageIcon(getClass().getResource("/genRep.png")));
         genRepBtn.setMnemonic(KeyEvent.VK_R);
         genRepBtn.setToolTipText("Generate grade reports (ALT+R)");
         genRepBtn.addActionListener(new ActionListener() {

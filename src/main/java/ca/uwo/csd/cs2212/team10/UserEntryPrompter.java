@@ -29,7 +29,7 @@ public class UserEntryPrompter{
     }
     
     public void showEmailDialog (Component parent, List<Student> studentsList) {
-        EmailDialog dialog = new EmailDialog(null, true, studentsList);
+        EmailDialog dialog = new EmailDialog(getParentFrame(parent), true, studentsList);
         
         retval = dialog.showDialog();
         
@@ -40,7 +40,7 @@ public class UserEntryPrompter{
     }
     
     public void showReportDialog (Component parent, List<Student> studentsList) {
-        ReportDialog dialog = new ReportDialog(null, true, studentsList);
+        ReportDialog dialog = new ReportDialog(getParentFrame(parent), true, studentsList);
         
         retval = dialog.showDialog();
 
@@ -361,6 +361,16 @@ public class UserEntryPrompter{
         while (c != null) {
             if (c instanceof JDialog) {
                 return (JDialog) c;
+            }
+            c = c.getParent();
+        }
+        return null;
+    }
+    
+    private static JFrame getParentFrame (Component c) {
+        while (c != null) {
+            if (c instanceof JFrame) {
+                return (JFrame) c;
             }
             c = c.getParent();
         }
