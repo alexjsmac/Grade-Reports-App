@@ -276,7 +276,7 @@ public class Course implements Serializable {
 
     @Override
     public String toString() {
-        return title + " " + code + " - " + term;
+        return title + " - " + code + " - " + term;
     }
     
     public boolean equals(Course c) {
