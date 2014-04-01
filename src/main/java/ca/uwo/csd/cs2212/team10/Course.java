@@ -184,7 +184,7 @@ public class Course implements Serializable {
         Student currStudent;
         
         if((line = reader.readNext()) != null){
-            if(!line[0].equals("Student Number")){
+            if (line.length < 1 || !line[0].equals("Student Number")){
                 throw new CSVException(CSVException.BAD_FORMAT);
             }
             
@@ -196,7 +196,7 @@ public class Course implements Serializable {
                     }
                 }
                 if (dList.size() != i)
-                    throw new CSVException(CSVException.BAD_FORMAT);
+                    dList.add(null);
             }
         }
         
@@ -224,6 +224,9 @@ public class Course implements Serializable {
             
             errorOnCurrLine = false;
             for (int i = 1; i < line.length; i++){
+                if (dList.get(i-1) == null)
+                    continue;
+                
                 try{
                     currGrade = Double.parseDouble(line[i]);
                 } catch (NumberFormatException e){
