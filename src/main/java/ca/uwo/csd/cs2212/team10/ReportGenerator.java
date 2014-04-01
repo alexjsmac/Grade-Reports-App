@@ -55,14 +55,13 @@ public class ReportGenerator {
         return JasperFillManager.fillReport(report, parameters, beanColDataSource);
     }
 
-    public void exportPDF(String directory, Course course, List<Student> students) throws JRException {
-        for (Student s : students){ 
-            JasperExportManager.exportReportToPdfFile(fillReport(course, s), directory + s.getLastName() + "-" + s.getFirstName() + "-" + s.getNum() + ".pdf");
-        }
+    public void exportToPDF(String directory, Course course, Student s) throws JRException {
+        JasperExportManager.exportReportToPdfFile(fillReport(course, s), 
+            new File(directory, s.getLastName() + "-" + s.getFirstName() + "-" + s.getNum() + ".pdf").getPath());
     }
 
-    public void sendReportByEmail(String smtpServer, String smtpPort, final String username, 
-            final String password, String fromAddress, Course course, List<Student> students)
+    public void sendByEmail(String smtpServer, String smtpPort, final String username, 
+            final String password, String fromAddress, Course course, Student s)
             throws AddressException, MessagingException, JRException {
         
         Properties props = new Properties();
@@ -80,41 +79,39 @@ public class ReportGenerator {
             }
         );
             
-        for (Student s : students){
-            Message msg = new MimeMessage(session);
+        Message msg = new MimeMessage(session);
 
-            Address sender = new InternetAddress(fromAddress);
-            msg.setFrom(sender);
+        Address sender = new InternetAddress(fromAddress);
+        msg.setFrom(sender);
 
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(s.getEmail()));
+        msg.addRecipient(Message.RecipientType.TO, new InternetAddress(s.getEmail()));
 
-            msg.setSubject("Grade Report");
+        msg.setSubject("Grade Report");
 
-            Multipart multiPart = new MimeMultipart();
+        Multipart multiPart = new MimeMultipart();
 
-            MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText(loadTemplate("email.text.vm", s.getFirstName()), "utf-8");
+        MimeBodyPart textPart = new MimeBodyPart();
+        textPart.setText(loadTemplate("email.text.vm", s.getFirstName()), "utf-8");
 
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset=utf-8");
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset=utf-8");
 
-            MimeBodyPart fileAttachmentPart = new MimeBodyPart();
+        MimeBodyPart fileAttachmentPart = new MimeBodyPart();
 
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            JasperExportManager.exportReportToPdfStream(fillReport(course, s), output);
-            DataSource source = new ByteArrayDataSource(output.toByteArray(), "application/pdf");
-            
-            fileAttachmentPart.setDataHandler(new DataHandler(source));
-            fileAttachmentPart.setFileName("grade_report.pdf");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(fillReport(course, s), output);
+        DataSource source = new ByteArrayDataSource(output.toByteArray(), "application/pdf");
+        
+        fileAttachmentPart.setDataHandler(new DataHandler(source));
+        fileAttachmentPart.setFileName("grade_report.pdf");
 
-            multiPart.addBodyPart(textPart);
-            multiPart.addBodyPart(htmlPart);
-            multiPart.addBodyPart(fileAttachmentPart);
+        multiPart.addBodyPart(textPart);
+        multiPart.addBodyPart(htmlPart);
+        multiPart.addBodyPart(fileAttachmentPart);
 
-            msg.setContent(multiPart);
+        msg.setContent(multiPart);
 
-            Transport.send(msg);
-        }
+        Transport.send(msg);
     } 
     
     private static String loadTemplate(String filename, String name) {

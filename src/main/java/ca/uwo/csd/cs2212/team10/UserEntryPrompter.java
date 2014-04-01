@@ -39,7 +39,7 @@ public class UserEntryPrompter{
         dialog.dispose();
     }
     
-        public void showReportDialog (Component parent, List<Student> studentsList) {
+    public void showReportDialog (Component parent, List<Student> studentsList) {
         ReportDialog dialog = new ReportDialog(null, true, studentsList);
         
         retval = dialog.showDialog();

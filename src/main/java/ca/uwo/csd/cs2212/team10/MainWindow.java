@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import au.com.bytecode.opencsv.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.mail.internet.AddressException;
+import javax.mail.MessagingException;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * The main window of the gradebook program
@@ -868,11 +871,7 @@ public class MainWindow extends JFrame {
 
     private void sendEmailAction() {
         if (gradebook.getActiveCourse() == null) {
-            int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
-
-            if (option == JOptionPane.YES_OPTION) {
-                addCourseAction();
-            }
+            showErrorMessage("You must create a course first.");
             return;
         }
 
@@ -880,31 +879,44 @@ public class MainWindow extends JFrame {
         prompt.showEmailDialog(this, gradebook.getActiveCourse().getStudentList());
 
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
-            //outpu[0] = "From" email address; output[1] = smtp server; output[2] = smtp port; output[3] = smtp username; output[4] = smtp password; output[5] = List of selected Students
             Object[] output = prompt.getOutput();
-            
-            //TODO email actions
+            List<Student> stuList = (List<Student>) output[5];
+
+            for (Student s : stuList){
+                try{
+                    reportGenerator.sendByEmail((String)output[1], (String)output[2], (String)output[3], 
+                        (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
+                } catch(AddressException e){
+                    //todo
+                } catch(MessagingException e){
+                    //todo
+                } catch(JRException e){
+                    //todo
+                }
+            }
         }
     }
 
     private void genReportsAction(){
         if (gradebook.getActiveCourse() == null) {
-            int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
-
-            if (option == JOptionPane.YES_OPTION) {
-                addCourseAction();
-            }
+            showErrorMessage("You must create a course first.");
             return;
         }
-
+        
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showReportDialog(this, gradebook.getActiveCourse().getStudentList());
 
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
-            //output[0] path; output[1] = selected students
             Object[] output = prompt.getOutput();
+            List<Student> stuList = (List<Student>) output[1];
 
-            //TODO Report actions
+            for (Student s : stuList){
+                try{
+                    reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
+                } catch(JRException e){
+                    //todo
+                }
+            }
         }
     }
     
