@@ -882,17 +882,30 @@ public class MainWindow extends JFrame {
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
             //outpu[0] = "From" email address; output[1] = smtp server; output[2] = smtp port; output[3] = smtp username; output[4] = smtp password; output[5] = List of selected Students
             Object[] output = prompt.getOutput();
-
+            
             //TODO email actions
         }
     }
 
     private void genReportsAction(){
-        //TODO: reports
-        //uncomment below for testing only (Henrique should remove this)
-        /* try{
-            reportGenerator.exportPDF("", gradebook.getActiveCourse(), gradebook.getActiveCourse().getStudentList());
-        } catch(Exception e){} */
+        if (gradebook.getActiveCourse() == null) {
+            int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
+
+            if (option == JOptionPane.YES_OPTION) {
+                addCourseAction();
+            }
+            return;
+        }
+
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showReportDialog(this, gradebook.getActiveCourse().getStudentList());
+
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
+            //output[0] path; output[1] = selected students
+            Object[] output = prompt.getOutput();
+
+            //TODO Report actions
+        }
     }
     
     private void updateStatusBar() {

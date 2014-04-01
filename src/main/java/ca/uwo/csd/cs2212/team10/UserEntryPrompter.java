@@ -39,6 +39,17 @@ public class UserEntryPrompter{
         dialog.dispose();
     }
     
+        public void showReportDialog (Component parent, List<Student> studentsList) {
+        ReportDialog dialog = new ReportDialog(null, true, studentsList);
+        
+        retval = dialog.showDialog();
+        System.out.println(retval);
+        if (retval == OK_PRESSED)
+            output = dialog.getOutput();
+        
+        dialog.dispose();
+    }
+    
     public void showAddCourseDialog(Component parent, Gradebook containingGradebook){
         showCourseDialog(parent, ADD_TYPE, null, null, null, containingGradebook, null);
     }
