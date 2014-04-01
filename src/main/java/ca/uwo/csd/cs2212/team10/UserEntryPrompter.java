@@ -43,7 +43,7 @@ public class UserEntryPrompter{
         ReportDialog dialog = new ReportDialog(null, true, studentsList);
         
         retval = dialog.showDialog();
-        System.out.println(retval);
+
         if (retval == OK_PRESSED)
             output = dialog.getOutput();
         

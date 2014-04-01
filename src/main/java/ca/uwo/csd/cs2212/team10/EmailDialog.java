@@ -2,54 +2,65 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.table.*;
 
 /**
- * Dialog to handle the Send Email Action
+ * Dialog to handle email sending
  *
  * @author team10
  */
-public class EmailDialog extends javax.swing.JDialog {
-
+public class EmailDialog extends JDialog {
     private int retval;
     private Object[] output;
     private static List<Student> students;
+    
+    private JButton cancel;
+    private JTextField email;
+    private JLabel emailLabel;
+    private JScrollPane jScrollPane1;
+    private JButton ok;
+    private JTextField smtp;
+    private JLabel smtpLabel;
+    private JTextField smtpPassword;
+    private JTextField smtpPort;
+    private JLabel smtpPortLabel;
+    private JLabel smtpPsswdLabel;
+    private JLabel smtpUserLabel;
+    private JTextField smtpUsername;
+    private JTable studentsTbl;
 
     public EmailDialog(Frame parent, boolean modal, List<Student> studentsList) {
         super(parent, modal);
         students = studentsList;
         initComponents();
         initTable();
-
     }
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        emailLabel = new javax.swing.JLabel();
-        smtpLabel = new javax.swing.JLabel();
-        smtpUserLabel = new javax.swing.JLabel();
-        smtpPassword = new javax.swing.JTextField();
-        smtp = new javax.swing.JTextField();
-        smtpPort = new javax.swing.JTextField();
-        smtpPsswdLabel = new javax.swing.JLabel();
-        smtpUsername = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        studentsTbl = new javax.swing.JTable();
-        ok = new javax.swing.JButton();
-        cancel = new javax.swing.JButton();
-        smtpPortLabel = new javax.swing.JLabel();
-        email = new javax.swing.JTextField();
+        emailLabel = new JLabel();
+        smtpLabel = new JLabel();
+        smtpUserLabel = new JLabel();
+        smtpPassword = new JTextField();
+        smtp = new JTextField();
+        smtpPort = new JTextField();
+        smtpPsswdLabel = new JLabel();
+        smtpUsername = new JTextField();
+        jScrollPane1 = new JScrollPane();
+        studentsTbl = new JTable();
+        ok = new JButton();
+        cancel = new JButton();
+        smtpPortLabel = new JLabel();
+        email = new JTextField();
 
         setTitle("Send Email");
-        setMinimumSize(new java.awt.Dimension(100, 100));
+        setMinimumSize(new Dimension(100, 100));
         setResizable(false);
 
-        emailLabel.setText("Origin Email Addres:");
+        emailLabel.setText("From Email Address:");
 
         smtpLabel.setText("SMTP Server:");
 
@@ -57,26 +68,6 @@ public class EmailDialog extends javax.swing.JDialog {
 
         smtpPsswdLabel.setText("SMTP Password:");
 
-        studentsTbl.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"teste", null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "teste", "Title 2", "Title 3", "Title 4"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
         jScrollPane1.setViewportView(studentsTbl);
 
         ok.setText("Send Email");
@@ -165,7 +156,7 @@ public class EmailDialog extends javax.swing.JDialog {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     private void initTable() {
         DialogTableModel tblModel = new DialogTableModel(students);
@@ -196,7 +187,7 @@ public class EmailDialog extends javax.swing.JDialog {
         }));
     }
 
-    private void okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okActionPerformed
+    private void okActionPerformed(java.awt.event.ActionEvent evt) {
         retval = 0;
         
         List<Student> selectedStudents = new ArrayList();
@@ -208,12 +199,12 @@ public class EmailDialog extends javax.swing.JDialog {
         output = new Object[] {email.getText(), smtp.getText(), smtpPort.getText(), smtpUsername.getText(), smtpPassword.getText(), selectedStudents};
         
         setVisible(false);
-    }//GEN-LAST:event_okActionPerformed
+    }
 
-    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {
         retval = 1;
         setVisible(false);
-    }//GEN-LAST:event_cancelActionPerformed
+    }
 
     public int showDialog() {
         setVisible(true);
@@ -223,60 +214,4 @@ public class EmailDialog extends javax.swing.JDialog {
     public Object[] getOutput() {
         return output;
     }
-    
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                EmailDialog dialog = new EmailDialog(new javax.swing.JFrame(), true , students);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancel;
-    private javax.swing.JTextField email;
-    private javax.swing.JLabel emailLabel;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton ok;
-    private javax.swing.JTextField smtp;
-    private javax.swing.JLabel smtpLabel;
-    private javax.swing.JTextField smtpPassword;
-    private javax.swing.JTextField smtpPort;
-    private javax.swing.JLabel smtpPortLabel;
-    private javax.swing.JLabel smtpPsswdLabel;
-    private javax.swing.JLabel smtpUserLabel;
-    private javax.swing.JTextField smtpUsername;
-    private javax.swing.JTable studentsTbl;
-    // End of variables declaration//GEN-END:variables
 }

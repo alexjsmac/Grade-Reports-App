@@ -2,6 +2,7 @@ package ca.uwo.csd.cs2212.team10;
 
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
@@ -9,15 +10,22 @@ import java.util.*;
 import javax.swing.table.*;
 
 /**
- * Dialog to handle the Send Email Action
+ * Dialog to handle report saving
  *
  * @author team10
  */
-public class ReportDialog extends javax.swing.JDialog {
-
+public class ReportDialog extends JDialog {
     private int retval;
     private Object[] output;
     private static List<Student> students;
+    
+    private JButton cancel;
+    private JScrollPane jScrollPane1;
+    private JButton ok;
+    private JButton pathBtn;
+    private JLabel pathLabel;
+    private JTextField pathTxt;
+    private JTable studentsTbl;
 
     public ReportDialog(Frame parent, boolean modal, List<Student> studentsList) {
         super(parent, modal);
@@ -27,56 +35,33 @@ public class ReportDialog extends javax.swing.JDialog {
 
     }
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        pathLabel = new JLabel();
+        jScrollPane1 = new JScrollPane();
+        studentsTbl = new JTable();
+        ok = new JButton();
+        cancel = new JButton();
+        pathTxt = new JTextField();
+        pathBtn = new JButton();
 
-        pathLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        studentsTbl = new javax.swing.JTable();
-        ok = new javax.swing.JButton();
-        cancel = new javax.swing.JButton();
-        pathTxt = new javax.swing.JTextField();
-        pathBtn = new javax.swing.JButton();
-
-        setTitle("Send Email");
-        setMinimumSize(new java.awt.Dimension(100, 100));
+        setTitle("Save Reports");
+        setMinimumSize(new Dimension(100, 100));
         setResizable(false);
 
-        pathLabel.setText("Select Folder to save:");
+        pathLabel.setText("Select destination folder:");
 
-        studentsTbl.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"teste", null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "teste", "Title 2", "Title 3", "Title 4"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
         jScrollPane1.setViewportView(studentsTbl);
 
-        ok.setText("Send Email");
+        ok.setText("Save");
         ok.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 okActionPerformed(evt);
             }
         });
 
         cancel.setText("Cancel");
         cancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 cancelActionPerformed(evt);
             }
         });
@@ -85,7 +70,7 @@ public class ReportDialog extends javax.swing.JDialog {
 
         pathBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png"))); // NOI18N
         pathBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 pathBtnActionPerformed(evt);
             }
         });
@@ -132,7 +117,7 @@ public class ReportDialog extends javax.swing.JDialog {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     private void initTable() {
         DialogTableModel tblModel = new DialogTableModel(students);
@@ -163,7 +148,7 @@ public class ReportDialog extends javax.swing.JDialog {
         }));
     }
 
-    private void okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okActionPerformed
+    private void okActionPerformed(ActionEvent evt) {
         if (pathTxt.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "You must choose a folder.");
             return;
@@ -178,14 +163,14 @@ public class ReportDialog extends javax.swing.JDialog {
         
         output = new Object[] {pathTxt.getText(), selectedStudents};
         setVisible(false);
-    }//GEN-LAST:event_okActionPerformed
+    }
 
-    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+    private void cancelActionPerformed(ActionEvent evt) {
         retval = 1;
         setVisible(false);
-    }//GEN-LAST:event_cancelActionPerformed
+    }
 
-    private void pathBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathBtnActionPerformed
+    private void pathBtnActionPerformed(ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         
@@ -195,7 +180,7 @@ public class ReportDialog extends javax.swing.JDialog {
             pathTxt.setText(file.getAbsolutePath());
         }
         
-    }//GEN-LAST:event_pathBtnActionPerformed
+    }
 
     public int showDialog() {
         setVisible(true);
@@ -205,53 +190,4 @@ public class ReportDialog extends javax.swing.JDialog {
     public Object[] getOutput() {
         return output;
     }
-    
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EmailDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                EmailDialog dialog = new EmailDialog(new javax.swing.JFrame(), true , students);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancel;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton ok;
-    private javax.swing.JButton pathBtn;
-    private javax.swing.JLabel pathLabel;
-    private javax.swing.JTextField pathTxt;
-    private javax.swing.JTable studentsTbl;
-    // End of variables declaration//GEN-END:variables
 }
