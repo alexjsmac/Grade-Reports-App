@@ -191,9 +191,10 @@ public class EmailDialog extends JDialog {
         retval = 0;
         
         List<Student> selectedStudents = new ArrayList();
-        for (int i = 0; i < students.size(); i++) {
-            if ((boolean)studentsTbl.getValueAt(i, 0))
-                selectedStudents.add(students.get(i));
+        for (int i = 0; i < studentsTbl.getRowCount(); i++) {
+             if ((boolean)studentsTbl.getValueAt(i, 0)){
+                selectedStudents.add(students.get(studentsTbl.convertRowIndexToModel(i)));
+            }
         }
         
         output = new Object[] {email.getText(), smtp.getText(), smtpPort.getText(), smtpUsername.getText(), smtpPassword.getText(), selectedStudents};
