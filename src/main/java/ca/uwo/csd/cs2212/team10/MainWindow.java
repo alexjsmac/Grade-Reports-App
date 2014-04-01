@@ -44,6 +44,7 @@ public class MainWindow extends JFrame {
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
             impGradesMenuItem, expGradesMenuItem, emailMenuItem, genRepMenuItem;
     private int padding = 5;
+    private ProgressMonitor progressMonitor;
 
     /* Constructor */
     public MainWindow() {
