@@ -45,13 +45,14 @@ public class GradeCellEditor extends DefaultCellEditor {
         textField.setBorder(BorderFactory.createEmptyBorder());
         if ((Double)value == Student.NO_GRADE)
             textField.setText("0.0");
-        textField.requestFocus();
+
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
+                textField.requestFocus();
                 textField.selectAll();
             }
         });
         
-        return retval;
+        return textField;
     }
 }
