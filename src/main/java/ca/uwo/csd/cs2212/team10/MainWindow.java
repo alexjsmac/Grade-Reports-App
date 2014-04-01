@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import au.com.bytecode.opencsv.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableCellRenderer;
 import javax.mail.internet.AddressException;
 import javax.mail.MessagingException;
 import net.sf.jasperreports.engine.JRException;
@@ -65,7 +66,7 @@ public class MainWindow extends JFrame {
         studentsTbl.setCellSelectionEnabled(true);
         studentsTbl.getRowSorter().toggleSortOrder(0);
         studentsTbl.setGridColor(Color.gray);
-        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         //Set height for the rows
         studentsTbl.setRowHeight(22);
@@ -150,6 +151,7 @@ public class MainWindow extends JFrame {
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
         //studentsTbl.setDefaultRenderer(Object.class, new CustomTableRenderer());
+        updateColumnSize();
     }
 
     private void initComponents() {
@@ -997,5 +999,30 @@ public class MainWindow extends JFrame {
     
     private void showWarningMessage(String text){
         JOptionPane.showMessageDialog(this, text, "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    private int getMaxColumnSize(int colNumber){
+    	int width = getHeaderSize(colNumber);
+    	for(int row=0; row< studentsTbl.getRowCount();row++){
+    		int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + 5;
+    		width = Math.max(width, prefWidth);
+    	}
+    	return width;
+    }
+
+    private void updateColumnSize(){
+    	for(int col=0;col<studentsTbl.getColumnCount();col++){
+    		studentsTbl.getColumnModel().getColumn(col).setPreferredWidth(getMaxColumnSize(col));
+    	}
+    }
+    
+    private int getHeaderSize(int colNumber){
+    	Object value = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderValue();
+    	TableCellRenderer renderer = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderRenderer();
+    	if(renderer == null){
+    		renderer = studentsTbl.getTableHeader().getDefaultRenderer();
+    	}
+    	Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
+    	return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + 5);
     }
 }
