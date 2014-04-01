@@ -189,9 +189,10 @@ public class ReportDialog extends javax.swing.JDialog {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         
-        int option = chooser.showOpenDialog(null);
+        int option = chooser.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getCurrentDirectory();
+            File file = chooser.getSelectedFile();
+            System.out.println(file.toString());
             pathTxt.setText(file.getAbsolutePath());
         }
         
