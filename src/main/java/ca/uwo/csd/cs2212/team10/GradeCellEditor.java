@@ -39,13 +39,18 @@ public class GradeCellEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value,
             boolean isSelected, int row, int column) {
-
-        textField.setBorder(BorderFactory.createEmptyBorder());
         
         Component retval = super.getTableCellEditorComponent(table, value, isSelected, row, column);
         
+        textField.setBorder(BorderFactory.createEmptyBorder());
         if ((Double)value == Student.NO_GRADE)
             textField.setText("0.0");
+        textField.requestFocus();
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+                textField.selectAll();
+            }
+        });
         
         return retval;
     }
