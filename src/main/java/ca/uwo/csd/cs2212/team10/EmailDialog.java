@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.*;
 import javax.swing.table.*;
 import org.jdesktop.swingx.JXTable;
+import javax.mail.internet.*;
 
 /**
  * Dialog to handle email sending
@@ -26,7 +27,7 @@ public class EmailDialog extends JDialog {
     private JButton ok;
     private JTextField smtp;
     private JLabel smtpLabel;
-    private JTextField smtpPassword;
+    private JPasswordField smtpPassword;
     private JTextField smtpPort;
     private JLabel smtpPortLabel;
     private JLabel smtpPsswdLabel;
@@ -45,7 +46,7 @@ public class EmailDialog extends JDialog {
         emailLabel = new JLabel();
         smtpLabel = new JLabel();
         smtpUserLabel = new JLabel();
-        smtpPassword = new JTextField();
+        smtpPassword = new JPasswordField();
         smtp = new JTextField();
         smtpPort = new JTextField();
         smtpPsswdLabel = new JLabel();
@@ -61,7 +62,7 @@ public class EmailDialog extends JDialog {
         setMinimumSize(new Dimension(100, 100));
         setResizable(false);
 
-        emailLabel.setText("Origin Email Address:");
+        emailLabel.setText("Source Email Address:");
 
         smtpLabel.setText("SMTP Server:");
 
@@ -189,31 +190,26 @@ public class EmailDialog extends JDialog {
     }
 
     private void okActionPerformed(java.awt.event.ActionEvent evt) {
-        if (email.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must enter an E-mail adress.");
-            return;
-        } else if (smtp.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must enter the SMTP server.");
-            return;
-        } else if (smtpPort.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must enter the SMTP port.");
+        if (smtp.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You must enter a SMTP server.");
             return;
         } else if (smtpUsername.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "You must enter the SMTP username.");
             return;
-        } else if (smtpPassword.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must enter the SMTP password.");
-            return;
-        }
-        try {
-            int port = Integer.parseInt(smtp.getText());
-            if (port <= 0) {
-                throw new NumberFormatException();
+        } else {
+            try {
+                int port = Integer.parseInt(smtpPort.getText());
+                if (port <= 0) 
+                    throw new NumberFormatException();
+                
+                new InternetAddress(email.getText()).validate();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "You must enter a valid SMTP port.");
+                return;
+            } catch (AddressException e) {
+                JOptionPane.showMessageDialog(this, "You must enter a valid source email address.");
+                return;
             }
-        } 
-        catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "You must enter a valid SMTP port.");
-            return;
         }
 
         retval = 0;
@@ -225,7 +221,7 @@ public class EmailDialog extends JDialog {
             }
         }
         
-        output = new Object[] {email.getText(), smtp.getText(), smtpPort.getText(), smtpUsername.getText(), smtpPassword.getText(), selectedStudents};
+        output = new Object[] {email.getText(), smtp.getText(), smtpPort.getText(), smtpUsername.getText(), new String(smtpPassword.getPassword()), selectedStudents};
         
         setVisible(false);
     }
