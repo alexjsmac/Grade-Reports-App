@@ -111,41 +111,41 @@ public class Course implements Serializable {
     }
     
     public double calcAverage(){
-		if (students.isEmpty())
-			return 0;
-		
-		double total = 0;
-		for (Student s : students){
-			total += s.calcAverage();
-		}
-		
-		return total/students.size();
+        if (students.isEmpty())
+            return 0;
+        
+        double total = 0;
+        for (Student s : students){
+            total += s.calcAverage();
+        }
+        
+        return total/students.size();
     }
     
     public double calcAverage(int type){
-		if (students.isEmpty())
-			return 0;
-		
-		double total = 0;
-		for (Student s : students){
-			total += s.calcAverage(type);
-		}
-		
-		return total/students.size();
+        if (students.isEmpty())
+            return 0;
+        
+        double total = 0;
+        for (Student s : students){
+            total += s.calcAverage(type);
+        }
+        
+        return total/students.size();
     }
     
     public double calcAverage(Deliverable deliverable){
-		if (students.isEmpty())
-			return 0;
-		
-		double total = 0;
-		for (Student s : students){
+        if (students.isEmpty())
+            return 0;
+        
+        double total = 0;
+        for (Student s : students){
             Double currGrade = s.getGrade(deliverable);
             if (currGrade != Student.NO_GRADE)
                 total += currGrade;
-		}
-		
-		return total/students.size();
+        }
+        
+        return total/students.size();
     }
     
     public void importStudents(CSVReader reader) throws IOException, CSVException{

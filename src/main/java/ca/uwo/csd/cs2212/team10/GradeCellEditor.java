@@ -41,6 +41,12 @@ public class GradeCellEditor extends DefaultCellEditor {
             boolean isSelected, int row, int column) {
 
         textField.setBorder(BorderFactory.createEmptyBorder());
-        return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+        
+        Component retval = super.getTableCellEditorComponent(table, value, isSelected, row, column);
+        
+        if ((Double)value == Student.NO_GRADE)
+            textField.setText("0.0");
+        
+        return retval;
     }
 }
