@@ -61,10 +61,8 @@ public class TableModel extends AbstractTableModel {
             return "Assignments Average";
         else if (columnIndex == IDX_EXAM_AVG)
             return "Exams Average";
-        else {
-            Deliverable deliverable = deliverables.get(columnIndex - 2);
-            return deliverable.getName() + " (" + deliverable.getWeight() + "%)";
-        }    
+        else
+            return deliverables.get(columnIndex - 2).toString();
     }
 
     @Override

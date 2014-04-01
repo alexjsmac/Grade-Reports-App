@@ -1,12 +1,12 @@
 package ca.uwo.csd.cs2212.team10;
 
-import java.awt.Color;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
-import java.util.*;
-import javax.swing.table.*;
+import javax.swing.table.TableColumn;
+import java.util.List;
+import java.util.ArrayList;
 import org.jdesktop.swingx.JXTable;
 
 /**
@@ -14,7 +14,7 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author team10
  */
-public class ReportDialog extends javax.swing.JDialog {
+public class ReportDialog extends JDialog {
     private JButton cancel;
     private JScrollPane jScrollPane1;
     private JButton ok;
@@ -32,90 +32,89 @@ public class ReportDialog extends javax.swing.JDialog {
         students = studentsList;
         initComponents();
         initTable();
-
     }
 
-    @SuppressWarnings("unchecked")
     private void initComponents() {
-
-        pathLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        pathLabel = new JLabel();
+        jScrollPane1 = new JScrollPane();
         studentsTbl = new JXTable();
-        ok = new javax.swing.JButton();
-        cancel = new javax.swing.JButton();
-        pathTxt = new javax.swing.JTextField();
-        pathBtn = new javax.swing.JButton();
+        ok = new JButton();
+        cancel = new JButton();
+        pathTxt = new JTextField();
+        pathBtn = new JButton();
 
-        setTitle("Generate PDF Report");
-        setMinimumSize(new java.awt.Dimension(100, 100));
+        setTitle("Generate PDF Reports");
+        setMinimumSize(new Dimension(100, 100));
         setResizable(false);
 
-        pathLabel.setText("Select Folder to save:");
+        pathLabel.setText("Select destination folder:");
 
         jScrollPane1.setViewportView(studentsTbl);
 
-        ok.setText("Send Email");
-        ok.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        ok.setText("Save");
+        ok.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 okActionPerformed(evt);
             }
         });
 
         cancel.setText("Cancel");
-        cancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 cancelActionPerformed(evt);
             }
         });
 
         pathTxt.setEditable(false);
 
-        pathBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png")));
-        pathBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+        pathBtn.setIcon(new ImageIcon(getClass().getResource("/folder.png")));
+        pathBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+
                 pathBtnActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 372, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ok)
                         .addGap(18, 18, 18)
                         .addComponent(cancel))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(pathLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pathTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pathBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pathLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pathTxt, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pathBtn, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(pathBtn)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(pathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(pathTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(pathLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pathTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(cancel)
                     .addComponent(ok))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -151,7 +150,7 @@ public class ReportDialog extends javax.swing.JDialog {
         }));
     }
 
-    private void okActionPerformed(java.awt.event.ActionEvent evt) {
+    private void okActionPerformed(ActionEvent evt) {
         if (pathTxt.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "You must choose a folder.");
             return;
@@ -160,31 +159,31 @@ public class ReportDialog extends javax.swing.JDialog {
         retval = 0;
         
         List<Student> selectedStudents = new ArrayList();
-        for (int i = 0; i < students.size(); i++) {
+        for (int i = 0; i < studentsTbl.getRowCount(); i++) {
             if ((boolean)studentsTbl.getValueAt(i, 0))
-                selectedStudents.add(students.get(i));
+                selectedStudents.add(students.get(studentsTbl.convertRowIndexToModel(i)));
         }
         
         output = new Object[] {pathTxt.getText(), selectedStudents};
         setVisible(false);
     }
 
-    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {
+
+    private void cancelActionPerformed(ActionEvent evt) {
         retval = 1;
         setVisible(false);
     }
 
-    private void pathBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void pathBtnActionPerformed(ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         
         int option = chooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
-            System.out.println(file.toString());
             pathTxt.setText(file.getAbsolutePath());
         }
-        
+
     }
 
     public int showDialog() {

@@ -69,7 +69,6 @@ public class MainWindow extends JFrame {
 
         studentsTbl.setAutoCreateRowSorter(true);
         studentsTbl.setCellSelectionEnabled(true);
-        studentsTbl.getRowSorter().toggleSortOrder(0);
         studentsTbl.setGridColor(Color.gray);
         studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         studentsTbl.setHorizontalScrollEnabled(true);
@@ -176,7 +175,8 @@ public class MainWindow extends JFrame {
 
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
         studentsTbl.setModel(tblModel);
-                
+        
+        studentsTbl.getRowSorter().toggleSortOrder(0);
         updateColumnSize();
     }
 
