@@ -70,7 +70,7 @@ public class ReportDialog extends javax.swing.JDialog {
 
         pathTxt.setEditable(false);
 
-        pathBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png"))); // NOI18N
+        pathBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder.png")));
         pathBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pathBtnActionPerformed(evt);
@@ -151,11 +151,12 @@ public class ReportDialog extends javax.swing.JDialog {
         }));
     }
 
-    private void okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okActionPerformed
+    private void okActionPerformed(java.awt.event.ActionEvent evt) {
         if (pathTxt.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "You must choose a folder.");
             return;
         }
+        
         retval = 0;
         
         List<Student> selectedStudents = new ArrayList();
@@ -166,14 +167,14 @@ public class ReportDialog extends javax.swing.JDialog {
         
         output = new Object[] {pathTxt.getText(), selectedStudents};
         setVisible(false);
-    }//GEN-LAST:event_okActionPerformed
+    }
 
-    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {
         retval = 1;
         setVisible(false);
-    }//GEN-LAST:event_cancelActionPerformed
+    }
 
-    private void pathBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathBtnActionPerformed
+    private void pathBtnActionPerformed(java.awt.event.ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         
@@ -184,7 +185,7 @@ public class ReportDialog extends javax.swing.JDialog {
             pathTxt.setText(file.getAbsolutePath());
         }
         
-    }//GEN-LAST:event_pathBtnActionPerformed
+    }
 
     public int showDialog() {
         setVisible(true);

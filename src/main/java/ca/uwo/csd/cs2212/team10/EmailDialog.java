@@ -189,6 +189,33 @@ public class EmailDialog extends JDialog {
     }
 
     private void okActionPerformed(java.awt.event.ActionEvent evt) {
+        if (email.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You must enter an E-mail adress.");
+            return;
+        } else if (smtp.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You must enter the SMTP server.");
+            return;
+        } else if (smtpPort.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You must enter the SMTP port.");
+            return;
+        } else if (smtpUsername.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You must enter the SMTP username.");
+            return;
+        } else if (smtpPassword.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You must enter the SMTP password.");
+            return;
+        }
+        try {
+            int port = Integer.parseInt(smtp.getText());
+            if (port <= 0) {
+                throw new NumberFormatException();
+            }
+        } 
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "You must enter a valid SMTP port.");
+            return;
+        }
+
         retval = 0;
         
         List<Student> selectedStudents = new ArrayList();
