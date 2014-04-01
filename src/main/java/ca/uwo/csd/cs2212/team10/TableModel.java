@@ -64,7 +64,7 @@ public class TableModel extends AbstractTableModel {
         else if (columnIndex == IDX_EXAM_AVG)
             return "Exams Average";
         else if (columnIndex == IDX_BUTTON)
-            return "Edit Students";
+            return "Edit Student";
         else {
             Deliverable deliverable = deliverables.get(columnIndex - 2);
             return deliverable.toString();
@@ -87,7 +87,7 @@ public class TableModel extends AbstractTableModel {
         else if (columnIndex == IDX_AVG)
             return selectedStudent.calcAverage();
         else if (columnIndex == IDX_BUTTON)
-            return "Edit " + selectedStudent.getLastName();
+            return "Edit";
         else
             return selectedStudent.getGrade(deliverables.get(columnIndex - 2));
     }
