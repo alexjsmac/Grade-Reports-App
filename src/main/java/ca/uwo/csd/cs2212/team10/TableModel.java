@@ -67,7 +67,7 @@ public class TableModel extends AbstractTableModel {
             return "Edit Students";
         else {
             Deliverable deliverable = deliverables.get(columnIndex - 2);
-            return deliverable.getName() + " (" + deliverable.getWeight() + "%)";
+            return deliverable.toString();
         }    
     }
 

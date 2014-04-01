@@ -56,4 +56,9 @@ public class Deliverable implements Serializable{
     public boolean equals(Deliverable d){
         return name.equals(d.getName());
     }
+    
+    @Override
+    public String toString(){
+        return name + " (" + weight + "%)";
+    }
 }

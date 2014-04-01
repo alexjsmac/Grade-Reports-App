@@ -36,18 +36,13 @@ public class ReportGenerator {
         List<Deliverable> deliverables = course.getDeliverableList();
         
         for (Deliverable d : deliverables)
-            beans.add(new JavaBean(d.getName(), student.getGrade(d), course.calcAverage(d)));
+            beans.add(new JavaBean(d.toString(), student.getGrade(d), course.calcAverage(d)));
         
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(beans);
         
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("courseTitle", course.getTitle());
-        parameters.put("courseCode", course.getCode());
-        parameters.put("courseTerm", course.getTerm());
-        parameters.put("firstName", student.getFirstName());
-        parameters.put("lastName", student.getLastName());
-        parameters.put("email", student.getEmail());
-        parameters.put("number", student.getNum());
+        parameters.put("courseDetails", course.toString());
+        parameters.put("studentDetails", student.toString());
         parameters.put("average", student.calcAverage());
         parameters.put("asnAverage", student.calcAverage(Deliverable.ASSIGNMENT_TYPE));
         parameters.put("examAverage", student.calcAverage(Deliverable.EXAM_TYPE));

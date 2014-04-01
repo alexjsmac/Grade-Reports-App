@@ -167,4 +167,9 @@ public class Student implements Serializable {
         else
             return total/weights; //return the weighted average
     }
+    
+    @Override
+    public String toString(){
+        return firstName + " " + lastName + " - " + num + " - " + email;
+    }
 }

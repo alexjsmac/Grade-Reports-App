@@ -13,13 +13,8 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Regular" isDefault="true" pdfFontName="Helvetica" pdfEncoding="UTF8" isPdfEmbedded="false"/>
 	<style name="Bold" pdfFontName="Helvetica-Bold" pdfEncoding="UTF8" isPdfEmbedded="false"/>
-	<parameter name="courseTitle" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="courseCode" class="java.lang.Object" isForPrompting="false"/>
-	<parameter name="courseTerm" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="firstName" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="lastName" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="email" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="number" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="courseDetails" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="studentDetails" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="average" class="java.lang.Double" isForPrompting="false"/>
 	<parameter name="asnAverage" class="java.lang.Double" isForPrompting="false"/>
 	<parameter name="examAverage" class="java.lang.Double" isForPrompting="false"/>
@@ -48,11 +43,11 @@
 				<text><![CDATA[Grade Report]]></text>
 			</staticText>
 			<textField>
-				<reportElement style="Bold" x="69" y="0" width="420" height="30" uuid="039b55e8-03ca-4873-8c80-0038b72b848f"/>
+				<reportElement style="Bold" x="0" y="0" width="560" height="30" uuid="039b55e8-03ca-4873-8c80-0038b72b848f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{courseTitle} + " - " + $P{courseCode} + " - " + $P{courseTerm}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{courseDetails}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -62,11 +57,11 @@
 				<reportElement x="20" y="20" width="551" height="1" uuid="851378aa-6b79-4914-9a1b-926cb0efe235"/>
 			</line>
 			<textField>
-				<reportElement style="Bold" x="61" y="0" width="450" height="20" uuid="8ea35621-79c6-403b-9bb8-c2122657a672"/>
+				<reportElement style="Bold" x="0" y="0" width="570" height="20" uuid="8ea35621-79c6-403b-9bb8-c2122657a672"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{firstName} + " " + $P{lastName} + " - " + $P{number} + " - " + $P{email}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{studentDetails}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -98,7 +93,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="20" y="0" width="70" height="20" uuid="9bb77222-6808-4521-8135-63503edbc320"/>
+				<reportElement x="20" y="0" width="130" height="20" uuid="9bb77222-6808-4521-8135-63503edbc320"/>
 				<textFieldExpression><![CDATA[$F{deliverableName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##%">
