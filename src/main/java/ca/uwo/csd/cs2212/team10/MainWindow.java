@@ -25,10 +25,12 @@ public class MainWindow extends JFrame {
     /* Constants */
     private final String DATA_FILENAME = "gradebook.dat";
     private final String BACKUP_FILENAME = "gradebook.dat.bak";
+    private final int COLUMN_PADDING = 5;
     
     /* Attributes */
     private Gradebook gradebook;
     private ReportGenerator reportGenerator;
+    private boolean callFirstStart = false;
 
     private JScrollPane jScrollPane1;
     private JXTable studentsTbl;
@@ -46,9 +48,8 @@ public class MainWindow extends JFrame {
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
             impGradesMenuItem, expGradesMenuItem, emailMenuItem, genRepMenuItem;
-    private int padding = 5;
     private ProgressMonitor progressMonitor;
-
+    
     /* Constructor */
     public MainWindow() {
         loadGradebook();
@@ -57,6 +58,9 @@ public class MainWindow extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
         setVisible(true);
+        
+        if (callFirstStart)
+            firstStartAction();
     }
 
     /* Private methods */
@@ -972,7 +976,14 @@ public class MainWindow extends JFrame {
     }
     
     private void firstStartAction() {
-        //TODO: OOBE code
+        int option = JOptionPane.showConfirmDialog(this, 
+            "<html>Welcome to the gradebook program!<br>Would you like to create a new course now?</html>", 
+            "Question", JOptionPane.YES_NO_OPTION);
+
+        if (option == JOptionPane.YES_OPTION) {
+            addCourseAction();
+        }
+        return;
     }
     
     private void exitAction() {
@@ -1001,7 +1012,7 @@ public class MainWindow extends JFrame {
                 } else{
                     //!! first app startup
                     gradebook = new Gradebook(); //create an empty gradebook
-                    firstStartAction(); //present OOBE to the user
+                    callFirstStart = true; //present OOBE to the user
                 }
             }
         } catch (IOException | ClassNotFoundException e){
@@ -1042,7 +1053,7 @@ public class MainWindow extends JFrame {
     private int getMaxColumnSize(int colNumber){
     	int width = getHeaderSize(colNumber);
     	for(int row=0; row< studentsTbl.getRowCount();row++){
-    		int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + padding;
+    		int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING;
     		width = Math.max(width, prefWidth);
     	}
     	return width;
@@ -1061,6 +1072,6 @@ public class MainWindow extends JFrame {
     		renderer = studentsTbl.getTableHeader().getDefaultRenderer();
     	}
     	Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
-    	return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + padding);
+    	return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING);
     }
 }
