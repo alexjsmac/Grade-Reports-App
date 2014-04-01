@@ -18,7 +18,7 @@ public class DialogTableModel extends AbstractTableModel {
     private final List<Student> students;
     private Boolean[] checkBoxes;
 
-    public DialogTableModel(List<Student> studentsList, List<Deliverable> deliverablesList) {
+    public DialogTableModel(List<Student> studentsList) {
         students = studentsList;
         checkBoxes = new Boolean[students.size()];
         Arrays.fill(checkBoxes, true);

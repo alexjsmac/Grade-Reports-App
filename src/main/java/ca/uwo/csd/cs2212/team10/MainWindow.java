@@ -43,7 +43,7 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
-        reportGenerator = new ReportGenerator();
+        //reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
@@ -66,7 +66,7 @@ public class MainWindow extends JFrame {
 
         //Set height for the rows
         studentsTbl.setRowHeight(22);
-        
+
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
         studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
@@ -95,11 +95,12 @@ public class MainWindow extends JFrame {
 
                 if (studentsTbl.getSelectedRow() >= 0 && e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                     int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-                    
-                    if (selectedColumn >= 0 && selectedColumn <= 1)
+
+                    if (selectedColumn >= 0 && selectedColumn <= 1) {
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3))
+                    } else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
+                    }
                 }
             }
 
@@ -122,7 +123,7 @@ public class MainWindow extends JFrame {
                     }
                 }
             }
-            
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 mousePressed(e);
@@ -203,24 +204,25 @@ public class MainWindow extends JFrame {
                 dropDownItemChanged(evt);
             }
         });
-        dropDownCourses.setRenderer(new ListCellRenderer(){
+        dropDownCourses.setRenderer(new ListCellRenderer() {
             private ListCellRenderer delegate;
             private JPanel separatorPanel = new JPanel(new BorderLayout());
             private JSeparator separator = new JSeparator();
-            
+
             @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus){
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component comp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(index != -1 && "Add Course".equals(value)){
+                if (index != -1 && "Add Course".equals(value)) {
                     separatorPanel.removeAll();
                     separatorPanel.add(separator, BorderLayout.NORTH);
                     separatorPanel.add(comp, BorderLayout.CENTER);
                     return separatorPanel;
-                } else
+                } else {
                     return comp;
+                }
             }
-            
-            private ListCellRenderer init(ListCellRenderer delegate){
+
+            private ListCellRenderer init(ListCellRenderer delegate) {
                 this.delegate = delegate;
                 return this;
             }
@@ -264,7 +266,7 @@ public class MainWindow extends JFrame {
 
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
-        
+
         importMenu.setMnemonic(KeyEvent.VK_I);
         importMenu.setText("Import");
         fileMenu.add(importMenu);
@@ -272,9 +274,9 @@ public class MainWindow extends JFrame {
         exportMenu.setMnemonic(KeyEvent.VK_E);
         exportMenu.setText("Export");
         fileMenu.add(exportMenu);
-        
+
         fileMenu.addSeparator();
-        
+
         impStudentsMenuItem.setText("Import students from CSV file");
         impStudentsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -282,7 +284,7 @@ public class MainWindow extends JFrame {
             }
         });
         importMenu.add(impStudentsMenuItem);
-        
+
         impGradesMenuItem.setText("Import grades from CSV file");
         impGradesMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -298,7 +300,7 @@ public class MainWindow extends JFrame {
             }
         });
         exportMenu.add(expGradesMenuItem);
-        
+
         emailMenuItem.setText("Send grade reports by email");
         emailMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -306,7 +308,7 @@ public class MainWindow extends JFrame {
             }
         });
         exportMenu.add(emailMenuItem);
-        
+
         genRepMenuItem.setText("Save grade reports as PDF");
         genRepMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -511,81 +513,83 @@ public class MainWindow extends JFrame {
     }
 
     private void dropDownItemChanged(ItemEvent evt) {
-        if (dropDownCourses.getSelectedItem() == null){
+        if (dropDownCourses.getSelectedItem() == null) {
             gradebook.setActiveCourse(null);
-            
+
             refreshTableModel();
             updateStatusBar();
-        } else if (evt.getStateChange() == ItemEvent.SELECTED){
-            if (dropDownCourses.getSelectedItem().equals("Add Course")){
+        } else if (evt.getStateChange() == ItemEvent.SELECTED) {
+            if (dropDownCourses.getSelectedItem().equals("Add Course")) {
                 addCourseAction();
-                if (gradebook.getCourseList().size() == 0)
+                if (gradebook.getCourseList().size() == 0) {
                     dropDownCourses.setSelectedItem(null);
-                else
+                } else {
                     dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
-                
+                }
+
                 refreshTableModel();
                 updateStatusBar();
-            } else
-                gradebook.setActiveCourse((Course)dropDownCourses.getSelectedItem());
-        
+            } else {
+                gradebook.setActiveCourse((Course) dropDownCourses.getSelectedItem());
+            }
+
             refreshTableModel();
             updateStatusBar();
         }
     }
 
-    private void addCourseAction(){                     
+    private void addCourseAction() {
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showAddCourseDialog(this, gradebook);
-        
-        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
-            String[] output = (String[])prompt.getOutput();
-        
+
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
+            String[] output = (String[]) prompt.getOutput();
+
             //Create a new Course and add it to the gradebook
             Course course = new Course(output[0], output[1], output[2]);
             gradebook.addCourse(course);
-                  
+
             //Add the entry to the dropdown list
             dropDownCourses.addItem(course);
-            
+
             //Make "Add Course" the last item in the list   
             dropDownCourses.removeItem("Add Course");
             dropDownCourses.addItem("Add Course");
-            
+
             //Make the new course selected
             dropDownCourses.setSelectedItem(course);
         }
     }
 
-    private void editCourseAction() {   
-        if (gradebook.getActiveCourse() == null){
+    private void editCourseAction() {
+        if (gradebook.getActiveCourse() == null) {
             showErrorMessage("There are no courses in the gradebook.");
             return;
         }
-    
+
         Course activeCourse = gradebook.getActiveCourse();
-        
+
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEditCourseDialog(this, activeCourse, gradebook);
-        
+
         int retval = prompt.getReturnValue();
-        if (retval == UserEntryPrompter.OK_PRESSED){
-            String[] output = (String[])prompt.getOutput();
-            
+        if (retval == UserEntryPrompter.OK_PRESSED) {
+            String[] output = (String[]) prompt.getOutput();
+
             //Set the attributes
             activeCourse.setTitle(output[0]);
             activeCourse.setCode(output[1]);
             activeCourse.setTerm(output[2]);
-            
+
             //Refresh the dropdown list and status bar
             dropDownCourses.revalidate();
             updateStatusBar();
-        } else if (retval == UserEntryPrompter.DELETE_PRESSED){
+        } else if (retval == UserEntryPrompter.DELETE_PRESSED) {
             delCourseAction();
         }
     }
 
-    private void delCourseAction() {                                             
+    private void delCourseAction() {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("There are no courses in the gradebook.");
             return;
@@ -596,21 +600,22 @@ public class MainWindow extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             //get the active course
             Course activeCourse = gradebook.getActiveCourse();
-            
+
             //remove it from the gradebook
             gradebook.removeCourse(activeCourse);
-            
+
             //remove it from the dropdown list
-            if (gradebook.getCourseList().size() == 0)
+            if (gradebook.getCourseList().size() == 0) {
                 dropDownCourses.setSelectedItem(null);
+            }
             dropDownCourses.removeItem(activeCourse);
         }
     }
-    
+
     private void addStudentAction() {
         if (gradebook.getActiveCourse() == null) {
             int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
-        
+
             if (option == JOptionPane.YES_OPTION) {
                 addCourseAction();
             }
@@ -618,17 +623,17 @@ public class MainWindow extends JFrame {
         }
 
         Course activeCourse = gradebook.getActiveCourse();
-        
+
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showAddStudentDialog(this, activeCourse);
-        
-        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
-            String[] output = (String[])prompt.getOutput();
-        
+
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
+            String[] output = (String[]) prompt.getOutput();
+
             //Create a new Student and add it to the gradebook
             Student student = new Student(output[0], output[1], output[2], output[3]);
             gradebook.getActiveCourse().addStudent(student);
-   
+
             //Update JTable
             refreshTableModel();
             updateStatusBar();
@@ -639,11 +644,11 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("Select a student first.");
             return;
-        } else if (studentsTbl.getSelectedRow() < 0){
+        } else if (studentsTbl.getSelectedRow() < 0) {
             showErrorMessage("Select a student first.");
             return;
-        } 
-        
+        }
+
         //Get the Student object
         int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
         Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
@@ -651,11 +656,11 @@ public class MainWindow extends JFrame {
 
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEditStudentDialog(this, student, activeCourse);
-        
+
         int retval = prompt.getReturnValue();
-        if (retval == UserEntryPrompter.OK_PRESSED){
-            String[] output = (String[])prompt.getOutput();
-            
+        if (retval == UserEntryPrompter.OK_PRESSED) {
+            String[] output = (String[]) prompt.getOutput();
+
             //Update student info
             student.setFirstName(output[0]);
             student.setLastName(output[1]);
@@ -664,7 +669,7 @@ public class MainWindow extends JFrame {
 
             //Update JTable
             refreshTableModel();
-        } else if (retval == UserEntryPrompter.DELETE_PRESSED){
+        } else if (retval == UserEntryPrompter.DELETE_PRESSED) {
             delStudentAction();
         }
     }
@@ -673,29 +678,29 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("Select a student first.");
             return;
-        } else if (studentsTbl.getSelectedRow() < 0){
+        } else if (studentsTbl.getSelectedRow() < 0) {
             showErrorMessage("Select a student first.");
             return;
-        } 
-        
+        }
+
         //Get the Student object
         int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
         Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
-        
+
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Student", JOptionPane.OK_CANCEL_OPTION);
-        
+
         if (option == JOptionPane.OK_OPTION) {
             gradebook.getActiveCourse().removeStudent(student);
             refreshTableModel();
             updateStatusBar();
         }
-        
+
     }
-    
+
     private void addDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
             int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
-        
+
             if (option == JOptionPane.YES_OPTION) {
                 addCourseAction();
             }
@@ -703,15 +708,15 @@ public class MainWindow extends JFrame {
         }
 
         Course activeCourse = gradebook.getActiveCourse();
-        
+
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showAddDeliverableDialog(this, activeCourse);
-        
-        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED){
+
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
             Object[] output = prompt.getOutput();
 
             //Create a new Deliverable and add it to the Course
-            Deliverable deliverable = new Deliverable((String)output[0], (int)output[1], (int)output[2]);
+            Deliverable deliverable = new Deliverable((String) output[0], (int) output[1], (int) output[2]);
             gradebook.getActiveCourse().addDeliverable(deliverable);
 
             //Update JTable
@@ -723,13 +728,13 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("Select a deliverable first.");
             return;
-        } else if (studentsTbl.getSelectedColumn() < 0){
+        } else if (studentsTbl.getSelectedColumn() < 0) {
             showErrorMessage("Select a deliverable first.");
             return;
-        } 
-        
+        }
+
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)){
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
             showErrorMessage("Select a deliverable first.");
             return;
         }
@@ -737,22 +742,22 @@ public class MainWindow extends JFrame {
         //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
         Course activeCourse = gradebook.getActiveCourse();
-        
+
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEditDeliverableDialog(this, deliverable, activeCourse);
-        
+
         int retval = prompt.getReturnValue();
-        if (retval == UserEntryPrompter.OK_PRESSED){
+        if (retval == UserEntryPrompter.OK_PRESSED) {
             Object[] output = prompt.getOutput();
-            
+
             //Update Deliverable
-            deliverable.setName((String)output[0]);
-            deliverable.setType((int)output[1]);
-            deliverable.setWeight((int)output[2]);
+            deliverable.setName((String) output[0]);
+            deliverable.setType((int) output[1]);
+            deliverable.setWeight((int) output[2]);
 
             //Update JTable
             refreshTableModel();
-        } else if (retval == UserEntryPrompter.DELETE_PRESSED){
+        } else if (retval == UserEntryPrompter.DELETE_PRESSED) {
             delDeliverableAction();
         }
     }
@@ -761,97 +766,98 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("Select a deliverable first.");
             return;
-        } else if (studentsTbl.getSelectedColumn() < 0){
+        } else if (studentsTbl.getSelectedColumn() < 0) {
             showErrorMessage("Select a deliverable first.");
             return;
-        } 
-        
+        }
+
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)){
+        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
             showErrorMessage("Select a deliverable first.");
             return;
         }
 
         //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
-        
+
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
-        
+
         if (option == JOptionPane.OK_OPTION) {
             gradebook.getActiveCourse().removeDeliverable(deliverable);
-            
+
             refreshTableModel();
         }
     }
-    
-    private void importStudentsAction(){
+
+    private void importStudentsAction() {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("You must create a course first.");
             return;
         }
-        
+
         CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
-        
+
         int option = chooser.showOpenDialog(rootPane);
-        if (option == JFileChooser.APPROVE_OPTION){
-            try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
+        if (option == JFileChooser.APPROVE_OPTION) {
+            try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
                 gradebook.getActiveCourse().importStudents(reader);
             } catch (IOException e) {
                 showErrorMessage("The selected file could not be read.");
-            } catch (CSVException e){
+            } catch (CSVException e) {
                 int numLines = e.getNumBadLines();
-                showErrorMessage("Problems were encountered on " + numLines + 
-                                " line" + (numLines == 1 ? "" : "s") + 
-                                " of the file. They may not have been imported fully.");
+                showErrorMessage("Problems were encountered on " + numLines
+                        + " line" + (numLines == 1 ? "" : "s")
+                        + " of the file. They may not have been imported fully.");
             }
-            
+
             refreshTableModel();
             updateStatusBar();
         }
     }
-    
-    private void importGradesAction(){
+
+    private void importGradesAction() {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("You must create a course first.");
             return;
         }
-        
+
         CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
-        
+
         int option = chooser.showOpenDialog(rootPane);
-        if (option == JFileChooser.APPROVE_OPTION){
-            try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))){
+        if (option == JFileChooser.APPROVE_OPTION) {
+            try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
                 gradebook.getActiveCourse().importGrades(reader);
             } catch (IOException e) {
                 showErrorMessage("The selected file could not be read.");
-            } catch (CSVException e){
+            } catch (CSVException e) {
                 int numLines = e.getNumBadLines();
-                if (numLines == CSVException.BAD_FORMAT)
+                if (numLines == CSVException.BAD_FORMAT) {
                     showErrorMessage("The file's header is invalid. No grades could be imported.");
-                else
-                    showErrorMessage("Problems were encountered on " + numLines + 
-                                    " line" + (numLines == 1 ? "" : "s") + 
-                                    " of the file. They may not have been imported fully.");
+                } else {
+                    showErrorMessage("Problems were encountered on " + numLines
+                            + " line" + (numLines == 1 ? "" : "s")
+                            + " of the file. They may not have been imported fully.");
+                }
             }
-            
+
             refreshTableModel();
         }
     }
-    
-    private void exportGradesAction(){
+
+    private void exportGradesAction() {
         if (gradebook.getActiveCourse() == null) {
             showErrorMessage("You must create a course first.");
             return;
         }
-        
+
         CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
-        
+
         int option = chooser.showSaveDialog(rootPane);
-        if (option == JFileChooser.APPROVE_OPTION){
-            try (CSVWriter writer = new CSVWriter(new FileWriter(chooser.getSelectedFile()))){
+        if (option == JFileChooser.APPROVE_OPTION) {
+            try (CSVWriter writer = new CSVWriter(new FileWriter(chooser.getSelectedFile()))) {
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
                 showErrorMessage("The selected file could not be written. Try a different filename.");
@@ -859,11 +865,28 @@ public class MainWindow extends JFrame {
             }
         }
     }
-    
-    private void sendEmailAction(){
-        //TODO: email
+
+    private void sendEmailAction() {
+        if (gradebook.getActiveCourse() == null) {
+            int option = JOptionPane.showConfirmDialog(this, "You must create a course first. Create one now?", "Question", JOptionPane.YES_NO_OPTION);
+
+            if (option == JOptionPane.YES_OPTION) {
+                addCourseAction();
+            }
+            return;
+        }
+
+        UserEntryPrompter prompt = new UserEntryPrompter();
+        prompt.showEmailDialog(this, gradebook.getActiveCourse().getStudentList());
+
+        if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
+            //outpu[0] = "From" email address; output[1] = smtp server; output[2] = smtp port; output[3] = smtp username; output[4] = smtp password; output[5] = List of selected Students
+            Object[] output = prompt.getOutput();
+
+            //TODO email actions
+        }
     }
-    
+
     private void genReportsAction(){
         //TODO: reports
         //uncomment below for testing only (Henrique should remove this)

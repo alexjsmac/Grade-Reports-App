@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import javax.mail.internet.*;
+import java.util.List;
 
 public class UserEntryPrompter{
     public static final int OK_PRESSED = 0;
@@ -25,6 +26,17 @@ public class UserEntryPrompter{
     
     public Object[] getOutput(){
         return output;
+    }
+    
+    public void showEmailDialog (Component parent, List<Student> studentsList) {
+        EmailDialog dialog = new EmailDialog(null, true, studentsList);
+        
+        retval = dialog.showDialog();
+        
+        if (retval == OK_PRESSED)
+            output = dialog.getOutput();
+        
+        dialog.dispose();
     }
     
     public void showAddCourseDialog(Component parent, Gradebook containingGradebook){
