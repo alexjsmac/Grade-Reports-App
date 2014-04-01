@@ -21,6 +21,7 @@ class CheckBoxTableHeader extends JCheckBox
     public CheckBoxTableHeader(ItemListener itemListener) {
         rendererComponent = this;
         rendererComponent.addItemListener(itemListener);
+        rendererComponent.setSelected(true);
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
@@ -37,7 +38,8 @@ class CheckBoxTableHeader extends JCheckBox
         }
         setColumn(column);
         Border border = UIManager.getBorder("TableHeader.cellBorder");
-        setBorder(border);
+        rendererComponent.setBorder(border);
+        rendererComponent.setBorderPainted(true);
         return rendererComponent;
     }
 
