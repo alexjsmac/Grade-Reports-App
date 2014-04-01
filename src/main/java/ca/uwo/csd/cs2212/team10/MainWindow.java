@@ -43,6 +43,7 @@ public class MainWindow extends JFrame {
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
             impGradesMenuItem, expGradesMenuItem, emailMenuItem, genRepMenuItem;
+    private int padding = 5;
 
     /* Constructor */
     public MainWindow() {
@@ -1004,7 +1005,7 @@ public class MainWindow extends JFrame {
     private int getMaxColumnSize(int colNumber){
     	int width = getHeaderSize(colNumber);
     	for(int row=0; row< studentsTbl.getRowCount();row++){
-    		int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + 5;
+    		int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + padding;
     		width = Math.max(width, prefWidth);
     	}
     	return width;
@@ -1023,6 +1024,6 @@ public class MainWindow extends JFrame {
     		renderer = studentsTbl.getTableHeader().getDefaultRenderer();
     	}
     	Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
-    	return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + 5);
+    	return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + padding);
     }
 }
