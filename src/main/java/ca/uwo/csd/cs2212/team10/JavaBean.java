@@ -8,7 +8,6 @@ public class JavaBean {
     private String deliverableName;
     
     public JavaBean(String deliverableName, Double grade, Double deliverableAvg) {
-
         this.deliverableName = deliverableName;
         this.deliverableGrade = grade;
         this.deliverableAvg = deliverableAvg;

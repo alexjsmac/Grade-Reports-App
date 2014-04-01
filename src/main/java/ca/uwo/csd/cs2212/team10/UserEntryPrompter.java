@@ -379,8 +379,7 @@ public class UserEntryPrompter{
     
     private static boolean isValidEmail(String email) {
         try {
-            InternetAddress internetAddress = new InternetAddress(email);
-            internetAddress.validate();
+            new InternetAddress(email).validate();
             return true;
         } catch (AddressException e) { }
         return false;

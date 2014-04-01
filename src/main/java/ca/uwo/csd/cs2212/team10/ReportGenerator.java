@@ -35,8 +35,10 @@ public class ReportGenerator {
         Collection<JavaBean> beans = new ArrayList<JavaBean>();
         List<Deliverable> deliverables = course.getDeliverableList();
         
-        for (Deliverable d : deliverables)
-            beans.add(new JavaBean(d.toString(), student.getGrade(d), course.calcAverage(d)));
+        for (Deliverable d : deliverables){
+            if (student.getGrade(d) != Student.NO_GRADE)
+                beans.add(new JavaBean(d.toString(), student.getGrade(d), course.calcAverage(d)));
+        }
         
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(beans);
         

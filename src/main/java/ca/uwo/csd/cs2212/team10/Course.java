@@ -1,10 +1,9 @@
 package ca.uwo.csd.cs2212.team10;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import au.com.bytecode.opencsv.*;
 import java.io.*;
+import javax.mail.internet.*;
 
 /**
  * Represents a course in the Gradebook
@@ -165,8 +164,13 @@ public class Course implements Serializable {
             email = line[13];
             
             try{
+                if (firstName.trim().isEmpty() || lastName.trim().isEmpty() || num.trim().isEmpty())
+                    throw new IllegalArgumentException();
+                
+                new InternetAddress(email).validate();
+                
                 validateStudentModification(null, email, num);
-            } catch (DuplicateObjectException e){
+            } catch (IllegalArgumentException | AddressException | DuplicateObjectException e){
                 invalidLines++;
                 continue;
             }
@@ -228,7 +232,9 @@ public class Course implements Serializable {
                     continue;
                 
                 try{
-                    currGrade = Double.parseDouble(line[i]);
+                    currGrade = Double.parseDouble(line[i])*100;
+                    if (currGrade < 0)
+                        throw new NumberFormatException();
                 } catch (NumberFormatException e){
                     errorOnCurrLine = true;
                     continue;
@@ -267,8 +273,12 @@ public class Course implements Serializable {
             currLine.add(s.getLastName());
             currLine.add(s.getNum());
             currLine.add(s.getEmail());
-            for(Deliverable d : deliverables)
-                currLine.add(s.getGrade(d).toString());
+            for(Deliverable d : deliverables){
+                if (s.getGrade(d) == Student.NO_GRADE)
+                    currLine.add("(no grade)");
+                else
+                    currLine.add(String.valueOf(s.getGrade(d)/100));
+            }
             
             writer.writeNext(currLine.toArray(new String[0]));
         }
