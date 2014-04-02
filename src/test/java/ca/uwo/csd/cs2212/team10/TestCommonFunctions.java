@@ -3,20 +3,30 @@ package ca.uwo.csd.cs2212.team10;
 import org.junit.Test;
 import org.junit.Before;
 import static junit.framework.Assert.*;
+import java.text.DecimalFormat;
 
 public class TestCommonFunctions {
 	
-	Double grade;
-	CommonFunctions common;
+	private Double grade;
+	private CommonFunctions common;
+	private DecimalFormat formatter;
+	
 	
 	@Before
 	public void setup(){
+		formatter = new DecimalFormat("0.##'%'");
 		grade = -1.0;
 	}
 	
 	@Test
-	public void testFormatGrade(){
+	public void testFormatGradeNoGrade(){
 		assertEquals("--.--%", common.formatGrade(grade));
+	}
+	
+	@Test
+	public void testFormatGrade(){
+		grade = 78.5;
+		assertEquals("78.5%",formatter.format(grade));
 	}
 
 }
