@@ -626,15 +626,16 @@ public class MainWindow extends JFrame {
     }
 
     private void updateClassAvgLabel() {
-        DecimalFormat df = new DecimalFormat("0.##'%'");
-        if (gradebook.getActiveCourse() != null) {
-            courseAvgLabel.setText(df.format(gradebook.getActiveCourse().calcAverage()));
-            assignmentAvgLabel.setText(df.format(gradebook.getActiveCourse().calcAverage(0)));
-            examAvgLabel.setText(df.format(gradebook.getActiveCourse().calcAverage(1)));
+        Course activeCourse = gradebook.getActiveCourse();
+        
+        if (activeCourse == null) {
+            courseAvgLabel.setText(CommonFunctions.formatGrade(Student.NO_GRADE));
+            assignmentAvgLabel.setText(CommonFunctions.formatGrade(Student.NO_GRADE));
+            examAvgLabel.setText(CommonFunctions.formatGrade(Student.NO_GRADE));
         } else {
-            courseAvgLabel.setText("0%");
-            assignmentAvgLabel.setText("0%");
-            examAvgLabel.setText("0%");
+            courseAvgLabel.setText(CommonFunctions.formatGrade(activeCourse.calcAverage()));
+            assignmentAvgLabel.setText(CommonFunctions.formatGrade(activeCourse.calcAverage(Deliverable.ASSIGNMENT_TYPE)));
+            examAvgLabel.setText(CommonFunctions.formatGrade(activeCourse.calcAverage(Deliverable.EXAM_TYPE)));
         }
     }
 
