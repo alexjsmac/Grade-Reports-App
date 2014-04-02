@@ -19,9 +19,9 @@ public class ReportGenerator {
     private final static String REPORT_FILENAME = "grade_report.jrxml";
 
     /* Attributes */
-    JasperReport report;
+    private JasperReport report;
 
-    public class JavaBean {
+    public static class JavaBean {
         /* Attributes */
         private Double deliverableAvg;
         private Double deliverableGrade;
@@ -54,6 +54,10 @@ public class ReportGenerator {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+    
+    public JasperReport getReport(){
+        return report;
     }
     
     public JasperPrint fillReport(Course course, Student student) throws JRException {
