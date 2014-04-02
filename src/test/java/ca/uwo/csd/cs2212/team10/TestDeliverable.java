@@ -40,6 +40,20 @@ public class TestDeliverable{
     }
     
     @Test
+    public void testEqualSameName(){
+        Deliverable d2 = new Deliverable(deliverable.getName(), Deliverable.ASSIGNMENT_TYPE, 0);
+        
+        assertTrue(deliverable.equals(d2));
+    }
+    
+    @Test
+    public void testEqualDifferentName(){
+        Deliverable d2 = new Deliverable(deliverable.getName() + "x", Deliverable.ASSIGNMENT_TYPE, 0);
+        
+        assertFalse(deliverable.equals(d2));
+    }
+    
+    @Test
     public void testToStringContainsNameAndWeight(){
     	assertTrue(deliverable.toString().contains(deliverable.getName()));
     	assertTrue(deliverable.toString().contains(""+deliverable.getWeight()));
