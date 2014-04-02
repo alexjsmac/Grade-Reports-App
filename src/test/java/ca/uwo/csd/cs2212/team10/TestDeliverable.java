@@ -42,6 +42,6 @@ public class TestDeliverable{
     @Test
     public void testEquals(){
     	deliverable.setName("Assignment 1");
-    	assertEquals("Assignment 1", deliverable.getName());
+    	assertEquals("Assignment 1", deliverable.getName().equals(deliverable));
     }
 }
