@@ -14,6 +14,7 @@ public class GradeCellRenderer extends DefaultTableCellRenderer {
     
     public GradeCellRenderer(){
         super();
+        //Specifies the format for displaying grades
         formatter = new DecimalFormat("0.##'%'");
         
         setHorizontalAlignment(SwingConstants.RIGHT);
@@ -23,6 +24,7 @@ public class GradeCellRenderer extends DefaultTableCellRenderer {
     public void setValue(Object aValue) {
         Double val = (Double)aValue;
         
+        //If no grade is present, we set the cell to "---"
         if (val == Student.NO_GRADE)
             super.setValue("---");
         else
