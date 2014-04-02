@@ -961,7 +961,7 @@ public class MainWindow extends JFrame {
             final List<Student> stuList = (List<Student>) output[5];
 
             final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Sending reports by email",
-                                                    "", 0, stuList.size());
+                                                    "Initializing...", 0, stuList.size());
             progressMonitor.setMillisToPopup(0);
             progressMonitor.setMillisToDecideToPopup(0);
             progressMonitor.setProgress(0);
@@ -1018,7 +1018,7 @@ public class MainWindow extends JFrame {
             final List<Student> stuList = (List<Student>) output[1];
 
             final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Exporting PDF reports",
-                                                    "", 0, stuList.size());
+                                                    "Initializing...", 0, stuList.size());
             progressMonitor.setMillisToPopup(0);
             progressMonitor.setMillisToDecideToPopup(0);
             progressMonitor.setProgress(0);
