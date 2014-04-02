@@ -5,9 +5,6 @@ import java.io.*;
 
 public class CustomFileChooser extends JFileChooser {
 
-	/* Constants */
-	private static final long serialVersionUID = 1L; //for serializing
-
 	/* Constructor */
 	public CustomFileChooser(){
 		super();
@@ -18,6 +15,7 @@ public class CustomFileChooser extends JFileChooser {
 	@Override
 	public void approveSelection() {
 		File f = getSelectedFile();
+		//If the file exists, ask user if they want to overwrite
 		if (f.exists() && getDialogType() == SAVE_DIALOG) {
 			int result = JOptionPane.showConfirmDialog(this,
 					"The file exists, overwrite?", "Existing file",
