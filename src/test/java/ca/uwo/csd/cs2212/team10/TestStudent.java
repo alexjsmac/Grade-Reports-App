@@ -108,4 +108,13 @@ public class TestStudent{
         student.removeGrade(exam1);
         student.removeGrade(exam2);
     }
+    
+    @Test
+    public void testToString(){
+    	assertTrue(student.toString().contains(student.getFirstName()));
+    	assertTrue(student.toString().contains(""+student.getLastName()));
+    	assertTrue(student.toString().contains(""+student.getNum()));
+    	assertTrue(student.toString().contains(""+student.getEmail()));
+    	
+    }
 }
