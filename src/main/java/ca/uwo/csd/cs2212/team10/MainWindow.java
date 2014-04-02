@@ -13,6 +13,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.mail.internet.AddressException;
 import javax.mail.MessagingException;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
 import net.sf.jasperreports.engine.JRException;
@@ -54,7 +56,7 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
-        reportGenerator = new ReportGenerator();
+        //reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
@@ -179,9 +181,14 @@ public class MainWindow extends JFrame {
         }
 
         TableModel tblModel = new TableModel(studentsList, deliverablesList);
-        studentsTbl.setModel(tblModel);
-        
+        studentsTbl.setModel(tblModel);        
         studentsTbl.getRowSorter().toggleSortOrder(0);
+        studentsTbl.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                updateClassAvgLabel();
+            }
+        });
         updateColumnSize();
     }
 
