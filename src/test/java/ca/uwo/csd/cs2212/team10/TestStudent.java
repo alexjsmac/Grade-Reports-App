@@ -85,9 +85,9 @@ public class TestStudent{
     @Test
     public void testCalcAveragesWithNoGrades(){
         //the average should be 0 if there are no grades
-        assertEquals(0.0, student.calcAverage());
-        assertEquals(0.0, student.calcAverage(Deliverable.ASSIGNMENT_TYPE));
-        assertEquals(0.0, student.calcAverage(Deliverable.EXAM_TYPE));
+        assertEquals(Student.NO_GRADE, student.calcAverage());
+        assertEquals(Student.NO_GRADE, student.calcAverage(Deliverable.ASSIGNMENT_TYPE));
+        assertEquals(Student.NO_GRADE, student.calcAverage(Deliverable.EXAM_TYPE));
     }
     
     @Test
