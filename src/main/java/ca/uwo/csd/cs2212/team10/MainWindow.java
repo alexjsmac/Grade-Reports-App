@@ -930,10 +930,11 @@ public class MainWindow extends JFrame {
             int errorCount = 0;
             int progress = 0;
             ProgressMonitor progressMonitor = new ProgressMonitor(this, "Sending reports by email",
-                                                    null, 0, stuList.size());
+                                                    "", 0, stuList.size());
             
             for (Student s : stuList){
                 progressMonitor.setProgress(progress);
+                progressMonitor.setNote("Completed " + progress + " out of " + stuList.size());
                 if (progressMonitor.isCanceled())
                     break;
                 
@@ -973,10 +974,11 @@ public class MainWindow extends JFrame {
             int errorCount = 0;
             int progress = 0;
             ProgressMonitor progressMonitor = new ProgressMonitor(this, "Exporting PDF reports",
-                                                    null, 0, stuList.size());
+                                                    "", 0, stuList.size());
             
             for (Student s : stuList){
                 progressMonitor.setProgress(progress);
+                progressMonitor.setNote("Completed " + progress + " out of " + stuList.size());
                 if (progressMonitor.isCanceled())
                     break;
                 
