@@ -1027,7 +1027,7 @@ public class MainWindow extends JFrame {
                 private int errorCount = 0;
                 private int progress = 0;
                 
-                public Void doInBackground() throws Exception{
+                public Void doInBackground(){
                     for (Student s : stuList){
                         try{
                             reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
