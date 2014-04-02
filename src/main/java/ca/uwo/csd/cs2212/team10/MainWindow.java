@@ -88,7 +88,7 @@ public class MainWindow extends JFrame {
         studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
                 int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-                if (selectedColumn >= 1 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
+                if (((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
                     delDeliverableAction();
                 } else if (studentsTbl.getSelectedRow() != -1) {
                     delStudentAction();
@@ -112,9 +112,9 @@ public class MainWindow extends JFrame {
                 if (studentsTbl.getSelectedRow() >= 0 && e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                     int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
 
-                    if (selectedColumn >= 0 && selectedColumn <= 1) {
+                    if (((TableModel)studentsTbl.getModel()).isStudentColumn(selectedColumn)) {
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else if (selectedColumn >= 2 && selectedColumn < (studentsTbl.getModel().getColumnCount() - 3)) {
+                    } else if (((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -124,23 +124,6 @@ public class MainWindow extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 mousePressed(e);
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                studentsTbl.clearSelection();
-                int row = studentsTbl.rowAtPoint(e.getPoint());
-                int column = studentsTbl.columnAtPoint(e.getPoint());
-                if (row >= 0 && row < studentsTbl.getRowCount()) {
-                    studentsTbl.changeSelection(row, column, false, false);
-                } else {
-                    studentsTbl.clearSelection();
-                }
-
-                if ((studentsTbl.getSelectedColumn() == studentsTbl.getModel().getColumnCount() - 1)
-                        && (e.getButton() == MouseEvent.BUTTON1) && e.getComponent() instanceof JTable) {
-                    editStudentAction();
-                }
             }
         });
 
@@ -829,19 +812,16 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
-        } else if (studentsTbl.getSelectedColumn() < 0) {
-            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
-            return;
-        }
-
+        } 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
+        if (!((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
-        //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
+        //To get the right Deliverable from the list 
+        int deliverableIndex = ((TableModel)studentsTbl.getModel()).getDeliverableIndex(selectedColumn);
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(deliverableIndex);
         Course activeCourse = gradebook.getActiveCourse();
 
         UserEntryPrompter prompt = new UserEntryPrompter();
@@ -867,19 +847,16 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
-        } else if (studentsTbl.getSelectedColumn() < 0) {
-            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
-            return;
-        }
-
+        } 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
+        if (!((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
-        //To get the right Deliverable from the list we use column - 2 because the Deliverables start on the 3nd Column
-        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(selectedColumn - 2);
+        //To get the right Deliverable from the list 
+        int deliverableIndex = ((TableModel)studentsTbl.getModel()).getDeliverableIndex(selectedColumn);
+        Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(deliverableIndex);
 
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
 

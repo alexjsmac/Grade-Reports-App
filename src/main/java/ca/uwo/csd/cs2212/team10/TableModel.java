@@ -28,7 +28,6 @@ public class TableModel extends AbstractTableModel {
         IDX_AVG = COLUMN_COUNT - 1;
         IDX_EXAM_AVG = IDX_AVG - 1;        
         IDX_ASSIG_AVG = IDX_EXAM_AVG - 1;
-
     }
     
     @Override
@@ -73,7 +72,6 @@ public class TableModel extends AbstractTableModel {
             return (selectedStudent.getLastName() + ", " + selectedStudent.getFirstName());
         else if (columnIndex == IDX_NUMBER)
             return selectedStudent.getNum();
-        
         else if (columnIndex == IDX_ASSIG_AVG)
             return selectedStudent.calcAverage(Deliverable.ASSIGNMENT_TYPE);
         else if (columnIndex == IDX_EXAM_AVG)
@@ -102,4 +100,19 @@ public class TableModel extends AbstractTableModel {
             return false;
     }
  
+    public boolean isDeliverableColumn (int columnIndex) {
+        return isCellEditable(0, columnIndex);
+    }
+    
+    public boolean isStudentColumn (int columnIndex) {
+        if (columnIndex == IDX_NUMBER || columnIndex == IDX_NAME)
+            return true;
+        else
+            return false;
+    }
+    
+    public int getDeliverableIndex(int columnIndex) {
+        return columnIndex - 2;
+    }
 }
+
