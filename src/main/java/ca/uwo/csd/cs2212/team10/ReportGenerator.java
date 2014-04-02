@@ -86,6 +86,7 @@ public class ReportGenerator {
             final String password, String fromAddress, Course course, Student s)
             throws AddressException, MessagingException, JRException {
         
+        //getr properties
         Properties props = new Properties();
  
         props.put("mail.smtp.host", smtpServer);
@@ -93,6 +94,7 @@ public class ReportGenerator {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
+        //authenticate username & password
         Session session = Session.getInstance(props,
             new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
@@ -100,16 +102,21 @@ public class ReportGenerator {
                 }
             }
         );
-            
+        
+        //initialize new message
         Message msg = new MimeMessage(session);
-
+        
+        //set sender's address
         Address sender = new InternetAddress(fromAddress);
         msg.setFrom(sender);
 
+        //add recipient
         msg.addRecipient(Message.RecipientType.TO, new InternetAddress(s.getEmail()));
 
+        //set subject
         msg.setSubject("Grade Report");
 
+        //load templates
         Multipart multiPart = new MimeMultipart();
 
         MimeBodyPart textPart = new MimeBodyPart();
@@ -118,6 +125,7 @@ public class ReportGenerator {
         MimeBodyPart htmlPart = new MimeBodyPart();
         htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset=utf-8");
 
+        //attach pdf report
         MimeBodyPart fileAttachmentPart = new MimeBodyPart();
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -133,6 +141,7 @@ public class ReportGenerator {
 
         msg.setContent(multiPart);
 
+        //send message
         Transport.send(msg);
     } 
     
@@ -141,8 +150,10 @@ public class ReportGenerator {
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
         
+        //get template
         Template template = ve.getTemplate(filename);
         
+        //put student name in template
         VelocityContext context = new VelocityContext();
         context.put("studentName", name);
         
