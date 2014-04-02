@@ -19,9 +19,9 @@ public class ReportGenerator {
     private final static String REPORT_FILENAME = "grade_report.jrxml";
 
     /* Attributes */
-    JasperReport report;
+    private JasperReport report;
 
-    public class JavaBean {
+    public static class JavaBean {
         /* Attributes */
         private Double deliverableAvg;
         private Double deliverableGrade;
@@ -46,14 +46,14 @@ public class ReportGenerator {
         }
     }
     
-    public ReportGenerator() {
-        try { 
-            InputStream reportStream = ReportGenerator.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
-            JasperDesign jasperDesign = JRXmlLoader.load(reportStream);
-            report = JasperCompileManager.compileReport(jasperDesign);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+    public ReportGenerator() throws JRException {
+        InputStream reportStream = ReportGenerator.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
+        JasperDesign jasperDesign = JRXmlLoader.load(reportStream);
+        report = JasperCompileManager.compileReport(jasperDesign);
+    }
+    
+    public JasperReport getReport(){
+        return report;
     }
     
     public JasperPrint fillReport(Course course, Student student) throws JRException {
@@ -117,9 +117,6 @@ public class ReportGenerator {
         MimeBodyPart textPart = new MimeBodyPart();
         textPart.setText(loadTemplate("email.text.vm", s.getFirstName()), "utf-8");
 
-        MimeBodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset=utf-8");
-
         //attach pdf report
         MimeBodyPart fileAttachmentPart = new MimeBodyPart();
 
@@ -131,7 +128,6 @@ public class ReportGenerator {
         fileAttachmentPart.setFileName("grade_report.pdf");
 
         multiPart.addBodyPart(textPart);
-        multiPart.addBodyPart(htmlPart);
         multiPart.addBodyPart(fileAttachmentPart);
 
         msg.setContent(multiPart);

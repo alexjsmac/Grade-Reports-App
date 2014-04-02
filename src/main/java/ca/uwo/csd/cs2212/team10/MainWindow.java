@@ -60,11 +60,17 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
-        reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
         setVisible(true);
+        
+        try{
+            reportGenerator = new ReportGenerator();
+        } catch (JRException e){
+            CommonFunctions.showErrorMessage(this, "<html>The report generator could not be initialized.<br>" + 
+                                                "PDF export and email functionality will not be available.</html>");
+        }
         
         if (callFirstStart)
             firstStartAction();
