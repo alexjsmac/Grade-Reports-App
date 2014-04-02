@@ -152,7 +152,10 @@ public class TestCourse{
     	course.addDeliverable(deliverable);
     	student1.setGrade(deliverable, 75.5);
     	student2.setGrade(deliverable,83.4);
-    	Double average = (75.5 + 83.4)/2;
-    	assertEquals(average, course.calcAverage());
+    	Double averageAsn = (75.5 + 83.4)/2;
+    	assertEquals(averageAsn, course.calcAverage());
+    	assertEquals(averageAsn,course.calcAverage(Deliverable.ASSIGNMENT_TYPE));
+    	assertEquals(averageAsn,course.calcAverage(deliverable));
+    	
     }
 }
