@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
 import au.com.bytecode.opencsv.*;
+import java.text.DecimalFormat;
 import javax.swing.border.BevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
@@ -36,11 +37,12 @@ public class MainWindow extends JFrame {
     private JXTable studentsTbl;
     private JComboBox dropDownCourses;
     private JPanel statusPanel;
-    private JLabel statusLabel;
-    private JButton addStudentBtn, addDeliverableBtn, 
+    private JLabel statusLabel, courseAvgTxtLabel, courseAvgLabel,
+            assignmentAvgTxtLabel, assignmentAvgLabel, examAvgTxtLabel, examAvgLabel;
+    private JButton addStudentBtn, addDeliverableBtn,
             emailBtn, genRepBtn;
     private JPopupMenu studentTblPopup, deliverableTblPopup;
-    private JMenuItem editStudentPopupMenu, delStudentPopupMenu, 
+    private JMenuItem editStudentPopupMenu, delStudentPopupMenu,
             editDeliverablePopupMenu, delDeliverablePopupMenu;
     private JMenuBar jMenuBar;
     private JMenu fileMenu, coursesMenu, studentsMenu, deliverablesMenu, importMenu, exportMenu;
@@ -48,7 +50,7 @@ public class MainWindow extends JFrame {
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
             impGradesMenuItem, expGradesMenuItem, emailMenuItem, genRepMenuItem;
-    
+
     /* Constructor */
     public MainWindow() {
         loadGradebook();
@@ -227,6 +229,19 @@ public class MainWindow extends JFrame {
         expGradesMenuItem = new JMenuItem();
         emailMenuItem = new JMenuItem();
         genRepMenuItem = new JMenuItem();
+        courseAvgTxtLabel = new JLabel("Overall Class Average:");
+        courseAvgLabel = new JLabel("--");
+        assignmentAvgTxtLabel = new JLabel("Assignments Average:");
+        assignmentAvgLabel = new JLabel("--");
+        examAvgTxtLabel = new JLabel("Exams Average:");
+        examAvgLabel = new JLabel("--");
+
+        courseAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        assignmentAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        examAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        courseAvgLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
+        assignmentAvgLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
+        examAvgLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -532,6 +547,18 @@ public class MainWindow extends JFrame {
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(genRepBtn)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(courseAvgTxtLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(courseAvgLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(assignmentAvgTxtLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(assignmentAvgLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(examAvgTxtLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(examAvgLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(dropDownCourses, 250, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addContainerGap())
@@ -548,6 +575,12 @@ public class MainWindow extends JFrame {
                                                 .addComponent(addDeliverableBtn)
                                                 .addComponent(emailBtn)
                                                 .addComponent(genRepBtn)
+                                                .addComponent(courseAvgTxtLabel)
+                                                .addComponent(courseAvgLabel)
+                                                .addComponent(examAvgTxtLabel)
+                                                .addComponent(examAvgLabel)
+                                                .addComponent(assignmentAvgTxtLabel)
+                                                .addComponent(assignmentAvgLabel)
                                                 .addComponent(dropDownCourses))
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 91, Short.MAX_VALUE)
@@ -581,6 +614,19 @@ public class MainWindow extends JFrame {
 
             refreshTableModel();
             updateStatusBar();
+        }
+    }
+
+    private void updateClassAvgLabel() {
+        DecimalFormat df = new DecimalFormat("0.##'%'");
+        if (gradebook.getActiveCourse() != null) {
+            courseAvgLabel.setText(df.format(gradebook.getActiveCourse().calcAverage()));
+            assignmentAvgLabel.setText(df.format(gradebook.getActiveCourse().calcAverage(0)));
+            examAvgLabel.setText(df.format(gradebook.getActiveCourse().calcAverage(1)));
+        } else {
+            courseAvgLabel.setText("0%");
+            assignmentAvgLabel.setText("0%");
+            examAvgLabel.setText("0%");
         }
     }
 
