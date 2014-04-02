@@ -46,14 +46,10 @@ public class ReportGenerator {
         }
     }
     
-    public ReportGenerator() {
-        try { 
-            InputStream reportStream = ReportGenerator.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
-            JasperDesign jasperDesign = JRXmlLoader.load(reportStream);
-            report = JasperCompileManager.compileReport(jasperDesign);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+    public ReportGenerator() throws JRException {
+        InputStream reportStream = ReportGenerator.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
+        JasperDesign jasperDesign = JRXmlLoader.load(reportStream);
+        report = JasperCompileManager.compileReport(jasperDesign);
     }
     
     public JasperReport getReport(){

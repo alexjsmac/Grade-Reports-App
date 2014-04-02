@@ -18,7 +18,7 @@ public class TestReportGenerator{
     private Deliverable exam2;
     
     @Before
-    public void setup(){
+    public void setup() throws JRException{
         //create the report generator
         reportGenerator = new ReportGenerator();
         
@@ -28,20 +28,24 @@ public class TestReportGenerator{
         //create the new student
         student = new Student("John", "Doe", "1234567890", "jdoe@example.com");
         
+        //add the student to the course
+        course.addStudent(student);
+        
         //create some deliverables
         asn1 = new Deliverable("Asn1", Deliverable.ASSIGNMENT_TYPE, 5);
         asn2 = new Deliverable("Asn2", Deliverable.ASSIGNMENT_TYPE, 10);
         exam1 = new Deliverable("Midterm", Deliverable.EXAM_TYPE, 35);
         exam2 = new Deliverable("Final", Deliverable.EXAM_TYPE, 50);
         
+        //add them to the course
+        course.addDeliverable(asn1);
+        course.addDeliverable(asn2);
+        course.addDeliverable(exam1);
+        course.addDeliverable(exam2);
+        
         //assign grades for some of them
-        student.addGrade(asn1);
-        student.addGrade(asn2);
         student.setGrade(asn1, 90.0);
         student.setGrade(asn2, 90.0);
-        
-        //add the student to the course
-        course.addStudent(student);
     }
     
     @Test
