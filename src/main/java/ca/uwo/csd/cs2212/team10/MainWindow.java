@@ -928,19 +928,25 @@ public class MainWindow extends JFrame {
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
             Object[] output = prompt.getOutput();
             List<Student> stuList = (List<Student>) output[5];
-
+            int errorCount = 0;
+            
             for (Student s : stuList){
                 try{
                     reportGenerator.sendByEmail((String)output[1], (String)output[2], (String)output[3], 
                         (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
                 } catch(AddressException e){
-                    //todo
+                    errorCount++;
                 } catch(MessagingException e){
-                    //todo
+                    errorCount++;
                 } catch(JRException e){
-                    //todo
+                    errorCount++;
                 }
             }
+            
+            if (errorCount > 0)
+                showErrorMessage("Problems were encountered when processing "
+                    + errorCount + " student" + (errorCount == 1 ? ". " : "s. ")
+                    + "Please check your SMTP credentials and email addresses.");
         }
     }
 
@@ -956,14 +962,20 @@ public class MainWindow extends JFrame {
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
             Object[] output = prompt.getOutput();
             List<Student> stuList = (List<Student>) output[1];
+            int errorCount = 0;
 
             for (Student s : stuList){
                 try{
                     reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
                 } catch(JRException e){
-                    //todo
+                    errorCount++;
                 }
             }
+            
+            if (errorCount > 0)
+                showErrorMessage("Problems were encountered when processing "
+                    + errorCount + " student" + (errorCount == 1 ? ". " : "s. ")
+                    + "Try a different folder, and check your free disk space.");
         }
     }
     
@@ -1054,27 +1066,27 @@ public class MainWindow extends JFrame {
     }
     
     private int getMaxColumnSize(int colNumber){
-    	int width = getHeaderSize(colNumber);
-    	for(int row=0; row< studentsTbl.getRowCount();row++){
-    		int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING;
-    		width = Math.max(width, prefWidth);
-    	}
-    	return width;
+        int width = getHeaderSize(colNumber);
+        for(int row=0; row< studentsTbl.getRowCount();row++){
+            int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING;
+            width = Math.max(width, prefWidth);
+        }
+        return width;
     }
 
     private void updateColumnSize(){
-    	for(int col=0;col<studentsTbl.getColumnCount();col++){
-    		studentsTbl.getColumnModel().getColumn(col).setPreferredWidth(getMaxColumnSize(col));
-    	}
+        for(int col=0;col<studentsTbl.getColumnCount();col++){
+            studentsTbl.getColumnModel().getColumn(col).setPreferredWidth(getMaxColumnSize(col));
+        }
     }
     
     private int getHeaderSize(int colNumber){
-    	Object value = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderValue();
-    	TableCellRenderer renderer = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderRenderer();
-    	if(renderer == null){
-    		renderer = studentsTbl.getTableHeader().getDefaultRenderer();
-    	}
-    	Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
-    	return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING);
+        Object value = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderValue();
+        TableCellRenderer renderer = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderRenderer();
+        if(renderer == null){
+            renderer = studentsTbl.getTableHeader().getDefaultRenderer();
+        }
+        Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
+        return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING);
     }
 }

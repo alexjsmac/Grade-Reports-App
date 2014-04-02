@@ -107,10 +107,10 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="320" splitType="Stretch">
+		<band height="400" splitType="Stretch">
 			<barChart>
 				<chart evaluationTime="Report" customizerClass="ca.uwo.csd.cs2212.team10.ChartCustomizer">
-					<reportElement style="Bold" x="0" y="80" width="572" height="220" uuid="47e67b23-3c82-430c-b6a2-aa8289b42d2f"/>
+					<reportElement style="Bold" x="0" y="80" width="572" height="300" uuid="47e67b23-3c82-430c-b6a2-aa8289b42d2f"/>
 					<chartTitle>
 						<font size="16"/>
 						<titleExpression><![CDATA["Deliverable Grades"]]></titleExpression>
@@ -139,6 +139,8 @@
 					<valueAxisFormat>
 						<axisFormat/>
 					</valueAxisFormat>
+					<rangeAxisMinValueExpression><![CDATA[0]]></rangeAxisMinValueExpression>
+					<rangeAxisMaxValueExpression><![CDATA[100]]></rangeAxisMaxValueExpression>
 				</barPlot>
 			</barChart>
 			<staticText>
