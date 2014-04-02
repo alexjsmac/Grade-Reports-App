@@ -131,4 +131,10 @@ public class TestCourse{
     public void testToStringReturnsAString(){
         assertNotNull(course.toString());
     }
+    
+    @Test
+    public void testCalcAverageNoStudents(){
+    	course.getStudentList().clear();
+    	assertEquals(Student.NO_GRADE,course.calcAverage());
+    }
 }
