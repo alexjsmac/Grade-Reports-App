@@ -38,4 +38,10 @@ public class TestDeliverable{
         deliverable.setWeight(50);
         assertEquals(50, deliverable.getWeight());
     }
+    
+    @Test
+    public void testEquals(){
+    	deliverable.setName("Assignment 1");
+    	assertEquals("Assignment 1", deliverable.getName());
+    }
 }
