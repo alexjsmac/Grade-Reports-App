@@ -903,8 +903,11 @@ public class MainWindow extends JFrame {
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 
         int option = chooser.showSaveDialog(rootPane);
+        String file_name = chooser.getSelectedFile().toString();
+        if (!file_name.toLowerCase().endsWith(".csv"))
+            file_name += ".csv";
         if (option == JFileChooser.APPROVE_OPTION) {
-            try (CSVWriter writer = new CSVWriter(new FileWriter(chooser.getSelectedFile()))) {
+            try (CSVWriter writer = new CSVWriter(new FileWriter(file_name))) {
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
                 showErrorMessage("The selected file could not be written. Try a different filename.");
