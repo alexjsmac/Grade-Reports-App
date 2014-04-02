@@ -110,41 +110,63 @@ public class Course implements Serializable {
     }
     
     public double calcAverage(){
-        if (students.isEmpty())
-            return Student.NO_GRADE;
-        
         double total = 0;
+        int count = 0;
+        double currAverage;
+        
         for (Student s : students){
-            total += s.calcAverage();
+            currAverage = s.calcAverage();
+            
+            if (currAverage != Student.NO_GRADE){
+                total += currAverage;
+                count++;
+            }
         }
         
-        return total/students.size();
+        if (count == 0)
+            return Student.NO_GRADE;
+        else
+            return total/count;
     }
     
     public double calcAverage(int type){
-        if (students.isEmpty())
-            return Student.NO_GRADE;
-        
         double total = 0;
+        int count = 0;
+        double currAverage;
+        
         for (Student s : students){
-            total += s.calcAverage(type);
+            currAverage = s.calcAverage(type);
+            
+            if (currAverage != Student.NO_GRADE){
+                total += currAverage;
+                count++;
+            }
         }
         
-        return total/students.size();
+        if (count == 0)
+            return Student.NO_GRADE;
+        else
+            return total/count;
     }
     
     public double calcAverage(Deliverable deliverable){
-        if (students.isEmpty())
-            return Student.NO_GRADE;
-        
         double total = 0;
+        int count = 0;
+        double currGrade;
+        
         for (Student s : students){
-            Double currGrade = s.getGrade(deliverable);
-            if (currGrade != Student.NO_GRADE)
+            currGrade = s.getGrade(deliverable);
+            
+            if (currGrade != Student.NO_GRADE){
                 total += currGrade;
+                count++;
+            }
         }
         
-        return total/students.size();
+        if (count == 0)
+            return Student.NO_GRADE;
+        else
+            return total/count;
     }
     
     public void importStudents(CSVReader reader) throws IOException, CSVException{
