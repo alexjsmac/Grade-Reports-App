@@ -40,15 +40,8 @@ public class TestDeliverable{
     }
     
     @Test
-    public void testEquals(){
-    	deliverable.setName("Assignment 1");
-    	assertEquals(true, deliverable.getName().equals(deliverable.getName()));
-    }
-    
-    @Test
-    public void testToString(){
-    	deliverable.setName("Assignment 1");
-    	deliverable.setWeight(10);
-    	assertEquals("Assignment 1 (10%)", deliverable.toString());
+    public void testToStringContainsNameAndWeight(){
+    	assertTrue(deliverable.toString().contains(deliverable.getName()));
+    	assertTrue(deliverable.toString().contains(""+deliverable.getWeight()));
     }
 }
