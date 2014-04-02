@@ -56,7 +56,7 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
-        //reportGenerator = new ReportGenerator();
+        reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
