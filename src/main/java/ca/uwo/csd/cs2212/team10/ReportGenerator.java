@@ -117,9 +117,6 @@ public class ReportGenerator {
         MimeBodyPart textPart = new MimeBodyPart();
         textPart.setText(loadTemplate("email.text.vm", s.getFirstName()), "utf-8");
 
-        MimeBodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(loadTemplate("email.html.vm", s.getFirstName()), "text/html; charset=utf-8");
-
         //attach pdf report
         MimeBodyPart fileAttachmentPart = new MimeBodyPart();
 
@@ -131,7 +128,6 @@ public class ReportGenerator {
         fileAttachmentPart.setFileName("grade_report.pdf");
 
         multiPart.addBodyPart(textPart);
-        multiPart.addBodyPart(htmlPart);
         multiPart.addBodyPart(fileAttachmentPart);
 
         msg.setContent(multiPart);
