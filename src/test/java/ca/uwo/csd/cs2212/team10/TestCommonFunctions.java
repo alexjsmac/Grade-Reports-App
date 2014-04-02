@@ -3,28 +3,17 @@ package ca.uwo.csd.cs2212.team10;
 import org.junit.Test;
 import org.junit.Before;
 import static junit.framework.Assert.*;
-import java.text.DecimalFormat;
 
-public class TestCommonFunctions {
-	
-	private Double grade;
-	private CommonFunctions common;
-	
-	
-	@Before
-	public void setup(){
-		grade = -1.0;
-	}
-	
+public class TestCommonFunctions {	
 	@Test
 	public void testFormatGradeNoGrade(){
-		assertEquals("--.--%", common.formatGrade(grade));
+		assertFalse(CommonFunctions.formatGrade(Student.NO_GRADE).contains(""+Student.NO_GRADE));
 	}
 	
 	@Test
 	public void testFormatGrade(){
-		grade = 78.5;
-		assertEquals("78.5%",common.formatGrade(grade));
+		double grade = 78.5;
+        
+		assertTrue(CommonFunctions.formatGrade(grade).contains(""+grade));
 	}
-
 }

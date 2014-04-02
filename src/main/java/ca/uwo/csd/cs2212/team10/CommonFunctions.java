@@ -6,6 +6,10 @@ import java.awt.Component;
 
 public class CommonFunctions{
     private static final DecimalFormat formatter = new DecimalFormat("0.##'%'");
+    
+    private CommonFunctions(){
+        // This class may not be instantiated
+    }
 
     public static String formatGrade(double grade){
         if (grade == Student.NO_GRADE)
