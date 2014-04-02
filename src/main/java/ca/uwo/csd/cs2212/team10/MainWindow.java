@@ -1066,15 +1066,21 @@ public class MainWindow extends JFrame {
     }
     
     private int getMaxColumnSize(int colNumber){
+    	//The default width will be the size of the header.
         int width = getHeaderSize(colNumber);
+        //Loop through all the cells in a column
         for(int row=0; row< studentsTbl.getRowCount();row++){
+        	//prefWidth is the width of the renderered component within the cell
+        	//(the amount of space the string within the cell takes up) + additional spacing
             int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING;
+            //The width of the column will then be the greater of the header width, or the width of the cell with the largest string).
             width = Math.max(width, prefWidth);
         }
         return width;
     }
 
     private void updateColumnSize(){
+    	//Loop through all columns and update the width of the columns.
         for(int col=0;col<studentsTbl.getColumnCount();col++){
             studentsTbl.getColumnModel().getColumn(col).setPreferredWidth(getMaxColumnSize(col));
         }
