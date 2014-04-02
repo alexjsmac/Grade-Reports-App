@@ -137,4 +137,19 @@ public class TestCourse{
     	course.getStudentList().clear();
     	assertEquals(Student.NO_GRADE,course.calcAverage());
     }
+    
+    @Test
+    public void testCalcAverageWithStudents(){
+    	course.getStudentList().clear();
+    	Student student1 = new Student("Foo", "Bar", "1", "daz");
+    	Student student2 = new Student("Foo", "Bar", "2", "jaz");
+    	course.addStudent(student1);
+    	course.addStudent(student2);
+    	deliverable = new Deliverable("Asn1",Deliverable.ASSIGNMENT_TYPE,100);
+    	course.addDeliverable(deliverable);
+    	student1.setGrade(deliverable, 75.5);
+    	student2.setGrade(deliverable,83.4);
+    	Double average = (75.5 + 83.4)/2;
+    	assertEquals(average, course.calcAverage());
+    }
 }
