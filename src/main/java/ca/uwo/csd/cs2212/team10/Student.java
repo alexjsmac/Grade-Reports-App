@@ -139,7 +139,7 @@ public class Student implements Serializable {
         }
         
         if (weights == 0)
-            return 0; //avoid division by 0, return 0 if there are no grades
+            return NO_GRADE;
         else
             return total/weights; //return the weighted average
     }
@@ -163,7 +163,7 @@ public class Student implements Serializable {
         }
         
         if (weights == 0)
-            return 0; //avoid division by 0, return 0 if there are no grades
+            return NO_GRADE;
         else
             return total/weights; //return the weighted average
     }

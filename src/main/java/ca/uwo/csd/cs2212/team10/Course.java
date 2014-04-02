@@ -111,7 +111,7 @@ public class Course implements Serializable {
     
     public double calcAverage(){
         if (students.isEmpty())
-            return 0;
+            return Student.NO_GRADE;
         
         double total = 0;
         for (Student s : students){
@@ -123,7 +123,7 @@ public class Course implements Serializable {
     
     public double calcAverage(int type){
         if (students.isEmpty())
-            return 0;
+            return Student.NO_GRADE;
         
         double total = 0;
         for (Student s : students){
@@ -135,7 +135,7 @@ public class Course implements Serializable {
     
     public double calcAverage(Deliverable deliverable){
         if (students.isEmpty())
-            return 0;
+            return Student.NO_GRADE;
         
         double total = 0;
         for (Student s : students){

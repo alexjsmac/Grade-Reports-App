@@ -24,9 +24,9 @@ public class GradeCellRenderer extends DefaultTableCellRenderer {
     public void setValue(Object aValue) {
         Double val = (Double)aValue;
         
-        //If no grade is present, we set the cell to "---"
+        //If no grade is present, we set the cell to a special value
         if (val == Student.NO_GRADE)
-            super.setValue("---");
+            super.setValue("--.--%");
         else
             super.setValue(formatter.format(val));
     }
