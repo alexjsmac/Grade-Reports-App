@@ -3,6 +3,8 @@ package ca.uwo.csd.cs2212.team10;
 import org.junit.Test;
 import org.junit.Before;
 import static junit.framework.Assert.*;
+import au.com.bytecode.opencsv.CSVReader;
+import java.io.*;
 
 public class TestCourse{
     private Course course;
@@ -127,6 +129,16 @@ public class TestCourse{
         course.validateStudentModification(student2, student.getEmail(), student.getNum());
     }
     
+    @Test(expected = DuplicateObjectException.class)
+    public void testStudentModificationWithExistingNumber() throws DuplicateObjectException{
+        Student student2 = new Student("foo", "bar", "2", "quux");
+        
+        course.addStudent(student);
+        course.addStudent(student2);
+        
+        course.validateStudentModification(student2, student2.getEmail(), student.getNum());
+    }
+    
     @Test
     public void testToStringReturnsAString(){
         assertNotNull(course.toString());
@@ -157,5 +169,16 @@ public class TestCourse{
     	assertEquals(averageAsn,course.calcAverage(Deliverable.ASSIGNMENT_TYPE));
     	assertEquals(averageAsn,course.calcAverage(deliverable));
     	
+    }
+    
+    @Test
+    public void testImportStudentsWithEmptyNumber() throws CSVException{
+        try (CSVReader reader = new CSVReader(new FileReader("studens.csv"))){
+            course.importStudents(reader);
+        } catch (IOException e){
+            ;
+        } catch (CSVException e){
+            assertEquals(5, e.getNumBadLines());
+        }
     }
 }
