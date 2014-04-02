@@ -13,11 +13,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.mail.internet.AddressException;
 import javax.mail.MessagingException;
+import javax.mail.Message;
+import javax.mail.Transport;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperExportManager;
 import org.jdesktop.swingx.*;
 
 /**
@@ -971,10 +975,13 @@ public class MainWindow extends JFrame {
                 private int progress = 0;
                 
                 public Void doInBackground(){
+                    Message currMessage;
+                    
                     for (Student s : stuList){
                         try{
-                            reportGenerator.sendByEmail((String)output[1], (String)output[2], (String)output[3], 
-                                (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
+                            currMessage = reportGenerator.exportToEmailMessage((String)output[1], (String)output[2], 
+                                (String)output[3], (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
+                            Transport.send(currMessage);
                         } catch(MessagingException | JRException e){
                             errorCount++;
                         }
@@ -1028,9 +1035,13 @@ public class MainWindow extends JFrame {
                 private int progress = 0;
                 
                 public Void doInBackground(){
+                    JasperPrint currReport;
+                    
                     for (Student s : stuList){
                         try{
-                            reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
+                            currReport = reportGenerator.fillReport(gradebook.getActiveCourse(), s);
+                            JasperExportManager.exportReportToPdfFile(currReport, new File((String)output[0], 
+                                s.getLastName() + "-" + s.getFirstName() + "-" + s.getNum() + ".pdf").getPath());
                         } catch(JRException e){
                             errorCount++;
                         }

@@ -56,7 +56,7 @@ public class ReportGenerator {
         }
     }
     
-    private JasperPrint fillReport(Course course, Student student) throws JRException {
+    public JasperPrint fillReport(Course course, Student student) throws JRException {
         Collection<JavaBean> beans = new ArrayList<JavaBean>();
         List<Deliverable> deliverables = course.getDeliverableList();
         
@@ -77,12 +77,7 @@ public class ReportGenerator {
         return JasperFillManager.fillReport(report, parameters, beanColDataSource);
     }
 
-    public void exportToPDF(String directory, Course course, Student s) throws JRException {
-        JasperExportManager.exportReportToPdfFile(fillReport(course, s), 
-            new File(directory, s.getLastName() + "-" + s.getFirstName() + "-" + s.getNum() + ".pdf").getPath());
-    }
-
-    public void sendByEmail(String smtpServer, String smtpPort, final String username, 
+    public Message exportToEmailMessage(String smtpServer, String smtpPort, final String username, 
             final String password, String fromAddress, Course course, Student s)
             throws AddressException, MessagingException, JRException {
         
@@ -141,8 +136,7 @@ public class ReportGenerator {
 
         msg.setContent(multiPart);
 
-        //send message
-        Transport.send(msg);
+        return msg;
     } 
     
     private static String loadTemplate(String filename, String name) {
