@@ -136,6 +136,9 @@ public class TestCourse{
     public void testCalcAverageNoStudents(){
     	course.getStudentList().clear();
     	assertEquals(Student.NO_GRADE,course.calcAverage());
+    	assertEquals(Student.NO_GRADE,course.calcAverage(deliverable));
+    	assertEquals(Student.NO_GRADE,course.calcAverage(Deliverable.ASSIGNMENT_TYPE));
+    	assertEquals(Student.NO_GRADE,course.calcAverage(Deliverable.EXAM_TYPE));
     }
     
     @Test
