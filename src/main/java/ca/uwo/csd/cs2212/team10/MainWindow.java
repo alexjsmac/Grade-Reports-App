@@ -48,7 +48,6 @@ public class MainWindow extends JFrame {
             addStudentMenuItem, editStudentMenuItem, delStudentMenuItem,
             addDeliverableMenuItem, editDeliverableMenuItem, delDeliverableMenuItem, impStudentsMenuItem,
             impGradesMenuItem, expGradesMenuItem, emailMenuItem, genRepMenuItem;
-    private ProgressMonitor progressMonitor;
     
     /* Constructor */
     public MainWindow() {
@@ -929,8 +928,15 @@ public class MainWindow extends JFrame {
             Object[] output = prompt.getOutput();
             List<Student> stuList = (List<Student>) output[5];
             int errorCount = 0;
+            int progress = 0;
+            ProgressMonitor progressMonitor = new ProgressMonitor(this, "Sending reports by email",
+                                                    null, 0, stuList.size());
             
             for (Student s : stuList){
+                progressMonitor.setProgress(progress);
+                if (progressMonitor.isCanceled())
+                    break;
+                
                 try{
                     reportGenerator.sendByEmail((String)output[1], (String)output[2], (String)output[3], 
                         (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
@@ -941,7 +947,9 @@ public class MainWindow extends JFrame {
                 } catch(JRException e){
                     errorCount++;
                 }
+                progress++;
             }
+            progressMonitor.close();
             
             if (errorCount > 0)
                 showErrorMessage("Problems were encountered when processing "
@@ -963,14 +971,23 @@ public class MainWindow extends JFrame {
             Object[] output = prompt.getOutput();
             List<Student> stuList = (List<Student>) output[1];
             int errorCount = 0;
-
+            int progress = 0;
+            ProgressMonitor progressMonitor = new ProgressMonitor(this, "Exporting PDF reports",
+                                                    null, 0, stuList.size());
+            
             for (Student s : stuList){
+                progressMonitor.setProgress(progress);
+                if (progressMonitor.isCanceled())
+                    break;
+                
                 try{
                     reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
                 } catch(JRException e){
                     errorCount++;
                 }
+                progress++;
             }
+            progressMonitor.close();
             
             if (errorCount > 0)
                 showErrorMessage("Problems were encountered when processing "
