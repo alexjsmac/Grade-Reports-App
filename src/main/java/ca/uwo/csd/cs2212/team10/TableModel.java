@@ -56,7 +56,7 @@ public class TableModel extends AbstractTableModel {
         else if (columnIndex == IDX_NUMBER)
             return "Student Number";
         else if (columnIndex == IDX_AVG)
-            return "Total Average";
+            return "Overall Average";
         else if (columnIndex == IDX_ASSIG_AVG)
             return "Assignments Average";
         else if (columnIndex == IDX_EXAM_AVG)
