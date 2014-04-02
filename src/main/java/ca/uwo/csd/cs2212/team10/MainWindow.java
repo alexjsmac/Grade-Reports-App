@@ -957,37 +957,50 @@ public class MainWindow extends JFrame {
         prompt.showEmailDialog(this, gradebook.getActiveCourse().getStudentList());
 
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
-            Object[] output = prompt.getOutput();
-            List<Student> stuList = (List<Student>) output[5];
-            int errorCount = 0;
-            int progress = 0;
-            ProgressMonitor progressMonitor = new ProgressMonitor(this, "Sending reports by email",
+            final Object[] output = prompt.getOutput();
+            final List<Student> stuList = (List<Student>) output[5];
+
+            final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Sending reports by email",
                                                     "", 0, stuList.size());
-            
-            for (Student s : stuList){
-                progressMonitor.setProgress(progress);
-                progressMonitor.setNote("Completed " + progress + " out of " + stuList.size());
-                if (progressMonitor.isCanceled())
-                    break;
+            progressMonitor.setMillisToPopup(0);
+            progressMonitor.setMillisToDecideToPopup(0);
+            progressMonitor.setProgress(0);
+
+            new SwingWorker<Void, Void>(){
+                private int errorCount = 0;
+                private int progress = 0;
                 
-                try{
-                    reportGenerator.sendByEmail((String)output[1], (String)output[2], (String)output[3], 
-                        (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
-                } catch(AddressException e){
-                    errorCount++;
-                } catch(MessagingException e){
-                    errorCount++;
-                } catch(JRException e){
-                    errorCount++;
+                public Void doInBackground(){
+                    for (Student s : stuList){
+                        try{
+                            reportGenerator.sendByEmail((String)output[1], (String)output[2], (String)output[3], 
+                                (String)output[4], (String)output[0], gradebook.getActiveCourse(), s);
+                        } catch(MessagingException | JRException e){
+                            errorCount++;
+                        }
+                        
+                        progress++;
+                        publish((Void)null);
+                    }
+                    
+                    return null;
                 }
-                progress++;
-            }
-            progressMonitor.close();
-            
-            if (errorCount > 0)
-                CommonFunctions.showErrorMessage(this, "<html>Problems were encountered while processing "
-                    + errorCount + " student" + (errorCount == 1 ? "." : "s.")
-                    + "<br>Please check your SMTP credentials and email addresses.</html>");
+                
+                protected void process(List<Void> chunks){
+                    progressMonitor.setProgress(progress);
+                    progressMonitor.setNote("Completed " + progress + " out of " + stuList.size());
+                    if (progressMonitor.isCanceled())
+                        cancel(true);
+                }
+
+                protected void done(){
+                    progressMonitor.close();
+                    if (errorCount > 0)
+                        CommonFunctions.showErrorMessage(MainWindow.this, "<html>Problems were encountered while processing "
+                            + errorCount + " student" + (errorCount == 1 ? "." : "s.")
+                            + "<br>Please check your SMTP credentials and email addresses.</html>");
+                }
+            }.execute();
         }
     }
 
@@ -1001,32 +1014,49 @@ public class MainWindow extends JFrame {
         prompt.showReportDialog(this, gradebook.getActiveCourse().getStudentList());
 
         if (prompt.getReturnValue() == UserEntryPrompter.OK_PRESSED) {
-            Object[] output = prompt.getOutput();
-            List<Student> stuList = (List<Student>) output[1];
-            int errorCount = 0;
-            int progress = 0;
-            ProgressMonitor progressMonitor = new ProgressMonitor(this, "Exporting PDF reports",
+            final Object[] output = prompt.getOutput();
+            final List<Student> stuList = (List<Student>) output[1];
+
+            final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Exporting PDF reports",
                                                     "", 0, stuList.size());
-            
-            for (Student s : stuList){
-                progressMonitor.setProgress(progress);
-                progressMonitor.setNote("Completed " + progress + " out of " + stuList.size());
-                if (progressMonitor.isCanceled())
-                    break;
+            progressMonitor.setMillisToPopup(0);
+            progressMonitor.setMillisToDecideToPopup(0);
+            progressMonitor.setProgress(0);
+
+            new SwingWorker<Void, Void>(){
+                private int errorCount = 0;
+                private int progress = 0;
                 
-                try{
-                    reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
-                } catch(JRException e){
-                    errorCount++;
+                public Void doInBackground() throws Exception{
+                    for (Student s : stuList){
+                        try{
+                            reportGenerator.exportToPDF((String)output[0], gradebook.getActiveCourse(), s);
+                        } catch(JRException e){
+                            errorCount++;
+                        }
+                        
+                        progress++;
+                        publish((Void)null);
+                    }
+                    
+                    return null;
                 }
-                progress++;
-            }
-            progressMonitor.close();
-            
-            if (errorCount > 0)
-                CommonFunctions.showErrorMessage(this, "<html>Problems were encountered while processing "
-                    + errorCount + " student" + (errorCount == 1 ? "." : "s.")
-                    + "<br>Try a different folder, and check your free disk space.</html>");
+                
+                protected void process(List<Void> chunks){
+                    progressMonitor.setProgress(progress);
+                    progressMonitor.setNote("Completed " + progress + " out of " + stuList.size());
+                    if (progressMonitor.isCanceled())
+                        cancel(true);
+                }
+
+                protected void done(){
+                    progressMonitor.close();
+                    if (errorCount > 0)
+                        CommonFunctions.showErrorMessage(MainWindow.this, "<html>Problems were encountered while processing "
+                                + errorCount + " student" + (errorCount == 1 ? "." : "s.")
+                                + "<br>Try a different folder, and check your free disk space.</html>");
+                }
+            }.execute();
         }
     }
     
