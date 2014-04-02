@@ -146,6 +146,7 @@ public class TestCourse{
     	course.getStudentList().clear();
     	Student student1 = new Student("Foo", "Bar", "1", "daz");
     	Student student2 = new Student("Foo", "Bar", "2", "jaz");
+    	Student student3 = new Student("Foo", "Bar", "3", "haz");
     	course.addStudent(student1);
     	course.addStudent(student2);
     	deliverable = new Deliverable("Asn1",Deliverable.ASSIGNMENT_TYPE,100);
@@ -155,6 +156,7 @@ public class TestCourse{
     	Double averageAsn = (75.5 + 83.4)/2;
     	assertEquals(averageAsn, course.calcAverage());
     	assertEquals(averageAsn,course.calcAverage(Deliverable.ASSIGNMENT_TYPE));
+    	student3.setGrade(deliverable,Student.NO_GRADE);
     	assertEquals(averageAsn,course.calcAverage(deliverable));
     	
     }
