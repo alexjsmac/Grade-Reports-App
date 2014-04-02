@@ -56,7 +56,7 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
-        //reportGenerator = new ReportGenerator();
+        reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
@@ -663,7 +663,7 @@ public class MainWindow extends JFrame {
 
     private void editCourseAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("There are no courses in the gradebook.");
+            CommonFunctions.showErrorMessage(this, "There are no courses in the gradebook.");
             return;
         }
 
@@ -691,7 +691,7 @@ public class MainWindow extends JFrame {
 
     private void delCourseAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("There are no courses in the gradebook.");
+            CommonFunctions.showErrorMessage(this, "There are no courses in the gradebook.");
             return;
         }
 
@@ -742,10 +742,10 @@ public class MainWindow extends JFrame {
 
     private void editStudentAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("Select a student first.");
+            CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
         } else if (studentsTbl.getSelectedRow() < 0) {
-            showErrorMessage("Select a student first.");
+            CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
         }
 
@@ -776,10 +776,10 @@ public class MainWindow extends JFrame {
 
     private void delStudentAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("Select a student first.");
+            CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
         } else if (studentsTbl.getSelectedRow() < 0) {
-            showErrorMessage("Select a student first.");
+            CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
         }
 
@@ -826,16 +826,16 @@ public class MainWindow extends JFrame {
 
     private void editDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("Select a deliverable first.");
+            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         } else if (studentsTbl.getSelectedColumn() < 0) {
-            showErrorMessage("Select a deliverable first.");
+            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
         if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
-            showErrorMessage("Select a deliverable first.");
+            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
@@ -864,16 +864,16 @@ public class MainWindow extends JFrame {
 
     private void delDeliverableAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("Select a deliverable first.");
+            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         } else if (studentsTbl.getSelectedColumn() < 0) {
-            showErrorMessage("Select a deliverable first.");
+            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
         int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
         if (selectedColumn <= 1 || selectedColumn > (studentsTbl.getModel().getColumnCount() - 3)) {
-            showErrorMessage("Select a deliverable first.");
+            CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
@@ -891,7 +891,7 @@ public class MainWindow extends JFrame {
 
     private void importStudentsAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("You must create a course first.");
+            CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
@@ -903,10 +903,10 @@ public class MainWindow extends JFrame {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
                 gradebook.getActiveCourse().importStudents(reader);
             } catch (IOException e) {
-                showErrorMessage("The selected file could not be read.");
+                CommonFunctions.showErrorMessage(this, "The selected file could not be read.");
             } catch (CSVException e) {
                 int numLines = e.getNumBadLines();
-                showErrorMessage("Problems were encountered on " + numLines
+                CommonFunctions.showErrorMessage(this, "Problems were encountered on " + numLines
                         + " line" + (numLines == 1 ? "" : "s")
                         + " of the file. They may not have been imported fully.");
             }
@@ -918,7 +918,7 @@ public class MainWindow extends JFrame {
 
     private void importGradesAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("You must create a course first.");
+            CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
@@ -930,13 +930,13 @@ public class MainWindow extends JFrame {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
                 gradebook.getActiveCourse().importGrades(reader);
             } catch (IOException e) {
-                showErrorMessage("The selected file could not be read.");
+                CommonFunctions.showErrorMessage(this, "The selected file could not be read.");
             } catch (CSVException e) {
                 int numLines = e.getNumBadLines();
                 if (numLines == CSVException.BAD_FORMAT) {
-                    showErrorMessage("The file's header is invalid. No grades could be imported.");
+                    CommonFunctions.showErrorMessage(this, "The file's header is invalid. No grades could be imported.");
                 } else {
-                    showErrorMessage("Problems were encountered on " + numLines
+                    CommonFunctions.showErrorMessage(this, "Problems were encountered on " + numLines
                             + " line" + (numLines == 1 ? "" : "s")
                             + " of the file. They may not have been imported fully.");
                 }
@@ -948,7 +948,7 @@ public class MainWindow extends JFrame {
 
     private void exportGradesAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("You must create a course first.");
+            CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
@@ -963,7 +963,7 @@ public class MainWindow extends JFrame {
             try (CSVWriter writer = new CSVWriter(new FileWriter(file_name))) {
                 gradebook.getActiveCourse().exportGrades(writer);
             } catch (IOException e) {
-                showErrorMessage("The selected file could not be written. Try a different filename.");
+                CommonFunctions.showErrorMessage(this, "The selected file could not be written. Try a different filename.");
                 return;
             }
         }
@@ -971,7 +971,7 @@ public class MainWindow extends JFrame {
 
     private void sendEmailAction() {
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("You must create a course first.");
+            CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
@@ -1007,7 +1007,7 @@ public class MainWindow extends JFrame {
             progressMonitor.close();
             
             if (errorCount > 0)
-                showErrorMessage("<html>Problems were encountered while processing "
+                CommonFunctions.showErrorMessage(this, "<html>Problems were encountered while processing "
                     + errorCount + " student" + (errorCount == 1 ? "." : "s.")
                     + "<br>Please check your SMTP credentials and email addresses.</html>");
         }
@@ -1015,7 +1015,7 @@ public class MainWindow extends JFrame {
 
     private void genReportsAction(){
         if (gradebook.getActiveCourse() == null) {
-            showErrorMessage("You must create a course first.");
+            CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
         
@@ -1046,7 +1046,7 @@ public class MainWindow extends JFrame {
             progressMonitor.close();
             
             if (errorCount > 0)
-                showErrorMessage("<html>Problems were encountered while processing "
+                CommonFunctions.showErrorMessage(this, "<html>Problems were encountered while processing "
                     + errorCount + " student" + (errorCount == 1 ? "." : "s.")
                     + "<br>Try a different folder, and check your free disk space.</html>");
         }
@@ -1109,11 +1109,11 @@ public class MainWindow extends JFrame {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BACKUP_FILENAME))){
                 //!! backup was OK
                 gradebook = Gradebook.fromObjectInputStream(in); //read the gradebook
-                showWarningMessage("The main data file could not be read. A backup was opened instead.");
+                CommonFunctions.showWarningMessage(this, "The main data file could not be read. A backup was opened instead.");
             } catch (IOException | ClassNotFoundException ex){
                 //!! both data files corrupt
                 gradebook = new Gradebook(); //create an empty gradebook
-                showErrorMessage("The data file was corrupt and could not be recovered. All data was lost.");
+                CommonFunctions.showErrorMessage(this, "The data file was corrupt and could not be recovered. All data was lost.");
             }
         }
     }
@@ -1129,14 +1129,6 @@ public class MainWindow extends JFrame {
         gradebook.toObjectOutputStream(new ObjectOutputStream(new FileOutputStream(DATA_FILENAME)));
     }
     
-    
-    private void showErrorMessage(String text){
-        JOptionPane.showMessageDialog(this, text, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    private void showWarningMessage(String text){
-        JOptionPane.showMessageDialog(this, text, "Warning", JOptionPane.WARNING_MESSAGE);
-    }
     
     private int getMaxColumnSize(int colNumber){
     	//The default width will be the size of the header.
