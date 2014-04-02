@@ -36,7 +36,7 @@ public class MainWindow extends JFrame {
     private boolean callFirstStart = false;
 
     private JScrollPane jScrollPane1;
-    private JXTable studentsTbl;
+    private JXTable mainTable;
     private JComboBox dropDownCourses;
     private JPanel statusPanel;
     private JLabel statusLabel, courseAvgTxtLabel, courseAvgLabel,
@@ -56,7 +56,7 @@ public class MainWindow extends JFrame {
     /* Constructor */
     public MainWindow() {
         loadGradebook();
-        reportGenerator = new ReportGenerator();
+        //reportGenerator = new ReportGenerator();
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initTable();
@@ -71,50 +71,50 @@ public class MainWindow extends JFrame {
         refreshTableModel();
 
         //Set cell editors and renderers for grades
-        studentsTbl.setDefaultEditor(Double.class, new GradeCellEditor());
-        studentsTbl.setDefaultRenderer(Double.class, new GradeCellRenderer());
+        mainTable.setDefaultEditor(Double.class, new GradeCellEditor());
+        mainTable.setDefaultRenderer(Double.class, new GradeCellRenderer());
 
-        studentsTbl.setAutoCreateRowSorter(true);
-        studentsTbl.setCellSelectionEnabled(true);
-        studentsTbl.setGridColor(Color.gray);
-        studentsTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        studentsTbl.setHorizontalScrollEnabled(true);
+        mainTable.setAutoCreateRowSorter(true);
+        mainTable.setCellSelectionEnabled(true);
+        mainTable.setGridColor(Color.gray);
+        mainTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        mainTable.setHorizontalScrollEnabled(true);
 
         //Set height for the rows
-        studentsTbl.setRowHeight(22);
+        mainTable.setRowHeight(22);
 
-        studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
-        studentsTbl.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
-        studentsTbl.getActionMap().put("deleteStudent", new AbstractAction() {
+        mainTable.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
+        mainTable.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
+        mainTable.getActionMap().put("deleteStudent", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
-                int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-                if (((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
+                int selectedColumn = mainTable.convertColumnIndexToModel(mainTable.getSelectedColumn());
+                if (((CustomTableModel)mainTable.getModel()).isDeliverableColumn(selectedColumn)) {
                     delDeliverableAction();
-                } else if (studentsTbl.getSelectedRow() != -1) {
+                } else if (mainTable.getSelectedRow() != -1) {
                     delStudentAction();
                 }
             }
         });
 
-        studentsTbl.addMouseListener(new MouseAdapter() {
+        mainTable.addMouseListener(new MouseAdapter() {
             //Mouse Listener for Linux/Mac
             @Override
             public void mousePressed(MouseEvent e) {
-                studentsTbl.clearSelection();
-                int row = studentsTbl.rowAtPoint(e.getPoint());
-                int column = studentsTbl.columnAtPoint(e.getPoint());
-                if (row >= 0 && row < studentsTbl.getRowCount()) {
-                    studentsTbl.changeSelection(row, column, false, false);
+                mainTable.clearSelection();
+                int row = mainTable.rowAtPoint(e.getPoint());
+                int column = mainTable.columnAtPoint(e.getPoint());
+                if (row >= 0 && row < mainTable.getRowCount()) {
+                    mainTable.changeSelection(row, column, false, false);
                 } else {
-                    studentsTbl.clearSelection();
+                    mainTable.clearSelection();
                 }
 
-                if (studentsTbl.getSelectedRow() >= 0 && e.isPopupTrigger() && e.getComponent() instanceof JTable) {
-                    int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
+                if (mainTable.getSelectedRow() >= 0 && e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    int selectedColumn = mainTable.convertColumnIndexToModel(mainTable.getSelectedColumn());
 
-                    if (((TableModel)studentsTbl.getModel()).isStudentColumn(selectedColumn)) {
+                    if (((CustomTableModel)mainTable.getModel()).isStudentColumn(selectedColumn)) {
                         studentTblPopup.show(e.getComponent(), e.getX(), e.getY());
-                    } else if (((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
+                    } else if (((CustomTableModel)mainTable.getModel()).isDeliverableColumn(selectedColumn)) {
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -128,16 +128,16 @@ public class MainWindow extends JFrame {
         });
 
         //Right-Click on a Deliverable column header open a Popup menu
-        studentsTbl.getTableHeader().addMouseListener(new MouseAdapter() {
+        mainTable.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.isPopupTrigger()) {
-                    studentsTbl.clearSelection();
-                    int column = studentsTbl.columnAtPoint(e.getPoint());
+                    mainTable.clearSelection();
+                    int column = mainTable.columnAtPoint(e.getPoint());
                     
-                    if (studentsTbl.convertColumnIndexToModel(column) >= 2 
-                            && studentsTbl.convertColumnIndexToModel(column) < (studentsTbl.getModel().getColumnCount() - 3)) {
-                        studentsTbl.changeSelection(-1, column, false, false);
+                    if (mainTable.convertColumnIndexToModel(column) >= 2 
+                            && mainTable.convertColumnIndexToModel(column) < (mainTable.getModel().getColumnCount() - 3)) {
+                        mainTable.changeSelection(-1, column, false, false);
                         deliverableTblPopup.show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -163,10 +163,10 @@ public class MainWindow extends JFrame {
             studentsList = new ArrayList<Student>();
         }
 
-        TableModel tblModel = new TableModel(studentsList, deliverablesList);
-        studentsTbl.setModel(tblModel);        
-        studentsTbl.getRowSorter().toggleSortOrder(0);
-        studentsTbl.getModel().addTableModelListener(new TableModelListener() {
+        CustomTableModel tblModel = new CustomTableModel(studentsList, deliverablesList);
+        mainTable.setModel(tblModel);        
+        mainTable.getRowSorter().toggleSortOrder(0);
+        mainTable.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
                 updateClassAvgLabel();
@@ -177,8 +177,8 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-        jScrollPane1 = new JScrollPane(studentsTbl, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        studentsTbl = new JXTable() {
+        jScrollPane1 = new JScrollPane(mainTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        mainTable = new JXTable() {
             public Component prepareEditor(TableCellEditor editor, int row, int column) {
                 Component c = super.prepareEditor(editor, row, column);
                 if (c instanceof JTextComponent) {
@@ -243,7 +243,7 @@ public class MainWindow extends JFrame {
 
         setTitle("Gradebook");
 
-        jScrollPane1.setViewportView(studentsTbl);
+        jScrollPane1.setViewportView(mainTable);
 
         dropDownCourses.addItem("Add Course");
         dropDownCourses.setSelectedItem(gradebook.getActiveCourse());
@@ -728,13 +728,13 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
-        } else if (studentsTbl.getSelectedRow() < 0) {
+        } else if (mainTable.getSelectedRow() < 0) {
             CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
         }
 
         //Get the Student object
-        int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
+        int selectedRow = mainTable.convertRowIndexToModel(mainTable.getSelectedRow());
         Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
         Course activeCourse = gradebook.getActiveCourse();
 
@@ -762,13 +762,13 @@ public class MainWindow extends JFrame {
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
-        } else if (studentsTbl.getSelectedRow() < 0) {
+        } else if (mainTable.getSelectedRow() < 0) {
             CommonFunctions.showErrorMessage(this, "Select a student first.");
             return;
         }
 
         //Get the Student object
-        int selectedRow = studentsTbl.convertRowIndexToModel(studentsTbl.getSelectedRow());
+        int selectedRow = mainTable.convertRowIndexToModel(mainTable.getSelectedRow());
         Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
 
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Student", JOptionPane.OK_CANCEL_OPTION);
@@ -813,14 +813,14 @@ public class MainWindow extends JFrame {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         } 
-        int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (!((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
+        int selectedColumn = mainTable.convertColumnIndexToModel(mainTable.getSelectedColumn());
+        if (!((CustomTableModel)mainTable.getModel()).isDeliverableColumn(selectedColumn)) {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
         //To get the right Deliverable from the list 
-        int deliverableIndex = ((TableModel)studentsTbl.getModel()).getDeliverableIndex(selectedColumn);
+        int deliverableIndex = ((CustomTableModel)mainTable.getModel()).getDeliverableIndex(selectedColumn);
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(deliverableIndex);
         Course activeCourse = gradebook.getActiveCourse();
 
@@ -848,14 +848,14 @@ public class MainWindow extends JFrame {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         } 
-        int selectedColumn = studentsTbl.convertColumnIndexToModel(studentsTbl.getSelectedColumn());
-        if (!((TableModel)studentsTbl.getModel()).isDeliverableColumn(selectedColumn)) {
+        int selectedColumn = mainTable.convertColumnIndexToModel(mainTable.getSelectedColumn());
+        if (!((CustomTableModel)mainTable.getModel()).isDeliverableColumn(selectedColumn)) {
             CommonFunctions.showErrorMessage(this, "Select a deliverable first.");
             return;
         }
 
         //To get the right Deliverable from the list 
-        int deliverableIndex = ((TableModel)studentsTbl.getModel()).getDeliverableIndex(selectedColumn);
+        int deliverableIndex = ((CustomTableModel)mainTable.getModel()).getDeliverableIndex(selectedColumn);
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(deliverableIndex);
 
         int option = JOptionPane.showConfirmDialog(this, "Are you sure? This action cannot be undone.", "Delete Deliverable", JOptionPane.OK_CANCEL_OPTION);
@@ -1112,10 +1112,10 @@ public class MainWindow extends JFrame {
     	//The default width will be the size of the header.
         int width = getHeaderSize(colNumber);
         //Loop through all the cells in a column
-        for(int row=0; row< studentsTbl.getRowCount();row++){
+        for(int row=0; row< mainTable.getRowCount();row++){
         	//prefWidth is the width of the renderered component within the cell
         	//(the amount of space the string within the cell takes up) + additional spacing
-            int prefWidth = (int)studentsTbl.getCellRenderer(row, colNumber).getTableCellRendererComponent(studentsTbl, studentsTbl.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING;
+            int prefWidth = (int)mainTable.getCellRenderer(row, colNumber).getTableCellRendererComponent(mainTable, mainTable.getValueAt(row, colNumber), false, false, row, colNumber).getPreferredSize().getWidth() + mainTable.getIntercellSpacing().width + COLUMN_PADDING;
             //The width of the column will then be the greater of the header width, or the width of the cell with the largest string).
             width = Math.max(width, prefWidth);
         }
@@ -1124,24 +1124,24 @@ public class MainWindow extends JFrame {
 
     private void updateColumnSize(){
     	//Loop through all columns and update the width of the columns.
-        for(int col=0;col<studentsTbl.getColumnCount();col++){
-            studentsTbl.getColumnModel().getColumn(col).setPreferredWidth(getMaxColumnSize(col));
+        for(int col=0;col<mainTable.getColumnCount();col++){
+            mainTable.getColumnModel().getColumn(col).setPreferredWidth(getMaxColumnSize(col));
         }
     }
     
     private int getHeaderSize(int colNumber){
     	//Get the header value for the specified column
-        Object value = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderValue();
+        Object value = mainTable.getColumnModel().getColumn(colNumber).getHeaderValue();
         //Get the tablecellrenderer that is used to draw the header of the specified column
-        TableCellRenderer renderer = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderRenderer();
+        TableCellRenderer renderer = mainTable.getColumnModel().getColumn(colNumber).getHeaderRenderer();
         //If the renderer is null, then we get the default renderer
         if(renderer == null){
-            renderer = studentsTbl.getTableHeader().getDefaultRenderer();
+            renderer = mainTable.getTableHeader().getDefaultRenderer();
         }
         //Here we get the rendered component within the cell
         //-1 refers to the header within the JTable
-        Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
+        Component comp = renderer.getTableCellRendererComponent(mainTable, value, false, false, -1, colNumber);
         //Return the width of this component (the amount of space the header string takes up) + spacing
-        return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING);
+        return (int)(comp.getPreferredSize().width + mainTable.getIntercellSpacing().width + COLUMN_PADDING);
     }
 }

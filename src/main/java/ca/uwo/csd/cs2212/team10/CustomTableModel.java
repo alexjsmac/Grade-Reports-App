@@ -10,7 +10,7 @@ import java.math.RoundingMode;
  * @author team10
  */
 
-public class TableModel extends AbstractTableModel {
+public class CustomTableModel extends AbstractTableModel {
     private final static int IDX_NAME = 0;
     private final static int IDX_NUMBER = 1;
     
@@ -21,7 +21,7 @@ public class TableModel extends AbstractTableModel {
     private final List<Student> students;
     private final List<Deliverable> deliverables;
 
-    public TableModel(List<Student> studentsList, List<Deliverable> deliverablesList) {
+    public CustomTableModel(List<Student> studentsList, List<Deliverable> deliverablesList) {
         students = studentsList;
         deliverables = deliverablesList;
         COLUMN_COUNT = 5 + (deliverables.size());
