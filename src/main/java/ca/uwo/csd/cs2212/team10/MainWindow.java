@@ -237,12 +237,12 @@ public class MainWindow extends JFrame {
         expGradesMenuItem = new JMenuItem();
         emailMenuItem = new JMenuItem();
         genRepMenuItem = new JMenuItem();
-        courseAvgTxtLabel = new JLabel("Overall Class Average:");
-        courseAvgLabel = new JLabel("--");
+        courseAvgTxtLabel = new JLabel("Class Average:");
+        courseAvgLabel = new JLabel();
         assignmentAvgTxtLabel = new JLabel("Assignments Average:");
-        assignmentAvgLabel = new JLabel("--");
+        assignmentAvgLabel = new JLabel();
         examAvgTxtLabel = new JLabel("Exams Average:");
-        examAvgLabel = new JLabel("--");
+        examAvgLabel = new JLabel();
 
         courseAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         assignmentAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
