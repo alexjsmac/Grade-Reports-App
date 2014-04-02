@@ -152,7 +152,7 @@ public class ReportDialog extends JDialog {
 
     private void okActionPerformed(ActionEvent evt) {
         if (pathTxt.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must choose a folder.");
+            CommonFunctions.showErrorMessage(this, "You must choose a folder.");
             return;
         }
         

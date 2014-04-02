@@ -191,10 +191,10 @@ public class EmailDialog extends JDialog {
 
     private void okActionPerformed(java.awt.event.ActionEvent evt) {
         if (smtp.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must enter a SMTP server.");
+            CommonFunctions.showErrorMessage(this, "You must enter a SMTP server.");
             return;
         } else if (smtpUsername.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You must enter the SMTP username.");
+            CommonFunctions.showErrorMessage(this, "You must enter the SMTP username.");
             return;
         } else {
             try {
@@ -204,10 +204,10 @@ public class EmailDialog extends JDialog {
                 
                 new InternetAddress(email.getText()).validate();
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "You must enter a valid SMTP port.");
+                CommonFunctions.showErrorMessage(this, "You must enter a valid SMTP port.");
                 return;
             } catch (AddressException e) {
-                JOptionPane.showMessageDialog(this, "You must enter a valid source email address.");
+                CommonFunctions.showErrorMessage(this, "You must enter a valid source email address.");
                 return;
             }
         }
