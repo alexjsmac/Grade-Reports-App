@@ -15,9 +15,9 @@
 	<style name="Bold" pdfFontName="Helvetica-Bold" pdfEncoding="UTF8" isPdfEmbedded="false"/>
 	<parameter name="courseDetails" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="studentDetails" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="average" class="java.lang.Double" isForPrompting="false"/>
-	<parameter name="asnAverage" class="java.lang.Double" isForPrompting="false"/>
-	<parameter name="examAverage" class="java.lang.Double" isForPrompting="false"/>
+	<parameter name="average" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="asnAverage" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="examAverage" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -150,9 +150,9 @@
 				</textElement>
 				<text><![CDATA[Overall Average:]]></text>
 			</staticText>
-			<textField pattern="#,##0.##%">
+			<textField>
 				<reportElement x="140" y="50" width="70" height="20" uuid="94d41f2f-e522-4314-980c-d439561a8f6c"/>
-				<textFieldExpression><![CDATA[new Double ($P{average} / 100)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{average}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Bold" x="20" y="30" width="120" height="20" uuid="bfc8ead1-7340-428a-8e73-800d7a3cc3ac"/>
@@ -168,13 +168,13 @@
 				</textElement>
 				<text><![CDATA[Assignments Average:]]></text>
 			</staticText>
-			<textField pattern="#,##0.##%">
+			<textField>
 				<reportElement x="140" y="10" width="70" height="20" uuid="082f851e-d91d-4367-8a43-fd40a56a6bcb"/>
-				<textFieldExpression><![CDATA[new Double ($P{asnAverage} / 100)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{asnAverage}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.##%">
+			<textField>
 				<reportElement x="140" y="30" width="70" height="20" uuid="de256db2-f2ac-4792-876d-733758adfc1e"/>
-				<textFieldExpression><![CDATA[new Double ($P{examAverage} / 100)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{examAverage}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

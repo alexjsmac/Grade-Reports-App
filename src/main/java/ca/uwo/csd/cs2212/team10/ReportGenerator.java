@@ -45,9 +45,9 @@ public class ReportGenerator {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("courseDetails", course.toString());
         parameters.put("studentDetails", student.toString());
-        parameters.put("average", student.calcAverage());
-        parameters.put("asnAverage", student.calcAverage(Deliverable.ASSIGNMENT_TYPE));
-        parameters.put("examAverage", student.calcAverage(Deliverable.EXAM_TYPE));
+        parameters.put("average", CommonFunctions.formatGrade(student.calcAverage()));
+        parameters.put("asnAverage", CommonFunctions.formatGrade(student.calcAverage(Deliverable.ASSIGNMENT_TYPE)));
+        parameters.put("examAverage", CommonFunctions.formatGrade(student.calcAverage(Deliverable.EXAM_TYPE)));
 
         return JasperFillManager.fillReport(report, parameters, beanColDataSource);
     }
