@@ -9,12 +9,10 @@ public class TestCommonFunctions {
 	
 	private Double grade;
 	private CommonFunctions common;
-	private DecimalFormat formatter;
 	
 	
 	@Before
 	public void setup(){
-		formatter = new DecimalFormat("0.##'%'");
 		grade = -1.0;
 	}
 	
@@ -26,7 +24,7 @@ public class TestCommonFunctions {
 	@Test
 	public void testFormatGrade(){
 		grade = 78.5;
-		assertEquals("78.5%",formatter.format(grade));
+		assertEquals("78.5%",common.formatGrade(grade));
 	}
 
 }
