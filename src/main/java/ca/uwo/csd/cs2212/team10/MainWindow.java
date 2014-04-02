@@ -953,9 +953,9 @@ public class MainWindow extends JFrame {
             progressMonitor.close();
             
             if (errorCount > 0)
-                showErrorMessage("Problems were encountered when processing "
-                    + errorCount + " student" + (errorCount == 1 ? ". " : "s. ")
-                    + "Please check your SMTP credentials and email addresses.");
+                showErrorMessage("<html>Problems were encountered while processing "
+                    + errorCount + " student" + (errorCount == 1 ? "." : "s.")
+                    + "<br>Please check your SMTP credentials and email addresses.</html>");
         }
     }
 
@@ -992,9 +992,9 @@ public class MainWindow extends JFrame {
             progressMonitor.close();
             
             if (errorCount > 0)
-                showErrorMessage("Problems were encountered when processing "
-                    + errorCount + " student" + (errorCount == 1 ? ". " : "s. ")
-                    + "Try a different folder, and check your free disk space.");
+                showErrorMessage("<html>Problems were encountered while processing "
+                    + errorCount + " student" + (errorCount == 1 ? "." : "s.")
+                    + "<br>Try a different folder, and check your free disk space.</html>");
         }
     }
     
