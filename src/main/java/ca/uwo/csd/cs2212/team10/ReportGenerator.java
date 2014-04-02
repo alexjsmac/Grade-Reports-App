@@ -21,6 +21,31 @@ public class ReportGenerator {
     /* Attributes */
     JasperReport report;
 
+    public class JavaBean {
+        /* Attributes */
+        private Double deliverableAvg;
+        private Double deliverableGrade;
+        private String deliverableName;
+        
+        public JavaBean(String deliverableName, Double grade, Double deliverableAvg) {
+            this.deliverableName = deliverableName;
+            this.deliverableGrade = grade;
+            this.deliverableAvg = deliverableAvg;
+        }
+
+        public String getDeliverableName() {
+            return deliverableName;
+        }
+
+        public Double getDeliverableGrade() {
+            return deliverableGrade;
+        }
+
+        public Double getDeliverableAvg() {
+            return deliverableAvg;
+        }
+    }
+    
     public ReportGenerator() {
         try { 
             InputStream reportStream = ReportGenerator.class.getClassLoader().getResourceAsStream(REPORT_FILENAME);
@@ -127,4 +152,3 @@ public class ReportGenerator {
         return out.toString();
     }
 }
-

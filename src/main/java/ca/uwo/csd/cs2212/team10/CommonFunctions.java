@@ -5,12 +5,13 @@ import javax.swing.JOptionPane;
 import java.awt.Component;
 
 public class CommonFunctions{
+    private static final DecimalFormat formatter = new DecimalFormat("0.##'%'");
 
     public static String formatGrade(double grade){
         if (grade == Student.NO_GRADE)
             return "--.--%";
         else
-            return new DecimalFormat("0.##'%'").format(grade);
+            return formatter.format(grade);
     }
     
     public static void showErrorMessage(Component parent, String text){
