@@ -18,7 +18,7 @@ public class TestReportGenerator{
     private Deliverable exam2;
     
     @Before
-    public void setup() throws JRException{
+    public void setup() throws Exception{
         //create the report generator
         reportGenerator = new ReportGenerator();
         
