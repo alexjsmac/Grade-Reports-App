@@ -1081,12 +1081,18 @@ public class MainWindow extends JFrame {
     }
     
     private int getHeaderSize(int colNumber){
+    	//Get the header value for the specified column
         Object value = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderValue();
+        //Get the tablecellrenderer that is used to draw the header of the specified column
         TableCellRenderer renderer = studentsTbl.getColumnModel().getColumn(colNumber).getHeaderRenderer();
+        //If the renderer is null, then we get the default renderer
         if(renderer == null){
             renderer = studentsTbl.getTableHeader().getDefaultRenderer();
         }
+        //Here we get the rendered component within the cell
+        //-1 refers to the header within the JTable
         Component comp = renderer.getTableCellRendererComponent(studentsTbl, value, false, false, -1, colNumber);
+        //Return the width of this component (the amount of space the header string takes up) + spacing
         return (int)(comp.getPreferredSize().width + studentsTbl.getIntercellSpacing().width + COLUMN_PADDING);
     }
 }
