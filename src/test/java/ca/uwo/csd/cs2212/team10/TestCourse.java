@@ -187,7 +187,7 @@ public class TestCourse{
         	course.addStudent(student);
         	course.validateStudentModification(student, "jaz", "1");	
     	} catch (DuplicateObjectException e){
-    		assertEquals(1,e.getReason());
+    		assertEquals(DuplicateObjectException.DUP_NUMBER, e.getReason());
     	}
     	
     }
