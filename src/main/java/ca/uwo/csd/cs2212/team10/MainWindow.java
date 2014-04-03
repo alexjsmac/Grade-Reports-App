@@ -1120,6 +1120,7 @@ public class MainWindow extends JFrame {
         }
     }
     
+    //Method to update the status bar with pertinent information.
     private void updateStatusBar() {
         if (gradebook.getActiveCourse() == null)
             statusLabel.setText("No course selected");
@@ -1131,6 +1132,9 @@ public class MainWindow extends JFrame {
         }
     }
     
+    //Method that welcomes user for the first time and asks to create a course
+    //Only occurs the first time a user ever opens the application.
+    //Will not occur on subsequent opens (unless there is no information stored).
     private void firstStartAction() {
         int option = JOptionPane.showConfirmDialog(this, 
             "<html>Welcome to the gradebook program!<br>Would you like to create a new course now?</html>", 
