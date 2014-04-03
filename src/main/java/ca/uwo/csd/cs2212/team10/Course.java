@@ -142,6 +142,9 @@ public class Course implements Serializable {
             return total/count;
     }
     
+    //Method that calculates average (similar to method above)
+    //but the average calculation is based on type
+    //ie. assignment average, exam average
     public double calcAverage(int type){
         double total = 0;
         int count = 0;
@@ -162,6 +165,9 @@ public class Course implements Serializable {
             return total/count;
     }
     
+    //Method that calculates average (similar to method above)
+    //but the average calculation is based on deliverable
+    //ie. Assignment 1 or Midterm or Assignment 2 or Final, etc.
     public double calcAverage(Deliverable deliverable){
         double total = 0;
         int count = 0;
