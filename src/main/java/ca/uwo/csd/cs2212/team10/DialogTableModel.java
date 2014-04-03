@@ -5,7 +5,8 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Class to set the Model of the Generate Report and Email dialog box Table
+ * Class to set the Model of the Generate Report and Email dialog boxes Table
+ * 
  * @author team10
  */
 
@@ -18,12 +19,14 @@ public class DialogTableModel extends AbstractTableModel {
     private final List<Student> students;
     private Boolean[] checkBoxes;
 
+    /*Constructor*/
     public DialogTableModel(List<Student> studentsList) {
         students = studentsList;
         checkBoxes = new Boolean[students.size()];
         Arrays.fill(checkBoxes, true);
     }
     
+    /*Overridden Methods*/
     @Override
     public int getRowCount() {
         return students.size();
@@ -45,11 +48,11 @@ public class DialogTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columnIndex == IDX_NAME)
-            return "Student Name";
+            return "Student";
         else if (columnIndex == IDX_NUMBER)
-            return "Student Number";
+            return "Number";
         else if (columnIndex == IDX_EMAIL)
-            return "Student Email";
+            return "Email";
         else if (columnIndex == IDX_CHECKBOX)
             return "Select Student";
         else 

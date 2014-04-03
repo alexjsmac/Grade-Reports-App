@@ -27,6 +27,7 @@ public class ReportDialog extends JDialog {
     private Object[] output;
     private static List<Student> students;
 
+    /*Constructor*/
     public ReportDialog(Frame parent, boolean modal, List<Student> studentsList) {
         super(parent, modal);
         students = studentsList;
@@ -34,6 +35,9 @@ public class ReportDialog extends JDialog {
         initTable();
     }
 
+    /*Private Methods*/
+    
+    //Initialize Components and set the layout of the dialog
     private void initComponents() {
         pathLabel = new JLabel();
         jScrollPane1 = new JScrollPane();
@@ -121,6 +125,7 @@ public class ReportDialog extends JDialog {
         setLocationRelativeTo(null);
     }
 
+    //Initialize JTable
     private void initTable() {
         DialogTableModel tblModel = new DialogTableModel(students);
         studentsTbl.setModel(tblModel);
@@ -150,6 +155,8 @@ public class ReportDialog extends JDialog {
         }));
     }
 
+    /*Button Actions*/
+    
     private void okActionPerformed(ActionEvent evt) {
         if (pathTxt.getText().trim().isEmpty()) {
             CommonFunctions.showErrorMessage(this, "You must choose a folder.");
@@ -168,7 +175,6 @@ public class ReportDialog extends JDialog {
         setVisible(false);
     }
 
-
     private void cancelActionPerformed(ActionEvent evt) {
         retval = 1;
         setVisible(false);
@@ -186,11 +192,17 @@ public class ReportDialog extends JDialog {
 
     }
 
+    /*Public Methods*/
+    
+    //Set dialog visible, only return when setVisible is set to false in one of the buttons actions
+    //this way it keeps the dialog on the screen untill the user is finished and returns retval
+    //indicating if user has finished action or canceled it
     public int showDialog() {
         setVisible(true);
         return retval;
     }
     
+    //Outputs the path to save file and the list of Selected Students
     public Object[] getOutput() {
         return output;
     }

@@ -12,14 +12,17 @@ import javax.swing.table.*;
 public class GradeCellEditor extends DefaultCellEditor {
     private JTextField textField;
 
+    /*Contructor*/
     public GradeCellEditor() {
         super(new JTextField());
         textField = (JTextField)getComponent();
         textField.setHorizontalAlignment(JTextField.RIGHT);
     }
     
+    /*Overridden methods*/
     @Override
     public boolean stopCellEditing() {
+        //Prevents user from stop editing if the entered data is not a positive number
         try {
             double value = Double.valueOf(textField.getText());
             if (value < 0)
@@ -39,13 +42,12 @@ public class GradeCellEditor extends DefaultCellEditor {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value,
             boolean isSelected, int row, int column) {
-        
-        Component retval = super.getTableCellEditorComponent(table, value, isSelected, row, column);
-        
+               
         textField.setBorder(BorderFactory.createEmptyBorder());
         if ((Double)value == Student.NO_GRADE)
             textField.setText("0.0");
 
+        //Necessary to select all the content on cell when before starts editing a grade
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
                 textField.requestFocus();

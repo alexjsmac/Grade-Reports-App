@@ -8,7 +8,9 @@ import java.awt.event.*;
 import javax.swing.border.Border;
 
 /**
- *
+ * Implements a custom renderer to header to show a Checkbox in dialog's tables
+ * By clicking in the checkbox on the header the user can Select All/Deselect All Students of the Table
+ * 
  * @author team10
  */
 class CheckBoxTableHeader extends JCheckBox
@@ -18,12 +20,15 @@ class CheckBoxTableHeader extends JCheckBox
     protected int column;
     protected boolean mousePressed = false;
 
+    /*Constructor*/
     public CheckBoxTableHeader(ItemListener itemListener) {
         rendererComponent = this;
         rendererComponent.addItemListener(itemListener);
         rendererComponent.setSelected(true);
     }
 
+    /*Overridden Method from the TableCellRenderer class*/
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
         if (table != null) {
@@ -42,6 +47,9 @@ class CheckBoxTableHeader extends JCheckBox
         return rendererComponent;
     }
 
+    /*Overridden Method from the MouseListener class */
+    
+    //Necessary to implement the Select All/Deselect All functionality
     @Override
     public void mouseClicked(MouseEvent e) {
         if (mousePressed) {
@@ -64,6 +72,7 @@ class CheckBoxTableHeader extends JCheckBox
         mousePressed = true;
     }
 
+    //Not necessary to implement, methods are not used
     @Override
     public void mouseReleased(MouseEvent e) {
     }

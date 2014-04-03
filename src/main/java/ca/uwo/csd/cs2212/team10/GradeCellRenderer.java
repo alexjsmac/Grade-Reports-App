@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Implements the Cell Renderer used in the JTable
+ * Set's the grade format to be displayed correctly
  *
  * @author team10
  */

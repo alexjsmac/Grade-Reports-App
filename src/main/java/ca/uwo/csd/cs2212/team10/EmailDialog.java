@@ -11,7 +11,7 @@ import org.jdesktop.swingx.JXTable;
 import javax.mail.internet.*;
 
 /**
- * Dialog to handle email sending
+ * Dialog to handle send Email action
  *
  * @author team10
  */
@@ -35,6 +35,7 @@ public class EmailDialog extends JDialog {
     private JTextField smtpUsername;
     private JXTable studentsTbl;
 
+    /*Constructor*/
     public EmailDialog(Frame parent, boolean modal, List<Student> studentsList) {
         super(parent, modal);
         students = studentsList;
@@ -42,6 +43,9 @@ public class EmailDialog extends JDialog {
         initTable();
     }
 
+    /*Private methods*/
+    
+    //Initialize Components and set the layout of the dialog
     private void initComponents() {
         emailLabel = new JLabel();
         smtpLabel = new JLabel();
@@ -160,6 +164,7 @@ public class EmailDialog extends JDialog {
         setLocationRelativeTo(null);
     }
 
+    //Initialize JTable
     private void initTable() {
         DialogTableModel tblModel = new DialogTableModel(students);
         studentsTbl.setModel(tblModel);
@@ -189,6 +194,8 @@ public class EmailDialog extends JDialog {
         }));
     }
 
+    /*Button Actions*/
+    
     private void okActionPerformed(java.awt.event.ActionEvent evt) {
         if (smtp.getText().trim().isEmpty()) {
             CommonFunctions.showErrorMessage(this, "You must enter a SMTP server.");
@@ -231,11 +238,17 @@ public class EmailDialog extends JDialog {
         setVisible(false);
     }
 
+    /*Public Methods*/
+    
+    //Set dialog visible, only return when setVisible is set to false in one of the buttons actions
+    //this way it keeps the dialog on the screen untill the user is finished and returns retval
+    //indicating if user has finished action or canceled it
     public int showDialog() {
         setVisible(true);
         return retval;
     }
     
+    //Output the Email Address, SMTP information and the list of Selected Students
     public Object[] getOutput() {
         return output;
     }

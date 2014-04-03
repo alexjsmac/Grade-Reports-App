@@ -6,6 +6,12 @@ import java.awt.*;
 import javax.mail.internet.*;
 import java.util.List;
 
+/**
+ * Class to handle all dialogs when the user is requested to enter some data or choose some options
+ * Validates data entered by the user in each dialog
+ * 
+ * @author Team 10
+ */
 public class UserEntryPrompter{
     public static final int OK_PRESSED = 0;
     public static final int CANCEL_PRESSED = 1;
