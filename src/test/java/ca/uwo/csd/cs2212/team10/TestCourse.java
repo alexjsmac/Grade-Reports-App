@@ -193,52 +193,6 @@ public class TestCourse{
     }
     
     @Test
-    public void testImportStudentsWithEmptyNumber() throws Exception{
-        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students.csv")))){
-            course.importStudents(reader);
-        } catch (CSVException e){
-            assertEquals(5, e.getNumBadLines());
-        }
-    }
-    
-    @Test
-
-    public void testImportStudentsWithWrongLineLength() throws Exception{
-        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students2.csv")))){
-            course.importStudents(reader);
-        } catch (CSVException e){
-            assertEquals(1, e.getNumBadLines());
-        }
-    }
-    
-    @Test
-    public void testImportStudentsWithEmptyFirstName() throws Exception{
-        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students3.csv")))){
-            course.importStudents(reader);
-        } catch (CSVException e){
-            assertEquals(1, e.getNumBadLines());
-        }
-    }
-    
-    @Test
-    public void testImportStudentsWithEmptyLastName() throws Exception{
-        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students4.csv")))){
-            course.importStudents(reader);
-        } catch (CSVException e){
-            assertEquals(1, e.getNumBadLines());
-        }
-    }
-    
-    @Test
-    public void testSuccessfulImportStudents() throws Exception{
-        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students5.csv")))){
-            course.importStudents(reader);
-        } catch (CSVException e){
-            assertEquals(0, e.getNumBadLines());
-        }
-    }
-    
-    @Test
     public void testCourseEquals(){
         Course newCourse = new Course("Foo", "bar", "daz");
         assertTrue(course.equals(newCourse));
@@ -265,13 +219,51 @@ public class TestCourse{
     }
     
     @Test
-    public void testImportStudentsWithBadFormat() throws Exception{
-        course.addStudent(new Student("John","Smith","250000000","fake-jsmith@uwo.ca"));
-        course.addDeliverable(deliverable);
-        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("grades2.csv")))){
+    public void testImportStudentsGood() throws Exception{
+        CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students_test1.csv")));
+        course.importStudents(reader);
+        
+        reader.close();
+    }
+    
+    @Test
+    public void testImportStudentsBad() throws Exception{
+        course.addStudent(new Student("John", "Smith", "250000000", "foo1@uwo.ca"));
+        
+        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students_test2.csv")))){
             course.importStudents(reader);
         } catch (CSVException e){
+            assertEquals(6, e.getNumBadLines());
+        }
+    }
+    
+    @Test
+    public void testImportGradesGood() throws Exception{
+        course.addStudent(new Student("John", "Smith", "1234", "foo2@uwo.ca"));
+        
+        CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("grades_test1.csv")));
+        course.importGrades(reader);
+        
+        reader.close();
+    }
+    
+    @Test
+    public void testImportGradesBad() throws Exception{
+        course.addStudent(new Student("John", "Smith", "2345", "foo3@uwo.ca"));
+        
+        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("grades_test2.csv")))){
+            course.importGrades(reader);
+        } catch (CSVException e){
             assertEquals(1, e.getNumBadLines());
+        }
+    }
+    
+    @Test
+    public void testImportGradesBadHeader() throws Exception{
+        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("grades_test3.csv")))){
+            course.importGrades(reader);
+        } catch (CSVException e){
+            assertEquals(CSVException.BAD_FORMAT, e.getNumBadLines());
         }
     }
 }
