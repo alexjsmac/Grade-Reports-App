@@ -938,7 +938,7 @@ public class MainWindow extends JFrame {
         CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 
-        /Open the open dialog and try reading the selected file
+        //Open the open dialog and try reading the selected file
         int option = chooser.showOpenDialog(rootPane);
         if (option == JFileChooser.APPROVE_OPTION) {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
