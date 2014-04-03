@@ -888,6 +888,7 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //Will import student list from a CSV file into the active course and display in the table
     private void importStudentsAction() {
     	
     	//If there is no active course then we notify the user to create one first
@@ -924,19 +925,27 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //Will import grades from a CSV file into the active course and display in the table
     private void importGradesAction() {
+    	
+    	//If there is no active course then we notify the user to create one first
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
+        //Create a new custom file chooser
         CustomFileChooser chooser = new CustomFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 
+        /Open the open dialog and try reading the selected file
         int option = chooser.showOpenDialog(rootPane);
         if (option == JFileChooser.APPROVE_OPTION) {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
+            	//Import grades into the active course
                 gradebook.getActiveCourse().importGrades(reader);
+                
+                //Show pertinent error messages if required
             } catch (IOException e) {
                 CommonFunctions.showErrorMessage(this, "The selected file could not be read.");
             } catch (CSVException e) {
@@ -950,6 +959,7 @@ public class MainWindow extends JFrame {
                 }
             }
 
+            //Refresh table
             refreshTableModel();
         }
     }
