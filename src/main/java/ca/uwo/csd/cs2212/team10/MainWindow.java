@@ -936,6 +936,7 @@ public class MainWindow extends JFrame {
 
         //Create a new custom file chooser
         CustomFileChooser chooser = new CustomFileChooser();
+        //File filter restricts users to selecting csv files
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 
         //Open the open dialog and try reading the selected file
@@ -964,22 +965,34 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //Will export grades and student information in the active course to a CSV file
     private void exportGradesAction() {
+    	
+    	//If there is no active course then we notify the user to create one first
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
+        //Create a new custom file chooser
         CustomFileChooser chooser = new CustomFileChooser();
+        //File filter restricts users to csv files
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 
+      //Open the save dialog and get the selected file
         int option = chooser.showSaveDialog(rootPane);
         String file_name = chooser.getSelectedFile().toString();
+        
+        //Add file extension if required.
         if (!file_name.toLowerCase().endsWith(".csv"))
             file_name += ".csv";
         if (option == JFileChooser.APPROVE_OPTION) {
+        	
+        	//Try writing the information to file
             try (CSVWriter writer = new CSVWriter(new FileWriter(file_name))) {
                 gradebook.getActiveCourse().exportGrades(writer);
+                
+                //Show pertinent error messages if required.
             } catch (IOException e) {
                 CommonFunctions.showErrorMessage(this, "The selected file could not be written. Try a different filename.");
                 return;
