@@ -172,11 +172,9 @@ public class TestCourse{
     }
     
     @Test
-    public void testImportStudentsWithEmptyNumber() throws CSVException{
-        try (CSVReader reader = new CSVReader(new FileReader("studens.csv"))){
+    public void testImportStudentsWithEmptyNumber() throws Exception{
+        try (CSVReader reader = new CSVReader(new FileReader("students.csv"))){
             course.importStudents(reader);
-        } catch (IOException e){
-            ;
         } catch (CSVException e){
             assertEquals(5, e.getNumBadLines());
         }
