@@ -4,6 +4,11 @@ import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 import java.awt.Component;
 
+/**
+ * Class to group together methods frequently used in many classes
+ * 
+ * @author Team 10
+ */
 public class CommonFunctions{
     private static final DecimalFormat formatter = new DecimalFormat("0.##'%'");
     

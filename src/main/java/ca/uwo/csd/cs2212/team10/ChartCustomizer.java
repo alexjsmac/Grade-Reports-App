@@ -6,6 +6,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 
+/**
+ * Class to customize the charts for the PDF report
+ * 
+ * @author Team 10
+ */
 public class ChartCustomizer implements JRChartCustomizer {
     public void customize(JFreeChart chart, JRChart jrChart) {
         CategoryPlot categoryPlot = chart.getCategoryPlot();

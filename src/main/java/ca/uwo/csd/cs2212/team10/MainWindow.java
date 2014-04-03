@@ -26,6 +26,7 @@ import org.jdesktop.swingx.*;
 
 /**
  * The main window of the gradebook program
+ * 
  * @author Team 10
  */
 public class MainWindow extends JFrame {
@@ -77,6 +78,8 @@ public class MainWindow extends JFrame {
     }
 
     /* Private methods */
+    
+    //Initializes table and it's properties
     private void initTable() {
         refreshTableModel();
 
@@ -93,6 +96,7 @@ public class MainWindow extends JFrame {
         //Set height for the rows
         mainTable.setRowHeight(22);
 
+        //Sets editing a grade by pressing ENTER and deleting a Student or a Deliverable by pressing Delete
         mainTable.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
         mainTable.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteStudent");
         mainTable.getActionMap().put("deleteStudent", new AbstractAction() {
@@ -106,6 +110,7 @@ public class MainWindow extends JFrame {
             }
         });
 
+        //Mouse listener to open the Popup menus on deliverables and students
         mainTable.addMouseListener(new MouseAdapter() {
             //Mouse Listener for Linux/Mac
             @Override
@@ -160,6 +165,7 @@ public class MainWindow extends JFrame {
         });        
     }
 
+    //Refresh all the data in the table when necessary (mostly when active course is changed)
     private void refreshTableModel() {
         List<Student> studentsList;
         List<Deliverable> deliverablesList;
@@ -174,8 +180,12 @@ public class MainWindow extends JFrame {
         }
 
         CustomTableModel tblModel = new CustomTableModel(studentsList, deliverablesList);
-        mainTable.setModel(tblModel);        
+        mainTable.setModel(tblModel);
+        
+        //Sort table by the last name of students
         mainTable.getRowSorter().toggleSortOrder(0);
+        
+        //Table Model Listener to change the display of Class average everytime data on the Table changes
         mainTable.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -186,9 +196,13 @@ public class MainWindow extends JFrame {
         updateColumnSize();
     }
 
+    //Initialize GUI Components
     private void initComponents() {
         jScrollPane1 = new JScrollPane(mainTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mainTable = new JXTable() {
+            //Necessary to Override this method so all the content of a Grade cell is selected when the user starts editing
+            //by pressing any key on the keyboard
+            @Override
             public Component prepareEditor(TableCellEditor editor, int row, int column) {
                 Component c = super.prepareEditor(editor, row, column);
                 if (c instanceof JTextComponent) {
@@ -237,6 +251,7 @@ public class MainWindow extends JFrame {
         examAvgTxtLabel = new JLabel("Exams Average:");
         examAvgLabel = new JLabel();
 
+        //Set Properties of the Class Average labels
         courseAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         assignmentAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         examAvgTxtLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
@@ -267,6 +282,7 @@ public class MainWindow extends JFrame {
             private JPanel separatorPanel = new JPanel(new BorderLayout());
             private JSeparator separator = new JSeparator();
 
+            //Separator before "Add Course" is rendered right
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component comp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -286,7 +302,7 @@ public class MainWindow extends JFrame {
             }
         }.init(dropDownCourses.getRenderer()));
 
-        //addStudentBtn.setText("Add Student");
+        /*Initialize Buttons*/
         addStudentBtn.setIcon(new ImageIcon(getClass().getResource("/addStudent.png")));
         addStudentBtn.setMnemonic(KeyEvent.VK_B);
         addStudentBtn.setToolTipText("Add a new Student to the active Course (Alt+B)");
@@ -296,7 +312,6 @@ public class MainWindow extends JFrame {
             }
         });
 
-        //addDeliverableBtn.setText("Add Deliverable");
         addDeliverableBtn.setIcon(new ImageIcon(getClass().getResource("/addDeliverable.png")));
         addDeliverableBtn.setMnemonic(KeyEvent.VK_N);
         addDeliverableBtn.setToolTipText("Add a new Deliverable to the active Course (Alt+N)");
@@ -306,7 +321,6 @@ public class MainWindow extends JFrame {
             }
         });
 
-        //emailBtn.setText("Email");
         emailBtn.setIcon(new ImageIcon(getClass().getResource("/email.png")));
         emailBtn.setMnemonic(KeyEvent.VK_M);
         emailBtn.setToolTipText("Send email (ALT+M)");
@@ -316,7 +330,6 @@ public class MainWindow extends JFrame {
             }
         });
 
-        //genRepBtn.setText("Generate Reports");
         genRepBtn.setIcon(new ImageIcon(getClass().getResource("/genRep.png")));
         genRepBtn.setMnemonic(KeyEvent.VK_R);
         genRepBtn.setToolTipText("Generate grade reports (ALT+R)");
@@ -491,6 +504,7 @@ public class MainWindow extends JFrame {
 
         setJMenuBar(jMenuBar);
 
+        /*Initializes Popup menus*/
         editStudentPopupMenu.setText("Edit Student");
         editStudentPopupMenu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -535,6 +549,7 @@ public class MainWindow extends JFrame {
         statusPanel.add(statusLabel);
         updateStatusBar();
 
+        //Set the Layout of the Main Window
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -644,6 +659,7 @@ public class MainWindow extends JFrame {
     }
 
     private void addCourseAction() {
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showAddCourseDialog(this, gradebook);
 
@@ -674,6 +690,7 @@ public class MainWindow extends JFrame {
 
         Course activeCourse = gradebook.getActiveCourse();
 
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEditCourseDialog(this, activeCourse, gradebook);
 
@@ -729,6 +746,7 @@ public class MainWindow extends JFrame {
 
         Course activeCourse = gradebook.getActiveCourse();
 
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showAddStudentDialog(this, activeCourse);
 
@@ -759,6 +777,7 @@ public class MainWindow extends JFrame {
         Student student = gradebook.getActiveCourse().getStudentList().get(selectedRow);
         Course activeCourse = gradebook.getActiveCourse();
 
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEditStudentDialog(this, student, activeCourse);
 
@@ -814,6 +833,7 @@ public class MainWindow extends JFrame {
 
         Course activeCourse = gradebook.getActiveCourse();
 
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showAddDeliverableDialog(this, activeCourse);
 
@@ -840,11 +860,12 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        //To get the right Deliverable from the list 
+        //Use deliverableIndex to get the right Deliverable from the list
         int deliverableIndex = ((CustomTableModel)mainTable.getModel()).getDeliverableIndex(selectedColumn);
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(deliverableIndex);
         Course activeCourse = gradebook.getActiveCourse();
 
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEditDeliverableDialog(this, deliverable, activeCourse);
 
@@ -875,7 +896,7 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        //To get the right Deliverable from the list 
+        //Use deliverableIndex to get the right Deliverable from the list 
         int deliverableIndex = ((CustomTableModel)mainTable.getModel()).getDeliverableIndex(selectedColumn);
         Deliverable deliverable = gradebook.getActiveCourse().getDeliverableList().get(deliverableIndex);
 
@@ -1009,6 +1030,7 @@ public class MainWindow extends JFrame {
             return;
         }
 
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showEmailDialog(this, gradebook.getActiveCourse().getStudentList());
 
@@ -1072,6 +1094,7 @@ public class MainWindow extends JFrame {
             return;
         }
         
+        //Dialog and data validation handled by UserEntryPrompter Class
         UserEntryPrompter prompt = new UserEntryPrompter();
         prompt.showReportDialog(this, gradebook.getActiveCourse().getStudentList());
 
@@ -1149,9 +1172,9 @@ public class MainWindow extends JFrame {
         if (option == JOptionPane.YES_OPTION) {
             addCourseAction();
         }
-        return;
     }
     
+    //Called before the program is closed to store all the data on the Gradebook
     private void exitAction() {
         try{
             storeGradebook();
@@ -1165,6 +1188,7 @@ public class MainWindow extends JFrame {
         }
     }
     
+    //Load all the data of the gradebook each time the user open the Program
     private void loadGradebook(){
         try{
             //try to read from main data file
@@ -1196,6 +1220,7 @@ public class MainWindow extends JFrame {
         }
     }
     
+    //Stores all the program data by serializing
     private void storeGradebook() throws IOException{
         //make a backup
         File dataFile = new File(DATA_FILENAME);
@@ -1207,7 +1232,8 @@ public class MainWindow extends JFrame {
         gradebook.toObjectOutputStream(new ObjectOutputStream(new FileOutputStream(DATA_FILENAME)));
     }
     
-    
+    //Look through all the cells to find the maximun size of its contents
+    //Necessary to set the optimal column width in updateColumnSize()
     private int getMaxColumnSize(int colNumber){
     	//The default width will be the size of the header.
         int width = getHeaderSize(colNumber);
@@ -1222,6 +1248,8 @@ public class MainWindow extends JFrame {
         return width;
     }
 
+    //Update each column preferred size by looking at the content on every cell of that Column
+    //calls getMaxColumnSize();
     private void updateColumnSize(){
     	//Loop through all columns and update the width of the columns.
         for(int col=0;col<mainTable.getColumnCount();col++){
@@ -1229,6 +1257,8 @@ public class MainWindow extends JFrame {
         }
     }
     
+    //Get the size of a Header in mainTable
+    //Necessary to set the optimal column width in updateColumnSize()
     private int getHeaderSize(int colNumber){
     	//Get the header value for the specified column
         Object value = mainTable.getColumnModel().getColumn(colNumber).getHeaderValue();

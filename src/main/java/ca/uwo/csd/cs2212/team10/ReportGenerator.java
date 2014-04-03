@@ -15,6 +15,11 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
+/**
+ * To generate the PDF Reports
+ * 
+ * @author Team 10
+ */
 public class ReportGenerator {
     private final static String REPORT_FILENAME = "grade_report.jrxml";
 

@@ -3,6 +3,11 @@ package ca.uwo.csd.cs2212.team10;
 import javax.swing.*;
 import java.io.*;
 
+/**
+ * Customized to confirm before overwriting a file
+ * 
+ * @author Team 10
+ */
 public class CustomFileChooser extends JFileChooser {
 
 	/* Constructor */

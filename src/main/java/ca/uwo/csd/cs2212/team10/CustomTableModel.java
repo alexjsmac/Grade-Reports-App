@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 
 /**
  * Class to set the Model of the Student's Table
+ * 
  * @author team10
  */
 
