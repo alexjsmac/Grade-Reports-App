@@ -140,6 +140,23 @@ public class TestCourse{
     }
     
     @Test
+    public void testValidateDeliverableMod() throws DuplicateObjectException{
+        Deliverable deliverable2 = new Deliverable("Doe", Deliverable.ASSIGNMENT_TYPE, 0);
+        course.addDeliverable(deliverable);
+        course.addDeliverable(deliverable2);
+        course.validateDeliverableModification(deliverable2, "Doe");
+        assertEquals("Doe", deliverable2.getName());
+    }
+    
+    @Test(expected = DuplicateObjectException.class)
+    public void testValidateDeliverableModWithSameNameAsExistingDeliverable() throws DuplicateObjectException{
+        Deliverable deliverable2 = new Deliverable("Doe", Deliverable.ASSIGNMENT_TYPE, 0);
+        course.addDeliverable(deliverable);
+        course.addDeliverable(deliverable2);
+        course.validateDeliverableModification(deliverable2, "Foo");
+    }
+    
+    @Test
     public void testToStringReturnsAString(){
         assertNotNull(course.toString());
     }
@@ -230,4 +247,5 @@ public class TestCourse{
     		assertEquals(DuplicateObjectException.DUP_EMAIL, e.getReason());
     	}
     }
+    
 }
