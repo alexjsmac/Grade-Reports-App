@@ -326,6 +326,9 @@ public class MainWindow extends JFrame {
             }
         });
 
+        //The following creates the file menu and adds the appropriate menu items
+        //to the appropriate menus.
+        
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setText("File");
 
