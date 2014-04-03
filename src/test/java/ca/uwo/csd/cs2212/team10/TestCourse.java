@@ -173,7 +173,7 @@ public class TestCourse{
     
     @Test
     public void testImportStudentsWithEmptyNumber() throws Exception{
-        try (CSVReader reader = new CSVReader(new FileReader("students.csv"))){
+        try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students.csv")))){
             course.importStudents(reader);
         } catch (CSVException e){
             assertEquals(5, e.getNumBadLines());
