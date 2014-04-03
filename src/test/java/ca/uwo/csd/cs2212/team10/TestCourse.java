@@ -181,7 +181,7 @@ public class TestCourse{
     }
     
     @Test
-<<<<<<< HEAD
+
     public void testImportStudentsWithWrongLineLength() throws Exception{
         try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("students2.csv")))){
             course.importStudents(reader);
@@ -215,7 +215,9 @@ public class TestCourse{
         } catch (CSVException e){
             assertEquals(0, e.getNumBadLines());
         }
-=======
+    }
+
+    @Test
     public void testDuplicateObjectException() throws Exception{
     	Student student2 = new Student("Foo", "Bar", "2", "haz");
     	try{
@@ -225,9 +227,7 @@ public class TestCourse{
         	student.setEmail("haz");
         	course.validateStudentModification(student, "haz", "1");	
     	} catch (DuplicateObjectException e){
-    		assertEquals(DuplicateObjectException.DUP_NUMBER, e.getReason());
+    		assertEquals(DuplicateObjectException.DUP_EMAIL, e.getReason());
     	}
-    	
->>>>>>> 62695298b469ae1d94cfe346c67e25c125bc7511
     }
 }
