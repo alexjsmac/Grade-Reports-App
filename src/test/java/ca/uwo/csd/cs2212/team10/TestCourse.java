@@ -217,10 +217,13 @@ public class TestCourse{
         }
 =======
     public void testDuplicateObjectException() throws Exception{
+    	Student student2 = new Student("Foo", "Bar", "2", "haz");
     	try{
     		course.getStudentList().clear();
         	course.addStudent(student);
-        	course.validateStudentModification(student, "jaz", "1");	
+        	course.addStudent(student2);
+        	student.setEmail("haz");
+        	course.validateStudentModification(student, "haz", "1");	
     	} catch (DuplicateObjectException e){
     		assertEquals(DuplicateObjectException.DUP_NUMBER, e.getReason());
     	}
