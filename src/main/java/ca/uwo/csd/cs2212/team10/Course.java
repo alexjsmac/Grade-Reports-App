@@ -66,18 +66,26 @@ public class Course implements Serializable {
     }
 
     public void validateStudentModification(Student student, String newEmail, String newNum) throws DuplicateObjectException{
+    	//Loop through student list
         for (Student s : students)
+        	//If the current student "s" does not equal the student passed in
             if (s != student){
+            	//If the new e-mail address the old e-mail address, throw exception
                 if (newEmail.equals(s.getEmail()))
                     throw new DuplicateObjectException(DuplicateObjectException.DUP_EMAIL);
+                //If the new student number equals the old student number, throw exception
                 else if (newNum.equals(s.getNum()))
                     throw new DuplicateObjectException(DuplicateObjectException.DUP_NUMBER);
             }
     }
     
     public void validateDeliverableModification(Deliverable deliverable, String newName) throws DuplicateObjectException{
+    	//Loop through deliverables list
         for (Deliverable d : deliverables)
+        	//If the current deliverable does not equal the deliverable passed in AND
+        	//if the current deliverable equals the parameters of the modified deliverable
             if (d != deliverable && d.equals(new Deliverable(newName, Deliverable.ASSIGNMENT_TYPE, 0)))
+            	//throw duplicate object exception
                 throw new DuplicateObjectException();
     }
     
