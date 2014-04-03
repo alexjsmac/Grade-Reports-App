@@ -122,18 +122,23 @@ public class Course implements Serializable {
         int count = 0;
         double currAverage;
         
+        //Loop through student list
         for (Student s : students){
+        	//Calculate average of current student
             currAverage = s.calcAverage();
             
+            //If the current average does not equal a no_grade
             if (currAverage != Student.NO_GRADE){
+            	//Add the current average to the total
                 total += currAverage;
                 count++;
             }
         }
-        
+        //If the count is 0, return no grade
         if (count == 0)
             return Student.NO_GRADE;
         else
+        	//Return the average
             return total/count;
     }
     
