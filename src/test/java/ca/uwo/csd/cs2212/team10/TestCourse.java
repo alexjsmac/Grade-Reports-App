@@ -237,13 +237,15 @@ public class TestCourse{
     @Test
     public void testCourseEquals(){
         Course newCourse = new Course("Foo", "bar", "daz");
-        assertTrue(course.equals(newCourse));
+        assertTrue(course.getCode().equals(newCourse.getCode()));
+        assertTrue(course.getTerm().equals(newCourse.getTerm()));
     }
     
     @Test
     public void testCourseEqualsFalse(){
         Course newCourse = new Course("Foo", "baar", "daaz");
-        assertFalse(course.equals(newCourse));
+        assertFalse(course.getCode().equals(newCourse.getCode()));
+        assertFalse(course.getTerm().equals(newCourse.getTerm()));
     }
 
     @Test
