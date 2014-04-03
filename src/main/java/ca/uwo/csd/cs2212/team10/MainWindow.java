@@ -1000,6 +1000,9 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //Method that takes care of sending emails to students
+    //Contains a progress monitor that appears during emailing to notify
+    //user of the progress of the email.
     private void sendEmailAction() {
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "You must create a course first.");
@@ -1060,6 +1063,9 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //Method that takes care of generating PDF reports for students.
+    //Contains a progress monitor that appears during PDF export to
+    //notify users of the progress of the export.
     private void genReportsAction(){
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "You must create a course first.");
