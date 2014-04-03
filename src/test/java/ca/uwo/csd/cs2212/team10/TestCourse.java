@@ -179,4 +179,16 @@ public class TestCourse{
             assertEquals(5, e.getNumBadLines());
         }
     }
+    
+    @Test
+    public void testDuplicateObjectException() throws Exception{
+    	try{
+    		course.getStudentList().clear();
+        	course.addStudent(student);
+        	course.validateStudentModification(student, "jaz", "1");	
+    	} catch (DuplicateObjectException e){
+    		assertEquals(1,DuplicateObjectException.DUP_NUMBER);
+    	}
+    	
+    }
 }
