@@ -889,18 +889,26 @@ public class MainWindow extends JFrame {
     }
 
     private void importStudentsAction() {
+    	
+    	//If there is no active course then we notify the user to create one first
         if (gradebook.getActiveCourse() == null) {
             CommonFunctions.showErrorMessage(this, "You must create a course first.");
             return;
         }
 
+        //Create a new custom file chooser
         CustomFileChooser chooser = new CustomFileChooser();
+        //File filter restricts users to selecting csv files
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
 
+        //Open the open dialog and try reading the selected file
         int option = chooser.showOpenDialog(rootPane);
         if (option == JFileChooser.APPROVE_OPTION) {
             try (CSVReader reader = new CSVReader(new FileReader(chooser.getSelectedFile()))) {
+            	//Import students into the active course
                 gradebook.getActiveCourse().importStudents(reader);
+                
+                //Show pertinent error messages if required.
             } catch (IOException e) {
                 CommonFunctions.showErrorMessage(this, "The selected file could not be read.");
             } catch (CSVException e) {
@@ -910,6 +918,7 @@ public class MainWindow extends JFrame {
                         + " of the file. They may not have been imported fully.");
             }
 
+            //Refresh the table and update the status bar.
             refreshTableModel();
             updateStatusBar();
         }
