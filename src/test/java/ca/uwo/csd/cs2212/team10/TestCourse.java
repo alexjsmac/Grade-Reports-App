@@ -238,14 +238,12 @@ public class TestCourse{
     public void testCourseEquals(){
         Course newCourse = new Course("Foo", "bar", "daz");
         assertTrue(course.equals(newCourse));
-        
     }
     
     @Test
     public void testCourseEqualsFalse(){
-        Course newCourse = new Course("Foo", "baar", "daaz");
+        Course newCourse = new Course("Foo", "bar", "daaz");
         assertFalse(course.equals(newCourse));
-        
     }
 
     @Test
