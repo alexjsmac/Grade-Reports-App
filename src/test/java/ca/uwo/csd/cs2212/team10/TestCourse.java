@@ -185,6 +185,8 @@ public class TestCourse{
     	assertEquals(averageAsn, course.calcAverage());
     	assertEquals(averageAsn,course.calcAverage(Deliverable.ASSIGNMENT_TYPE));
     	assertEquals(averageAsn,course.calcAverage(deliverable));
+    	student2.setGrade(deliverable,Student.NO_GRADE);
+    	assertEquals(75.5,course.calcAverage());
     	
     }
     
