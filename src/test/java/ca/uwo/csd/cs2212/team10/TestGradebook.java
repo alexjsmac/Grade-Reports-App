@@ -51,4 +51,20 @@ public class TestGradebook{
         
         assertNull(gradebook.getActiveCourse());
     }
+    
+    @Test(expected = DuplicateObjectException.class)
+    public void testValidateCourseModificationFail() throws DuplicateObjectException{
+        Course course2 = new Course("moo", "ma", "maz");
+        gradebook.addCourse(course);
+        gradebook.addCourse(course2);
+        gradebook.validateCourseModification(course2, "bar", "daz");
+    }
+    
+    @Test
+    public void testValidateCourseModificationSuccess() throws DuplicateObjectException{
+        Course course2 = new Course("moo", "ma", "maz");
+        gradebook.addCourse(course);
+        gradebook.addCourse(course2);
+        gradebook.validateCourseModification(course2, "baar", "daaz");
+    }
 }
