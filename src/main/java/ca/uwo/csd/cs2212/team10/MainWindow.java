@@ -595,13 +595,16 @@ public class MainWindow extends JFrame {
         pack();
     }
 
+    //This method will change the active course to the course selected in the drop down menu
     private void dropDownItemChanged(ItemEvent evt) {
+    	//If there is no courses in the drop down menu, the active course will be set to null
         if (dropDownCourses.getSelectedItem() == null) {
             gradebook.setActiveCourse(null);
 
             refreshTableModel();
             updateStatusBar();
         } else if (evt.getStateChange() == ItemEvent.SELECTED) {
+        	//If user clicks on Add Course, method will call addCourseAction
             if (dropDownCourses.getSelectedItem().equals("Add Course")) {
                 addCourseAction();
                 if (gradebook.getCourseList().size() == 0) {
@@ -621,13 +624,18 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //Method updates the Class Average that is displayed in the application
     private void updateClassAvgLabel() {
         Course activeCourse = gradebook.getActiveCourse();
         
+        //If there is no active course, the course, assignment and exam averages will
+        //display the default no grade
         if (activeCourse == null) {
             courseAvgLabel.setText(CommonFunctions.formatGrade(Student.NO_GRADE));
             assignmentAvgLabel.setText(CommonFunctions.formatGrade(Student.NO_GRADE));
             examAvgLabel.setText(CommonFunctions.formatGrade(Student.NO_GRADE));
+            
+            //Else they will be updated with the relevant class average information
         } else {
             courseAvgLabel.setText(CommonFunctions.formatGrade(activeCourse.calcAverage()));
             assignmentAvgLabel.setText(CommonFunctions.formatGrade(activeCourse.calcAverage(Deliverable.ASSIGNMENT_TYPE)));
