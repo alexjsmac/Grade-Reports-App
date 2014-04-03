@@ -250,11 +250,12 @@ public class TestCourse{
     @Test
     public void testImportGradesBad() throws Exception{
         course.addStudent(new Student("John", "Smith", "2345", "foo3@uwo.ca"));
+        course.addDeliverable(new Deliverable("DL1", Deliverable.EXAM_TYPE, 1));
         
         try (CSVReader reader = new CSVReader(new InputStreamReader(TestCourse.class.getClassLoader().getResourceAsStream("grades_test2.csv")))){
             course.importGrades(reader);
         } catch (CSVException e){
-            assertEquals(1, e.getNumBadLines());
+            assertEquals(2, e.getNumBadLines());
         }
     }
     
