@@ -1,5 +1,5 @@
 # Grade-Reports-App
-A Java program for a professor to keep track of his/her students grades in multiple classes. Created with a group for a school assignment.
+A Java program for a professor to keep track of his/her students' grades in multiple classes. Created with a group for a school assignment.
 
 Build with `mvn package` in project directory.
 
